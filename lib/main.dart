@@ -4,6 +4,8 @@ import 'package:swipeapp/Controller/Dashboard.dart';
 import 'Controller/LoginScreen.dart';
 import 'dart:async';
 
+import 'Controller/Test.dart';
+
 
 void main() {
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -41,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ()=>Navigator.pushReplacement(context,
             MaterialPageRoute(builder:
                 (context) =>
-                LoginScreen(),
+                Test(),
             )
         )
     );

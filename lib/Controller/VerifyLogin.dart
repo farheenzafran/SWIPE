@@ -2,6 +2,7 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
 import 'package:swipeapp/Controller/PhoneSignup.dart';
+import 'package:flutter/material.dart';
 
 class VerifyLogin extends StatefulWidget {
   const VerifyLogin({Key? key}) : super(key: key);
@@ -10,23 +11,28 @@ class VerifyLogin extends StatefulWidget {
   State<VerifyLogin> createState() => _SearchState();
 }
 
-class _SearchState extends State<VerifyLogin> with SingleTickerProviderStateMixin {
+class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMixin
+{
   TabController? _tabController;
 
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
       body: Center(
-        // child: SingleChildScrollView(
         child: SafeArea(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(0),
+     // child:    SingleChildScrollView(
+           child: Column(
             children: [
               Container(
                 height: 60,
@@ -392,8 +398,11 @@ class _SearchState extends State<VerifyLogin> with SingleTickerProviderStateMixi
             ],
           ),
         ),
-        //  ),
-      ),
+          ),
+
+        ),
+
+
     );
   }
 }

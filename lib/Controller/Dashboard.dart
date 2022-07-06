@@ -35,7 +35,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class dashboardState extends State<Dashboard> {
-
+  List<Transactions> transactionlist = [];
 
   bool viewVisible = false;
   bool viewVisible1 = false;
@@ -73,7 +73,6 @@ class dashboardState extends State<Dashboard> {
   String acname = "";
   late Future<List<BankData>> bankdatalist = [] as Future<List<BankData>>;
   BankData bankDataobj = BankData();
-  List<Transactions> transactionlist = [];
   late LegacyLinkConfiguration _publicKeyConfiguration;
   late LinkTokenConfiguration _linkTokenConfiguration;
 
@@ -134,7 +133,7 @@ class dashboardState extends State<Dashboard> {
       bankDataobj.bankthemecolor = insres.institution?.primaryColor;
       bankDataobj.bankname = insres.institution?.name;
       var accesstokenres =
-          await accessTokenResponse(bankDataobj.publictoken.toString());
+      await accessTokenResponse(bankDataobj.publictoken.toString());
       bankDataobj.accesstoken = accesstokenres.accessToken;
       List<BankData> templstbankdata = await bankdatalist;
       // print(templstbankdata.length);
@@ -159,7 +158,7 @@ class dashboardState extends State<Dashboard> {
       if (bdata != "") {
         List<dynamic> dicData = jsonDecode(bdata);
         bankdatalist =
-            List<BankData>.from(dicData.map((i) => BankData.fromJson(i)));
+        List<BankData>.from(dicData.map((i) => BankData.fromJson(i)));
       }
       //print('&&&&&&&&');
       // print(bankdatalist.length);
@@ -175,13 +174,14 @@ class dashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
-      body: Center(
-        // child: SingleChildScrollView(
-        child: SafeArea(
+      body: Padding(
+        padding: EdgeInsets.all(1.0),
+        // child: SafeArea(
+        //   child: Padding(
+            //padding: EdgeInsets.all(0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: 100,
@@ -190,9 +190,9 @@ class dashboardState extends State<Dashboard> {
                 //color: const Color(0xDEB46FEA),
                 decoration: new BoxDecoration(
                   gradient: LinearGradient(
-                      // begin: Alignment.topCenter,
-                      // end: Alignment.bottomCenter,
-                      // transform: GradientRotation(120 * math.pi/180),
+                    // begin: Alignment.topCenter,
+                    // end: Alignment.bottomCenter,
+                    // transform: GradientRotation(120 * math.pi/180),
 
                       begin: Alignment(-1.0, -2.0),
                       end: Alignment(1.0, 2.0),
@@ -201,7 +201,27 @@ class dashboardState extends State<Dashboard> {
                         Color(0xb59e3d57),
                         Color(0xff9f60d0)
                       ]),
+
                 ),
+                //child: Align(alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+
+                    children:<Widget>[
+                    Text('Debit', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white,), textAlign: TextAlign.left,),
+                    Image.asset(
+                      "asset/images/downarrow.png",                                      // width: 300,
+                      height: 20,
+                      width: 20,
+                      alignment: Alignment.center,
+
+                    ),                    Text('Credit', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white,), textAlign: TextAlign.left,),
+                    ]
+
+                ),
+
+              //  ),
               ),
 
               Container(
@@ -209,17 +229,18 @@ class dashboardState extends State<Dashboard> {
                 width: 100,
                 margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
                 padding: EdgeInsets.all(5),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffECDCFF)),
-                child: Text('Debit: 0'),
+                    color: const Color(0xFFeeeeff)),
+                child: Text('Debit: 0', textAlign: TextAlign.center),
               ),
 
               Container(
                   height: 35,
                   width: double.infinity,
                   margin:
-                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+                  EdgeInsets.only(top: 10, left: 15, bottom: 10, right: 15),
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
@@ -234,727 +255,489 @@ class dashboardState extends State<Dashboard> {
                           });
                           // hideWidget();
                         },
-                        child: Image(
-                          image: AssetImage("asset/images/addbtn.png"),
-                          width: 100,
-                          height: 80,
-                        ),
+                        child:
+                Image.asset(
+                "asset/images/Plus.png",                                      // width: 300,
+                height: 40,
+                alignment: Alignment.topRight,
+
+              ),
                       ),
                       Text('Connect To Debit Account'),
                     ],
                   )),
               //-------------------
-      Expanded(
-         // height: 300.0,
-         // color: Colors.yellow,
-        child: Column(
-           children: [
-              Visibility(
-                visible: viewVisible,
-                child: Container(
-                   // height: 250.0,
-                   // color: Colors.yellow,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.topRight,
-                          width: double.infinity,
-                          height: 40.0,
-                          color: Colors.white,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: FlatButton(
-                            onPressed: () async {
-                              Loader.show(context,
-                                  isSafeAreaOverlay: false,
-                                  progressIndicator:
-                                      CircularProgressIndicator(),
-                                  isBottomBarOverlay: false,
-                                  overlayFromBottom: 80,
-                                  themeData: Theme.of(context)
-                                      .copyWith(accentColor: Colors.black),
-                                  overlayColor: Color(0x0000ffff));
-                              Future.delayed(Duration(seconds: 4), () {
-                                Loader.hide();
-                              });
-                              var linktoken = await linktokenResponse();
-                              _linkTokenConfiguration = LinkTokenConfiguration(
-                                token: linktoken.linkToken.toString(),
-                              );
 
-                              PlaidLink.open(
-                                  configuration: _linkTokenConfiguration);
-                            },
-                            child: Image(
-                                image: AssetImage("asset/images/addbtn.png"),
-                                alignment: Alignment.topRight),
-                          ),
-                        ),
+              Container(
+               // height: 200.0,
+                 color: Colors.white,
+              child : Expanded(
+              //  scrollDirection: Axis.vertical,
+            child:    Column(
+                  children: [
+                    Visibility(
+                      visible: viewVisible,
+                      child: Container(
+                        // height: 250.0,
+                        // color: Colors.yellow,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.topRight,
+                                width: double.infinity,
+                                height: 25.0,
+                                color: Colors.white,
+                                margin: const EdgeInsets.all(5),
+                                child: FlatButton(
+                                  onPressed: () async {
+                                    Loader.show(context,
+                                        isSafeAreaOverlay: false,
+                                        progressIndicator:
+                                        CircularProgressIndicator(),
+                                        isBottomBarOverlay: false,
+                                        overlayFromBottom: 80,
+                                        themeData: Theme.of(context)
+                                            .copyWith(accentColor: Colors.black),
+                                        overlayColor: Color(0x0000ffff));
+                                    Future.delayed(Duration(seconds: 4), () {
+                                      Loader.hide();
+                                    });
+                                    var linktoken = await linktokenResponse();
+                                    _linkTokenConfiguration = LinkTokenConfiguration(
+                                      token: linktoken.linkToken.toString(),
+                                    );
 
-                      Container(
-                          width: double.infinity,
-                         // height: 140.0,
-                          margin: const EdgeInsets.only(bottom: 0, top: 0),
-                        color: Colors.black12,
-                        // color: const Color(0xffF7F6FA),
-                          child: FutureBuilder<List<BankData>>(
-                            future: bankdatalist,
-                            builder: (context, snapshot) {
-                              return
-                                ListView.builder(
-                                  itemCount: snapshot.data!.length,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                 // physics: ClampingScrollPhysics(),
-                                  // itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, i) {
-                                    // if (i == snapshot.data!.length) {
-                                    //   return
-                                    //     //SizedBox(height: 70);
-                                    // } else {
-                                      return
-                                        Column(
-                                          children: [
-                                        Align(
-                                          alignment: Alignment.topCenter,
-                                          child: GestureDetector(
-                                            onTap: () async {
-                                              print(
-                                                  "clikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-                                              TransactionResponse tempresponse =
-                                              await transactionResponse(
-                                                  snapshot.data![i].accesstoken
-                                                      .toString(),
-                                                  snapshot.data![i].accountid
-                                                      .toString(),
-                                                  cmonth);
+                                    PlaidLink.open(
+                                        configuration: _linkTokenConfiguration);
+                                  },
+                                child:
+                                  Image.asset(
+                                      "asset/images/Plus.png",                                      // width: 300,
+                                      height: 50,
+                                    alignment: Alignment.topRight,
 
-                                              transactionlist = tempresponse.transactions
-                                              as List<Transactions>;
-                                              showWidget();
-                                              // viewVisible = true;
-                                              viewVisible1 = true;
-                                              bname =
-                                                  snapshot.data![i].bankname.toString();
-                                              acname = snapshot.data![i].accountname
-                                                  .toString();
+                                  ),
 
-                                              setState(() {
-                                                //selectedIndex = i;
-                                              });
-                                            },
-                                            // child: Container(
-                                            //  child: Stack(
-                                            // children: <Widget>[
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 90.0,
-                                              margin: const EdgeInsets.only(
-                                                  right: 5,
-                                                  left: 5,
-                                                  top: 0,
-                                                  bottom: 0),
-                                              padding: new EdgeInsets.only(
-                                                right: 0.0,
-                                                left: 10.0,
-                                                top: 10,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                // border: Border.all(
-                                                //   color: Colors.white,
-                                                //   width: 3,
-                                                // ),
-                                                // borderRadius: BorderRadius.only(
-                                                //     topRight: Radius.circular(10.0),
-                                                //     bottomRight: Radius.circular(10.0),
-                                                //     topLeft: Radius.circular(10.0),
-                                                //     bottomLeft: Radius.circular(10.0)),
-                                                color: HexColor(snapshot
-                                                    .data![i].bankthemecolor
-                                                    .toString()),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                                //  crossAxisAlignment : CrossAxisAlignment.end,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Align(
-                                                        alignment: Alignment.topLeft,
-                                                        child: CircleAvatar(
-                                                          radius: 30,
-                                                          child: Image.memory(
-                                                            Base64Codec().decode(snapshot
-                                                                .data![i].banklogo
-                                                                .toString()),
-                                                            // backgroundImage: new AssetImage(
-                                                            // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                                          ),
-                                                        ),
+                                ),
+                              ),
+
+                              Container(
+                                width: double.infinity,
+                                height: 250.0,
+                                margin: const EdgeInsets.only(bottom: 0, top: 0),
+                                color: Colors.white,
+                                child: FutureBuilder<List<BankData>>(
+                                  future: bankdatalist,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return Container();
+                                    } else {
+                                      return ListView.builder(
+                                          itemCount: snapshot.data!.length + 1,
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          physics: ScrollPhysics(),
+                                          // itemCount: snapshot.data!.length,
+                                          itemBuilder: (context, i) {
+                                            if (i == snapshot.data!.length) {
+                                              return SizedBox(height: 70);
+                                            } else {
+                                              return   Dismissible(
+                                                // key: ValueKey(i),
+                                                key: UniqueKey(),
+
+                                                background: Container(
+                                                  color: Colors.white,
+                                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                                  alignment: AlignmentDirectional.centerStart,
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                //Stack(
+                                                //ListTile(
+                                                // dense:true,
+                                                // contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal:
+                                                // 0.0),
+                                                child:  Align(
+                                                  alignment: Alignment.topCenter,
+                                                  heightFactor: 0.5,
+
+                                                  child: GestureDetector(
+                                                    onTap: () async {
+                                                      print(
+                                                          "clikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+                                                      TransactionResponse tempresponse =
+                                                      await transactionResponse(
+                                                          snapshot.data![i].accesstoken
+                                                              .toString(),
+                                                          snapshot.data![i].accountid
+                                                              .toString(),
+                                                          cmonth);
+
+                                                      transactionlist = tempresponse.transactions
+                                                      as List<Transactions>;
+                                                      showWidget();
+                                                      // viewVisible = true;
+                                                      viewVisible1 = true;
+                                                      bname =
+                                                          snapshot.data![i].bankname.toString();
+                                                      acname = snapshot.data![i].accountname
+                                                          .toString();
+                                                      print("start position end");
+
+
+                                                      print(" position end");
+                                                      setState(() {
+                                                        //selectedIndex = i;
+                                                      });
+                                                    },
+                                                    // child: Container(
+                                                    //  child: Stack(
+                                                    // children: <Widget>[
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      height: 160.0,
+                                                      margin: const EdgeInsets.only(
+                                                          right: 15,
+                                                          left: 15,
+                                                          top: 0,
+                                                          bottom: 15),
+                                                      padding: new EdgeInsets.only(
+                                                        right: 0.0,
+                                                        left: 10.0,
+                                                        top: 10,
                                                       ),
-
-                                                      Column(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Colors.white,
+                                                          width: 3,
+                                                        ),
+                                                        borderRadius: BorderRadius.only(
+                                                            topRight: Radius.circular(10.0),
+                                                            bottomRight: Radius.circular(10.0),
+                                                            topLeft: Radius.circular(10.0),
+                                                            bottomLeft: Radius.circular(10.0)),
+                                                        color: HexColor(snapshot
+                                                            .data![i].bankthemecolor
+                                                            .toString()),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.spaceBetween,
+                                                        //  crossAxisAlignment : CrossAxisAlignment.end,
                                                         children: [
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets.only(
-                                                                left: 4),
-                                                            child: Text(
-                                                              snapshot.data![i].bankname
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors.white,
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                  FontWeight.w700),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets.only(
-                                                                left: 4, top: 4),
-                                                            child: Text(
-                                                              snapshot
-                                                                  .data![i].accountname
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Colors.white,
-                                                                  fontSize: 11,
-                                                                  fontWeight:
-                                                                  FontWeight.w500),
-                                                            ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Align(
+                                                                alignment: Alignment.topLeft,
+                                                                child: CircleAvatar(
+                                                                  radius: 30,
+                                                                  child: Image.memory(
+                                                                    Base64Codec().decode(snapshot
+                                                                        .data![i].banklogo
+                                                                        .toString()),
+                                                                    // backgroundImage: new AssetImage(
+                                                                    // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                                                                  ),
+                                                                ),
+                                                              ),
+
+                                                              Column(
+                                                                children: [
+                                                                  Padding(
+                                                                    padding:
+                                                                    const EdgeInsets.only(
+                                                                        left: 4),
+                                                                    child: Text(
+                                                                      snapshot.data![i].bankname
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          color: Colors.white,
+                                                                          fontSize: 16,
+                                                                          fontWeight:
+                                                                          FontWeight.w700),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                    const EdgeInsets.only(
+                                                                        left: 4, top: 4),
+                                                                    child: Text(
+                                                                      snapshot
+                                                                          .data![i].accountname
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          color: Colors.white,
+                                                                          fontSize: 11,
+                                                                          fontWeight:
+                                                                          FontWeight.w500),
+                                                                    ),
+                                                                  ),
+
+                                                                ],
+                                                              ),
+                                                              //   Spacer(),
+                                                            ],
                                                           ),
 
                                                         ],
                                                       ),
+                                                    ),
 
-                                                      //   Spacer(),
-                                                      Visibility(
-                                                        maintainSize: false,
-                                                        maintainAnimation: true,
-                                                        maintainState: true,
-                                                        visible: viewVisible1,
-                                                        child: Container(
-                                                          width: double.infinity,
-                                                          height: 150.0,
-                                                          color: Colors.white,
-                                                          child: Stack(
-                                                            //child: Column(
-                                                            children: [
-                                                              ListView.builder(
-                                                                  shrinkWrap: true,
-                                                                  physics: ClampingScrollPhysics(),
-                                                                  itemCount: transactionlist.length,
-                                                                  itemBuilder: (context, int index) {
-                                                                    var $;
-                                                                    return ListTile(
-                                                                      title: Column(
-                                                                        children: [
-                                                                          Container(
-                                                                            child: Stack(
-                                                                              children: <Widget>[
-                                                                                Container(
-                                                                                  width: double.infinity,
-                                                                                  height: 80.0,
-                                                                                  margin: const EdgeInsets.only(
-                                                                                      right: 5, left: 5),
-                                                                                  child: Card(
-                                                                                    color: const Color(0xffEFF4F8),
-
-                                                                                    shape: RoundedRectangleBorder(
-                                                                                        borderRadius:
-                                                                                        BorderRadius.circular(10)),
-                                                                                    //  child: Stack(
-                                                                                    child: ListTile(
-                                                                                      contentPadding: EdgeInsets.only(
-                                                                                          left: 10.0, right: 0.0),
-                                                                                      leading: CircleAvatar(
-                                                                                        radius: 20,
-                                                                                        backgroundColor:
-                                                                                        const Color(0xffE2703A),
-                                                                                        child: Image(
-                                                                                          image: AssetImage(
-                                                                                              "assets/images/travel.png"),
-                                                                                          alignment: Alignment.topRight,
-                                                                                          height: 30,
-                                                                                          width: 30,
-                                                                                          color:
-                                                                                          const Color(0xffEFF4F8),
-                                                                                        ),
-                                                                                      ),
-                                                                                      title: Text(
-                                                                                        transactionlist[index]
-                                                                                            .name
-                                                                                            .toString(),
-                                                                                        style: TextStyle(
-                                                                                            color: Colors.black,
-                                                                                            fontSize: 13,
-                                                                                            fontWeight:
-                                                                                            FontWeight.w500),
-                                                                                      ),
-                                                                                      subtitle: Wrap(
-                                                                                          spacing: 25,
-                                                                                          children: <Widget>[
-                                                                                            Text(
-                                                                                              transactionlist[index]
-                                                                                                  .date
-                                                                                                  .toString(),
-                                                                                              style: TextStyle(
-                                                                                                  color: Colors.black,
-                                                                                                  fontSize: 11,
-                                                                                                  fontWeight:
-                                                                                                  FontWeight.w500),
-                                                                                            ),
-                                                                                            Text(
-
-                                                                                              transactionlist[index]
-                                                                                                  .amount
-                                                                                                  .toString(),
-                                                                                              style: TextStyle(
-                                                                                                  color: Colors.black,
-                                                                                                  fontSize: 11,
-                                                                                                  fontWeight:
-                                                                                                  FontWeight.w500),
-                                                                                            ),
-                                                                                          ]),
-                                                                                      trailing: Wrap(children: <Widget>[
-                                                                                        //   Image(
-                                                                                        //     image: AssetImage(
-                                                                                        //         "assets/images/chevron.png"),
-                                                                                        //     width: 30,
-                                                                                        //     height: 40,
-                                                                                        //    color: const Color(0xffE2703A),
-                                                                                        //
-                                                                                        //   )
-                                                                                        //   onTap: (){
-                                                                                        //     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FruitDetail(fruitDataModel: Fruitdata[index],)));
-                                                                                        //   },// icon-2
-                                                                                        // ],
-                                                                                        InkWell(
-                                                                                          onTap: () {
-                                                                                            // Navigator.push(
-                                                                                            //   context,
-                                                                                            //   MaterialPageRoute(
-                                                                                            //     builder: (context) =>
-                                                                                            //     const TransactionDetail(),
-                                                                                            //     // Pass the arguments as part of the RouteSettings. The
-                                                                                            //     // DetailScreen reads the arguments from these settings.
-                                                                                            //     settings: RouteSettings(
-                                                                                            //       arguments:
-                                                                                            //       transactionlist[
-                                                                                            //       index],
-                                                                                            //     ),
-                                                                                            //   ),
-                                                                                            // );
-                                                                                          },
-                                                                                          child: ClipRRect(
-                                                                                            borderRadius:
-                                                                                            BorderRadius.circular(
-                                                                                                20.0),
-                                                                                            child: Image.asset(
-                                                                                              "assets/images/chevron.png",
-                                                                                              width: 30,
-                                                                                              height: 40,
-                                                                                              color: const Color(
-                                                                                                  0xffE2703A),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ]),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    );
-
-                                                                  }
-                                                                // );
-                                                                // }
-                                                                //},
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
                                                   ),
+                                                  // ],
+                                                  // ),
+                                                ),
+                                                onDismissed: (direction) async {
+
+                                                  // Rig
+                                                  direction: DismissDirection.endToStart;
 
 
-                                                ],
-                                              ),
-                                                ],
-                                              ),
+
+                                                  hideWidget();
+                                                  setState(() {
 
 
-                                            ),
+                                                  });
 
-                                          ),
-                                          // ],
-                                          // ),
-                                        ),
-                                            // Visibility(
-                                            //   maintainSize: false,
-                                            //   maintainAnimation: true,
-                                            //   maintainState: true,
-                                            //   visible: viewVisible1,
-                                            //   child: Container(
-                                            //     width: double.infinity,
-                                            //     height: 150.0,
-                                            //     color: Colors.white,
-                                            //     child: Stack(
-                                            //       //child: Column(
-                                            //       children: [
-                                            //         ListView.builder(
-                                            //             shrinkWrap: true,
-                                            //            // scrollDirection: ClampingScrollPhysics,
-                                            //             itemCount: transactionlist.length,
-                                            //             itemBuilder: (context, int index) {
-                                            //               var $;
-                                            //               return ListTile(
-                                            //                 title: Column(
-                                            //                   children: [
-                                            //                     Container(
-                                            //                       child: Stack(
-                                            //                         children: <Widget>[
-                                            //                           Container(
-                                            //                             width: double.infinity,
-                                            //                             height: 80.0,
-                                            //                             margin: const EdgeInsets.only(
-                                            //                                 right: 5, left: 5),
-                                            //                             child: Card(
-                                            //                               color: const Color(0xffEFF4F8),
-                                            //
-                                            //                               shape: RoundedRectangleBorder(
-                                            //                                   borderRadius:
-                                            //                                   BorderRadius.circular(10)),
-                                            //                               //  child: Stack(
-                                            //                               child: ListTile(
-                                            //                                 contentPadding: EdgeInsets.only(
-                                            //                                     left: 10.0, right: 0.0),
-                                            //                                 leading: CircleAvatar(
-                                            //                                   radius: 20,
-                                            //                                   backgroundColor:
-                                            //                                   const Color(0xffE2703A),
-                                            //                                   child: Image(
-                                            //                                     image: AssetImage(
-                                            //                                         "assets/images/travel.png"),
-                                            //                                     alignment: Alignment.topRight,
-                                            //                                     height: 30,
-                                            //                                     width: 30,
-                                            //                                     color:
-                                            //                                     const Color(0xffEFF4F8),
-                                            //                                   ),
-                                            //                                 ),
-                                            //                                 title: Text(
-                                            //                                   transactionlist[index]
-                                            //                                       .name
-                                            //                                       .toString(),
-                                            //                                   style: TextStyle(
-                                            //                                       color: Colors.black,
-                                            //                                       fontSize: 13,
-                                            //                                       fontWeight:
-                                            //                                       FontWeight.w500),
-                                            //                                 ),
-                                            //                                 subtitle: Wrap(
-                                            //                                     spacing: 25,
-                                            //                                     children: <Widget>[
-                                            //                                       Text(
-                                            //                                         transactionlist[index]
-                                            //                                             .date
-                                            //                                             .toString(),
-                                            //                                         style: TextStyle(
-                                            //                                             color: Colors.black,
-                                            //                                             fontSize: 11,
-                                            //                                             fontWeight:
-                                            //                                             FontWeight.w500),
-                                            //                                       ),
-                                            //                                       Text(
-                                            //
-                                            //                                         transactionlist[index]
-                                            //                                             .amount
-                                            //                                             .toString(),
-                                            //                                         style: TextStyle(
-                                            //                                             color: Colors.black,
-                                            //                                             fontSize: 11,
-                                            //                                             fontWeight:
-                                            //                                             FontWeight.w500),
-                                            //                                       ),
-                                            //                                     ]),
-                                            //                                 trailing: Wrap(children: <Widget>[
-                                            //
-                                            //                                   InkWell(
-                                            //                                     onTap: () {
-                                            //
-                                            //                                     },
-                                            //                                     // child: ClipRRect(
-                                            //                                     //   borderRadius:
-                                            //                                     //   BorderRadius.circular(
-                                            //                                     //       20.0),
-                                            //                                     //   child: Image.asset(
-                                            //                                     //     "assets/images/chevron.png",
-                                            //                                     //     width: 30,
-                                            //                                     //     height: 40,
-                                            //                                     //     color: const Color(
-                                            //                                     //         0xffE2703A),
-                                            //                                     //   ),
-                                            //                                     // ),
-                                            //                                   ),
-                                            //                                 ]),
-                                            //                               ),
-                                            //                             ),
-                                            //                           ),
-                                            //                         ],
-                                            //                       ),
-                                            //                     ),
-                                            //                   ],
-                                            //                 ),
-                                            //               );
-                                            //
-                                            //             }
-                                            //           // );
-                                            //           // }
-                                            //           //},
-                                            //         ),
-                                            //       ],
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                       ]
+                                                },
 
-                                      );
+                                              );
+                                            }
+                                          });
+                                    }
+                                  },
+                                ),
+                              ),
 
-                                  });
-                            },
-                          ),
-                        ),
+                            ],
+                          )
+                      ),
+                    ),
 
-                      ],
-                    )),
+
+                  ],
+            ),
+                ),
               ),
 
-         ],
-       ),
-       ),
 
+              Visibility(
+                maintainSize: false,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: viewVisible1,
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Stack(
+                    //child: Column(
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: transactionlist.length,
+                          itemBuilder: (context, int index) {
+                            var $;
+                            return ListTile(
+                              title: Column(
+                                children: [
+                                  Container(
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          width: double.infinity,
+                                          height: 80.0,
+                                          margin: const EdgeInsets.only(
+                                              right: 5, left: 5),
+                                          child: Card(
+                                            color: const Color(0xffEFF4F8),
 
-              // Visibility(
-              //   maintainSize: false,
-              //   maintainAnimation: true,
-              //   maintainState: true,
-              //   visible: viewVisible1,
-              //   child: Container(
-              //     width: double.infinity,
-              //     height: 150.0,
-              //     color: Colors.white,
-              //     child: Stack(
-              //       //child: Column(
-              //       children: [
-              //         ListView.builder(
-              //             shrinkWrap: true,
-              //             itemCount: transactionlist.length,
-              //             itemBuilder: (context, int index) {
-              //               var $;
-              //               return ListTile(
-              //                 title: Column(
-              //                   children: [
-              //                     Container(
-              //                       child: Stack(
-              //                         children: <Widget>[
-              //                           Container(
-              //                             width: double.infinity,
-              //                             height: 80.0,
-              //                             margin: const EdgeInsets.only(
-              //                                 right: 5, left: 5),
-              //                             child: Card(
-              //                               color: const Color(0xffEFF4F8),
-              //
-              //                               shape: RoundedRectangleBorder(
-              //                                   borderRadius:
-              //                                   BorderRadius.circular(10)),
-              //                               //  child: Stack(
-              //                               child: ListTile(
-              //                                 contentPadding: EdgeInsets.only(
-              //                                     left: 10.0, right: 0.0),
-              //                                 leading: CircleAvatar(
-              //                                   radius: 20,
-              //                                   backgroundColor:
-              //                                   const Color(0xffE2703A),
-              //                                   child: Image(
-              //                                     image: AssetImage(
-              //                                         "assets/images/travel.png"),
-              //                                     alignment: Alignment.topRight,
-              //                                     height: 30,
-              //                                     width: 30,
-              //                                     color:
-              //                                     const Color(0xffEFF4F8),
-              //                                   ),
-              //                                 ),
-              //                                 title: Text(
-              //                                   transactionlist[index]
-              //                                       .name
-              //                                       .toString(),
-              //                                   style: TextStyle(
-              //                                       color: Colors.black,
-              //                                       fontSize: 13,
-              //                                       fontWeight:
-              //                                       FontWeight.w500),
-              //                                 ),
-              //                                 subtitle: Wrap(
-              //                                     spacing: 25,
-              //                                     children: <Widget>[
-              //                                       Text(
-              //                                         transactionlist[index]
-              //                                             .date
-              //                                             .toString(),
-              //                                         style: TextStyle(
-              //                                             color: Colors.black,
-              //                                             fontSize: 11,
-              //                                             fontWeight:
-              //                                             FontWeight.w500),
-              //                                       ),
-              //                                       Text(
-              //
-              //                                             transactionlist[index]
-              //                                                 .amount
-              //                                                 .toString(),
-              //                                         style: TextStyle(
-              //                                             color: Colors.black,
-              //                                             fontSize: 11,
-              //                                             fontWeight:
-              //                                             FontWeight.w500),
-              //                                       ),
-              //                                     ]),
-              //                                 trailing: Wrap(children: <Widget>[
-              //                                   //   Image(
-              //                                   //     image: AssetImage(
-              //                                   //         "assets/images/chevron.png"),
-              //                                   //     width: 30,
-              //                                   //     height: 40,
-              //                                   //    color: const Color(0xffE2703A),
-              //                                   //
-              //                                   //   )
-              //                                   //   onTap: (){
-              //                                   //     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FruitDetail(fruitDataModel: Fruitdata[index],)));
-              //                                   //   },// icon-2
-              //                                   // ],
-              //                                   InkWell(
-              //                                     onTap: () {
-              //                                       // Navigator.push(
-              //                                       //   context,
-              //                                       //   MaterialPageRoute(
-              //                                       //     builder: (context) =>
-              //                                       //     const TransactionDetail(),
-              //                                       //     // Pass the arguments as part of the RouteSettings. The
-              //                                       //     // DetailScreen reads the arguments from these settings.
-              //                                       //     settings: RouteSettings(
-              //                                       //       arguments:
-              //                                       //       transactionlist[
-              //                                       //       index],
-              //                                       //     ),
-              //                                       //   ),
-              //                                       // );
-              //                                     },
-              //                                     child: ClipRRect(
-              //                                       borderRadius:
-              //                                       BorderRadius.circular(
-              //                                           20.0),
-              //                                       child: Image.asset(
-              //                                         "assets/images/chevron.png",
-              //                                         width: 30,
-              //                                         height: 40,
-              //                                         color: const Color(
-              //                                             0xffE2703A),
-              //                                       ),
-              //                                     ),
-              //                                   ),
-              //                                 ]),
-              //                               ),
-              //                             ),
-              //                           ),
-              //                         ],
-              //                       ),
-              //                     ),
-              //                   ],
-              //                 ),
-              //               );
-              //
-              //             }
-              //           // );
-              //           // }
-              //           //},
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            //  child: Stack(
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 10.0, right: 0.0),
+                                              leading: CircleAvatar(
+                                                radius: 20,
+                                               // backgroundColor:
+                                                //const Color(0xffE2703A),
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      "asset/images/property.png"),
+                                                  alignment: Alignment.topRight,
+                                                  height: 30,
+                                                  width: 30,
+                                                  color:
+                                                  const Color(0xffEFF4F8),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                transactionlist[index]
+                                                    .name
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                    FontWeight.w500),
+                                              ),
+                                              subtitle: Wrap(
+                                                  spacing: 25,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      transactionlist[index]
+                                                          .date
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                          FontWeight.w500),
+                                                    ),
 
-             //----------- Spacer(),
-              // Container(
-              //   height: 30,
-              //   width: 100,
-              //   margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
-              //   padding: EdgeInsets.all(5),
-              //   decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(12),
-              //       color: const Color(0xffECDCFF)),
-              //   child: Text('Credit: 0'),
-              // ),
-              // Container(
-              //     height: 35,
-              //     width: double.infinity,
-              //     margin:
-              //         EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
-              //     padding: EdgeInsets.all(5),
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(4),
-              //         color: const Color(0xffF7F6FA)),
-              //     child: Row(
-              //       children: [
-              //         FlatButton(
-              //           padding: const EdgeInsets.all(5),
-              //           onPressed: () {},
-              //           child: Image(
-              //             image: AssetImage("asset/images/addbtn.png"),
-              //             width: 60,
-              //           ),
-              //         ),
-              //         Text('Connect To Credit Account'),
-              //       ],
-              //     )),
-              // //  color: const Color(0xFFA781D3),
-              // Container(
-              //   height: 38,
-              //   width: double.infinity,
-              //   margin: const EdgeInsets.only(
-              //       top: 15, bottom: 5.0, left: 15, right: 15),
-              //   decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       border: Border.all(
-              //         color: const Color(0xFFA781D3),
-              //       )),
-              //   child: FlatButton(
-              //     color: const Color(0xFFA781D3),
-              //     padding: const EdgeInsets.all(5),
-              //     onPressed: () {},
-              //     child: Text(
-              //       'Make a Payment',
-              //       style: TextStyle(
-              //         fontWeight: FontWeight.w600,
-              //         fontSize: 14,
-              //         color: Colors.white,
-              //       ),
-              //       textAlign: TextAlign.center,
-              //     ),
-              //   ),
-              // ),
+                                                  ]),
+                                              trailing: Wrap(children: <Widget>[
+                                                Text(
+
+                                                  transactionlist[index]
+                                                      .amount
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                      FontWeight.w500),
+                                                ),
+                                                //   Image(
+                                                //     image: AssetImage(
+                                                //         "assets/images/chevron.png"),
+                                                //     width: 30,
+                                                //     height: 40,
+                                                //    color: const Color(0xffE2703A),
+                                                //
+                                                //   )
+                                                //   onTap: (){
+                                                //     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FruitDetail(fruitDataModel: Fruitdata[index],)));
+                                                //   },// icon-2
+                                                // ],
+                                                // InkWell(
+                                                //   onTap: () {
+
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) =>
+                                                    //     const TransactionDetail(),
+                                                    //     // Pass the arguments as part of the RouteSettings. The
+                                                    //     // DetailScreen reads the arguments from these settings.
+                                                    //     settings: RouteSettings(
+                                                    //       arguments:
+                                                    //       transactionlist[
+                                                    //       index],
+                                                    //     ),
+                                                    //   ),
+                                                    // );
+                                                 // },
+                                                  // child: ClipRRect(
+                                                  //   borderRadius:
+                                                  //   BorderRadius.circular(
+                                                  //       20.0),
+                                                  //   child: Image.asset(
+                                                  //     "asset/images/property.png",
+                                                  //     width: 30,
+                                                  //     height: 40,
+                                                  //     color: const Color(
+                                                  //         0xffE2703A),
+                                                  //   ),
+                                                  // ),
+                                               // ),
+                                              ]),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                          }
+                        // );
+                        // }
+                        //},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+           //   ----------- Spacer(),
+              Container(
+                height: 30,
+                width: 100,
+                margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFeeeeff)),
+                child: Text('Credit: 0', textAlign: TextAlign.center,),
+              ),
+              Container(
+                  height: 35,
+                  width: double.infinity,
+                  margin:
+                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: const Color(0xFFeeeeff)),
+                  child: Row(
+                    children: [
+                      FlatButton(
+                        padding: const EdgeInsets.all(5),
+                        onPressed: () {},
+                        child: Image(
+                          image: AssetImage("asset/images/addbtn.png"),
+                          width: 60,
+                        ),
+                      ),
+                      Text('Connect To Credit Account'),
+                    ],
+                  )),
+              //  color: const Color(0xFFA781D3),
+              Container(
+                height: 38,
+                width: double.infinity,
+                margin: const EdgeInsets.only(
+                    top: 15, bottom: 5.0, left: 15, right: 15),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: const Color(0xFFA781D3),
+                    )),
+                child: FlatButton(
+                  color: const Color(0xFFA781D3),
+                  padding: const EdgeInsets.all(5),
+                  onPressed: () {},
+                  child: Text(
+                    'Make a Payment',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
               Spacer(),
               Container(
                 height: 50,
@@ -973,10 +756,10 @@ class dashboardState extends State<Dashboard> {
                     IconButton(
                       // icon: Image.asset('assets/images/dashboard.png'),
                       icon: ImageIcon(
-                        AssetImage("asset/images/phome.png"),
+                        AssetImage("asset/images/home2.png"),
                         size: 140,
                         color:
-                            isFavourite ? const Color(0xFFA781D3) : Colors.grey,
+                        isFavourite ? const Color(0xFFA781D3) : Colors.grey,
                       ),
 
                       onPressed: () {
@@ -1044,9 +827,8 @@ class dashboardState extends State<Dashboard> {
               )
             ],
           ),
-        ),
-      ),
-      // ),
+       // ),),
+       ),
     );
   }
 }
@@ -1065,12 +847,12 @@ Future<LinkTokenResponse> linktokenResponse() async {
   tokenRequest.language = "en";
   tokenRequest.webhook = "https://sample-web-hook.com";
   final response =
-      await http.post(Uri.parse(Constants.URL + '/link/token/create'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(tokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/link/token/create'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(tokenRequest));
   // print(Uri.parse(Constants.URL + '/link/token/create'));
 
   if (response.statusCode == 200) {
@@ -1108,12 +890,12 @@ Future<InstitutionResponse> institutionResponse(String InstituteId) async {
   institutionResquest.options = options;
   //print('Request body-----: ${jsonEncode(institutionResquest)}');
   final response2 =
-      await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(institutionResquest));
+  await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(institutionResquest));
   // print('###########################################################################################################');
   if (response2.statusCode == 200) {
     // If the server did return a 201 CREATED response,
@@ -1132,12 +914,12 @@ Future<AccessTokenResponse> accessTokenResponse(String publicToken) async {
   accessTokenRequest.publicToken = publicToken;
   // print('Request body3-----: ${jsonEncode(accessTokenRequest)}');
   final response3 =
-      await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(accessTokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(accessTokenRequest));
 
   //print('##########################################'
   // '###################################################'
@@ -1202,12 +984,12 @@ Future<TransactionResponse> transactionResponse(
   transactionRequest.endDate = enddate;
   // print('Request body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
   final response4 =
-      await http.post(Uri.parse(Constants.URL + '/transactions/get'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(transactionRequest));
+  await http.post(Uri.parse(Constants.URL + '/transactions/get'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(transactionRequest));
   // print('###########################################################################################################');
   // print('respose44 body-----: ${jsonEncode(response4.body)}');
   // print('##########################################'

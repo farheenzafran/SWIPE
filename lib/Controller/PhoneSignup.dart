@@ -29,8 +29,8 @@ class PhoneSignup extends StatelessWidget {
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment(-1.0, -4.0),
+                      end: Alignment(1.0, 4.0),
                       colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
                           0xff9f60d0)]),
                 ),
@@ -100,11 +100,12 @@ class PhoneSignup extends StatelessWidget {
                         width: 230,
                         child: Text(
                           'Enter the 6-digital code we sent overSMS to 123-456-789',
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 12,
                             overflow: TextOverflow.ellipsis,
+
                           ),
                         ),
                       ),

@@ -20,15 +20,11 @@ class CarouselDemoState extends State<LoginScreen> {
   late CarouselSlider carouselSlider;
   int _current = 0;
   //List imageList<String> = [
-  List imageList = [
-    'asset/images/Swipe.png'
-    'asset/images/apple.png'
-    'asset/images/Swipe.png'
-  ];
-  final List<String> imageList1 = [
-    'asset/images/Swipe.png'
-        'asset/images/apple.png'
-        'asset/images/Swipe.png'
+  final List<String> imageList = [
+        'asset/images/loginm1.png',
+        'asset/images/loginm2.png',
+        'asset/images/loginm3.png',
+    //   'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
   ];
 
   // List<String> imageNames = [
@@ -57,11 +53,13 @@ class CarouselDemoState extends State<LoginScreen> {
     );
    return Material(
         type: MaterialType.transparency,
+     child: Expanded(
       child:Container(
       decoration: new BoxDecoration(
         color: Colors.white,
       ),
 //-------------------
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,16 +95,13 @@ class CarouselDemoState extends State<LoginScreen> {
 
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        imageList[i],
-                        width: 500,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image(image: AssetImage(imageList[i]),),
                     ),
                   ),
                   onTap: (){
                     var url = imageList[i];
                     _current = i;
+                    print("@@@@@@@@@@@@@@#############&&&&&&&&&&&&&&&&&&&&&&&R%&&%%&##%");
                     print(url.toString());
                   },
                 );
@@ -140,7 +135,7 @@ class CarouselDemoState extends State<LoginScreen> {
         children: <Widget>[
       //  Text('Swipe'),
           Image(
-            image: AssetImage("asset/images/Swipe.png"),
+            image: AssetImage("asset/images/swipelogin.png"),
             width: 100,
             height: 80,
 
@@ -210,6 +205,7 @@ class CarouselDemoState extends State<LoginScreen> {
         ],
       ),
       ),
+    )
     );
   }
 

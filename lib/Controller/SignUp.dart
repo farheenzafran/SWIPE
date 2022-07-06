@@ -23,7 +23,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        // child: SingleChildScrollView(
+        child: Scrollbar(
         child: SafeArea(
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,8 +34,8 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                 padding: EdgeInsets.all(15),
                 decoration: new BoxDecoration(
                     gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+                        begin: Alignment(-1.0, -4.0),
+                        end: Alignment(1.0, 4.0),
                         colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
                             0xff9f60d0)])),
                 child: Wrap(
@@ -394,7 +394,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
-        //  ),
+          ),
       ),
     );
   }

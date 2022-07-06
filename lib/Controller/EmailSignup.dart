@@ -34,9 +34,12 @@ class EmailSignup extends StatelessWidget {
       //     ),
       //   ),
       // ),
-      body: Container(
+      body: Center(
         child: SafeArea(
-          child: Column(
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -46,8 +49,8 @@ class EmailSignup extends StatelessWidget {
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment(-1.0, -4.0),
+                      end: Alignment(1.0, 4.0),
                       colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
                           0xff9f60d0)]),
                 ),
@@ -189,6 +192,7 @@ class EmailSignup extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
