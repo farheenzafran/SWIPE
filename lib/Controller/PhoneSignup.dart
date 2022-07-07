@@ -27,13 +27,11 @@ class PhoneSignup extends StatelessWidget {
               Container(
                 height: 60,
                 width: double.infinity,
-                decoration: new BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment(-1.0, -4.0),
-                      end: Alignment(1.0, 4.0),
-                      colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
-                          0xff9f60d0)]),
-                ),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("asset/images/background.png"),
+                      fit: BoxFit.cover,
+                    )),
 
                 padding: EdgeInsets.only(top: 20, left: 15, bottom: 25),
                 child: Wrap(
@@ -54,7 +52,7 @@ class PhoneSignup extends StatelessWidget {
                     ),
                     // ),
                     Text(
-                      'SIGN UP',
+                      'Login',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,

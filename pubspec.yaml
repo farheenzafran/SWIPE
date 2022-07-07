@@ -99,11 +99,13 @@ flutter:
     - asset/images/paccount.png
     - asset/images/pbox.png
     - asset/images/pmoney.png
-    - asset/images/property.png
+    - asset/images/Property.png
     - asset/images/Plus.png
     - asset/images/swipelogin.png
     - asset/images/downarrow.png
     - asset/images/home2.png
+    - asset/images/cart.png
+    - asset/images/background.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

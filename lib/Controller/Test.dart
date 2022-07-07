@@ -57,6 +57,7 @@ class tdashboardState extends State<Test> {
 
   var buttonText = 'Click Me!';
   int _value = 0;
+  String dollar  = " \$";
   bool isFavourite = false;
   bool isFavourite1 = true;
   bool isFavourite2 = true;
@@ -208,7 +209,27 @@ class tdashboardState extends State<Test> {
                         Color(0xb59e3d57),
                         Color(0xff9f60d0)
                       ]),
+
                 ),
+                //child: Align(alignment: Alignment.center,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+
+                    children:<Widget>[
+                      Text('Debit', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white,), textAlign: TextAlign.left,),
+                      Image.asset(
+                        "asset/images/downarrow.png",                                      // width: 300,
+                        height: 20,
+                        width: 20,
+                        alignment: Alignment.center,
+
+                      ),                    Text('Credit', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white,), textAlign: TextAlign.left,),
+                    ]
+
+                ),
+
+                //  ),
               ),
 
               Container(
@@ -299,20 +320,30 @@ class tdashboardState extends State<Test> {
                               //--------------------------
                               Container(
                                 width: double.infinity,
-                                // height: 140.0,
+                                 height: 250.0,
                                 margin: const EdgeInsets.only(bottom: 0, top: 0),
                                 color: Colors.white,
-                              child:
+                              child: ListView(
+                                shrinkWrap: true,
 
-                                FutureBuilder<List<BankData>>(
+                               children: [
+                                 FutureBuilder<List<BankData>>(
                                   future: bankdatalist,
                                   builder: (context, snapshot) {
                                     return
-                                      ListView.builder(
+
+                                        ListView.separated(
+                                            separatorBuilder: (context, index) => Divider(
+
+                                            ),
+
                                           itemCount: snapshot.data!.length,
                                           shrinkWrap: true,
                                           scrollDirection: Axis.vertical,
-                                          itemBuilder: (context, i) {
+                                          physics: ScrollPhysics(),
+                                          itemBuilder: (context, i)
+
+                                          {
                                             return
                                               ExpansionPanelList(
                                                   animationDuration: Duration(milliseconds: 2000),
@@ -341,24 +372,44 @@ class tdashboardState extends State<Test> {
                                                         });
                                                         },
                                                         child:  Container(
-                                                            child: Column(
-                                                              children: [
-                                                                Text(
-                                                                  'Click To Expand',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black),),
-                                                                Text(
-                                                                  snapshot.data![i].bankname.toString(),
-                                                                  style: TextStyle(
-                                                                      color: Colors.black,
-                                                                      fontSize: 16,
-                                                                      fontWeight:
-                                                                      FontWeight.w700),
-                                                                ),
-
-                                                              ],
-                                                            )
+                                                         child: ListTile(
+                                                            leading:  CircleAvatar(
+                                                           radius: 20,
+                                                           child: Image.memory(
+                                                             Base64Codec().decode(snapshot
+                                                                 .data![i].banklogo
+                                                                 .toString()),
+                                                             // backgroundImage: new AssetImage(
+                                                             // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                                                           ),
+                                                         ),
+                                                            title:  Text(
+                                                         snapshot.data![i].bankname
+                                                             .toString(),
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                              FontWeight.w600),
+                                                        ),
+                                                            trailing: Text( dollar+
+                                                             "0000",
+                                                              style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                  FontWeight.w500),
+                                                            ),
+                                                            subtitle: Text(
+                                                         snapshot.data![i].accountname
+                                                             .toString(),
+                                                          style: TextStyle(
+                                                              color: Colors.grey,
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.w500),
+                                                        ),
+                                                            selected: true,
+                                                          ),
                                                         ),
                                                         );
                                                       },
@@ -366,7 +417,7 @@ class tdashboardState extends State<Test> {
                                                            snapshot.data![i].accountid.toString(), cmonth),
                                                      //ListTile(title:   Text('sssee', style: TextStyle(color: Colors.black),),),
                                                       isExpanded: selectedIndex == i,
-                                                      canTapOnHeader: true,
+                                                 //     canTapOnHeader: true,
                                                     ),
                                                   ],
                                                   dividerColor: Colors.grey,
@@ -391,6 +442,8 @@ class tdashboardState extends State<Test> {
                                           });
                                   },
                                 ),
+                               ],
+                              ),
                               ),
 
                               //--------------------------
@@ -588,11 +641,58 @@ class tdashboardState extends State<Test> {
    List<Widget> listTiles = [];
       for(var t in tdata.transactions!) {
 
-        var card = Card(
-            child: ListTile(
-              title:Text(t.name.toString()) ,
-            )
-        );
+        var card = Container(
+          margin:EdgeInsets.all( 15),
+            color: const Color(0xffF5F5F5),
+
+
+            child:
+            //ListTile(title:Text(t.name.toString()) ,)
+            ListTile(
+              contentPadding: EdgeInsets.all(5) ,
+              leading: CircleAvatar(
+                radius: 10,
+                child: Image(
+                  image: AssetImage("asset/images/Property.png"),
+                  //width: 40,
+                    color: const Color(0xffECDCFF)
+                ),
+              ),
+              title: Padding(
+                padding: EdgeInsets.only(  top:5,bottom: 8),
+            child:  Text(t.category.toString(),
+                style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w700),),),
+
+              trailing:
+                Column
+
+                  (children: <Widget>[
+                    Padding(
+                padding: EdgeInsets.only(bottom: 10 , top: 5),
+                child: Text(dollar+t.amount.toString(),
+              style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w700),),
+        ),
+
+          Padding(
+            padding: EdgeInsets.only(  bottom: 2),
+             child:     Text(t.date.toString(),
+               style: TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w400),),
+
+          ),
+
+   ],
+                ),
+
+              subtitle:  Padding(
+                padding: EdgeInsets.only(  bottom: 2),
+           child:   Text(t.name.toString(),
+                  style: TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w400),),
+              ),
+
+              selected: true,
+            ),
+            );
+
    // var tile = ListTile(
    //        title: Text(
    //          t.name.toString(),
@@ -927,3 +1027,4 @@ DateTime formatTimeOfDay(int month, int year, int day) {
 //     ),
 //   ),
 // ),
+//6rkytdhtfjyfjyrfjyddtd

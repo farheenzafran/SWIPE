@@ -32,12 +32,11 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                 height: 60,
                 width: double.infinity,
                 padding: EdgeInsets.all(15),
-                decoration: new BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment(-1.0, -4.0),
-                        end: Alignment(1.0, 4.0),
-                        colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
-                            0xff9f60d0)])),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("asset/images/background.png"),
+                      fit: BoxFit.cover,
+                    )),
                 child: Wrap(
                   spacing: 100,
                   children: <Widget>[
