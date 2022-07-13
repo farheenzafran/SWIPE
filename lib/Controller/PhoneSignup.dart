@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:swipeapp/Controller/Request/MobileRequest.dart';
+import 'package:swipeapp/Controller/Response/MobileResponse.dart';
 
+import '../Model Helper.dart';
 import 'Dashboard.dart';
+import 'package:http/http.dart' as http;
 
 
 void main() {
@@ -189,6 +195,33 @@ class PhoneSignup extends StatelessWidget {
         ),
 
     );
+  }
+}
+Future<MobileResponse> otpLogin(String countrycode , String mobilenumber) async {
+  MobileRequest loginRequest = MobileRequest();
+  loginRequest.countryCode = countrycode;
+  loginRequest.mobileNumber = mobilenumber;
+  loginRequest.deviceName = "devicename";
+  loginRequest.deviceToken = "devicetoken";
+  loginRequest.otp = "otp" ;
+  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/api/User/VerifyUser'),
+      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
+      body: jsonEncode(loginRequest));
+  print('respose44 body-----: ${jsonEncode(response5.body)}');
+  if (response5.statusCode == 200) {
+    void dispose() {
+
+      // super.dispose();
+    }
+    return MobileResponse.fromJson(jsonDecode(response5.body));
+  } else {
+    //void dispose() {
+    // Loader.hide();
+
+    // super.dispose();
+    //}
+
+    throw Exception('Failed to call transaction .');
   }
 }
 //jhvfhkbvhkdfbhujvndfjknvdfhvjkfhd

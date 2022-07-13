@@ -10,10 +10,9 @@ class Constants{
   static  String Secret = "6f659b9485ddf6eb85054997ed4091";
   static  String URL = "https://sandbox.plaid.com";
   static String baseUrl = "https://breakbulkdevservices.azurewebsites.net/api";
-  //static  String baseUrl = "https://breakbulkliveservices.azurewebsites.net/api"
+  static  String baseUrl2 = "http://swipe-test.us-east-1.elasticbeanstalk.com/api";
   static String LoginKey = "LoginSession";
   static String UserObject = "UserObject";
-
   static read( String key) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(key) ?? "";

@@ -3,6 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
 import 'package:swipeapp/Controller/PhoneSignup.dart';
 import 'package:flutter/material.dart';
+import 'package:swipeapp/Controller/Request/LoginRequest.dart';
+import 'package:swipeapp/Controller/Response/CountryCodeResponse.dart';
+import 'package:swipeapp/Controller/Response/LoginResponse.dart';
+import 'dart:async';
+import 'dart:math' as math;
+import 'dart:ui';
+import 'dart:convert';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
+import 'dart:ui';
+import 'package:http/http.dart' as http;
+import 'package:swipeapp/Model%20Helper.dart';
 
 class VerifyLogin extends StatefulWidget {
   const VerifyLogin({Key? key}) : super(key: key);
@@ -21,7 +34,8 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
 
     super.initState();
   }
-
+late String countryCode;
+  late String phoneNumber;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +104,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                     Container(
                       height: 300,
                       //padding: const EdgeInsets.all(20.0),
-                      width: Size.infinite.width,
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
@@ -161,6 +175,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                 top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                               child: RaisedButton(
                                 onPressed: () {
+                                  login(countryCode,phoneNumber,);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -255,7 +270,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                         Container(
                           height: 300,
                           //padding: const EdgeInsets.all(20.0),
-                          width: Size.infinite.width,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.white,
@@ -403,5 +418,56 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
 
 
     );
+  }
+}
+//Future<LoginResponse> login(String email, String password) async {
+
+Future<LoginResponse> login(String countrycode , String mobilenumber) async {
+  LoginRequest loginRequest = LoginRequest();
+  loginRequest.countryCode = countrycode;
+  loginRequest.mobileNumber = mobilenumber;
+  loginRequest.deviceName = "devicename";
+  loginRequest.deviceToken = "devicetoken";
+  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + 'api/User/MobileLogin'),
+      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
+      body: jsonEncode(loginRequest));
+  print('respose44 body-----: ${jsonEncode(response5.body)}');
+  if (response5.statusCode == 200) {
+    void dispose() {
+
+      // super.dispose();
+    }
+    return LoginResponse.fromJson(jsonDecode(response5.body));
+  } else {
+    //void dispose() {
+   // Loader.hide();
+
+    // super.dispose();
+    //}
+
+    throw Exception('Failed to call transaction .');
+  }
+}
+
+Future<CountryCodeResponse> countrycode() async {
+
+  final response6 = await http.post(Uri.parse(Constants.baseUrl2 + '/api/General/GetCountries'),
+      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
+      body: jsonEncode(CountryCodeResponse));
+  print('respose44 body-----: ${jsonEncode(response6.body)}');
+  if (response6.statusCode == 200) {
+    void dispose() {
+
+      // super.dispose();
+    }
+    return CountryCodeResponse.fromJson(jsonDecode(response6.body));
+  } else {
+    //void dispose() {
+    // Loader.hide();
+
+    // super.dispose();
+    //}
+
+    throw Exception('Failed to call transaction .');
   }
 }
