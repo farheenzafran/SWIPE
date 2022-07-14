@@ -1,4 +1,4 @@
-package com.swipeapp.swipeapp
+package com.financial.swipeapp
 
 import io.flutter.embedding.android.FlutterActivity
 

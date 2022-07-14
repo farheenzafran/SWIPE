@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.swipeapp.swipeapp">
+    package="com.financial.swipeapp">
    <application
         android:label="swipeapp"
         android:name="${applicationName}"
