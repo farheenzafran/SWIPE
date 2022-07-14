@@ -53,7 +53,7 @@ class CarouselDemoState extends State<LoginScreen> {
     );
    return Material(
         type: MaterialType.transparency,
-     child: Expanded(
+    // child: Expanded(
       child:Container(
       decoration: new BoxDecoration(
         color: Colors.white,
@@ -205,7 +205,7 @@ class CarouselDemoState extends State<LoginScreen> {
         ],
       ),
       ),
-    )
+    //)
     );
   }
 
