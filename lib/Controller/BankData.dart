@@ -8,6 +8,7 @@ class BankData {
   String? accesstoken;
   String? banklogo;
   String? bankthemecolor;
+  bool isExpaneded = false;
   BankData({
     this.bankname,
     this.mask,

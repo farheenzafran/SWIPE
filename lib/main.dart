@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import 'Controller/LoginScreen.dart';
+import 'Model Helper.dart';
 import 'dart:async';
 
 import 'Controller/Test.dart';
 
-
-void main() {
+void main() async{
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -16,7 +17,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -29,24 +29,44 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  String LoginKey = "LoginKey";
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 class _MyHomePageState extends State<MyHomePage> {
   get color => null;
-
+  late String authenticated;
   @override
   void initState() {
     super.initState();
+    _loadPf();
     Timer(Duration(seconds: 3),
             ()=>Navigator.pushReplacement(context,
             MaterialPageRoute(builder:
                 (context) =>
-                LoginScreen(),
+                landingPage(),
             )
         )
     );
+  }
+
+  _loadPf() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      authenticated = (prefs.getString(Constants.LoginKey) ?? "");
+    });
+  }
+
+  Widget landingPage(){
+   // final value = Constants.read(Constants.LoginKey);
+    if (authenticated != "") {
+      print('llllllllllllllllllllllllllllllllllllllllllll');
+      print(authenticated);
+      return Dashboard();
+    } else {
+      return LoginScreen();
+    }
   }
   @override
   Widget build(BuildContext context) {

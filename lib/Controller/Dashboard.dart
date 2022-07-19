@@ -37,6 +37,7 @@ class Dashboard extends StatefulWidget {
 class tdashboardState extends State<Dashboard> {
   bool viewVisible = false;
   bool viewVisible1 = false;
+  bool viewVisible2 = false;
   bool _expanded = false;
   bool active = false;
 
@@ -164,14 +165,12 @@ class tdashboardState extends State<Dashboard> {
         bankdatalist =
             List<BankData>.from(dicData.map((i) => BankData.fromJson(i)));
       }
-      //print('&&&&&&&&');
-      // print(bankdatalist.length);
-      // print(bdata);
-      return bankdatalist;
+      print('&&&&&&&&');
+      print(bankdatalist.length);
     } catch (Excepetion) {
-      throw Exception('Failed to load album');
-      return bankdatalist;
+      throw Exception('Failed to load bankdata');
     }
+    return bankdatalist;
   }
 
   String tname = "";
@@ -184,7 +183,7 @@ class tdashboardState extends State<Dashboard> {
       body: Center(
         // child: SingleChildScrollView(
         child: SafeArea(
-          // child: Column(
+          // child: Scrollbar(
           //   mainAxisAlignment: MainAxisAlignment.start,
           //   crossAxisAlignment: CrossAxisAlignment.start,
           //  child: SingleChildScrollView(
@@ -246,7 +245,6 @@ class tdashboardState extends State<Dashboard> {
                     color: const Color(0xffECDCFF)),
                 child: Text('Debit: 0'),
               ),
-
               Container(
                   height: 35,
                   width: double.infinity,
@@ -275,12 +273,185 @@ class tdashboardState extends State<Dashboard> {
                       Text('Connect To Debit Account'),
                     ],
                   )),
-              //-------------------
               Container(
                 child: Column(
                   children: [
                     Visibility(
                       visible: viewVisible,
+                      child: Container(
+                          // height: 250.0,
+                          // color: Colors.yellow,
+                          child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topRight,
+                            width: double.infinity,
+                            height: 40.0,
+                            color: Colors.white,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: FlatButton(
+                              onPressed: () async {
+                                Loader.show(context,
+                                    isSafeAreaOverlay: false,
+                                    progressIndicator:
+                                        CircularProgressIndicator(),
+                                    isBottomBarOverlay: false,
+                                    overlayFromBottom: 80,
+                                    themeData: Theme.of(context)
+                                        .copyWith(accentColor: Colors.black),
+                                    overlayColor: Color(0x0000ffff));
+                                Future.delayed(Duration(seconds: 4), () {
+                                  Loader.hide();
+                                });
+                                var linktoken = await linktokenResponse();
+                                _linkTokenConfiguration =
+                                    LinkTokenConfiguration(
+                                  token: linktoken.linkToken.toString(),
+                                );
+
+                                PlaidLink.open(
+                                    configuration: _linkTokenConfiguration);
+                              },
+                              child: Image(
+                                  image: AssetImage(
+                                    "asset/images/Plus.png",
+                                  ),
+                                  alignment: Alignment.topRight),
+                            ),
+                          ),
+                          //-----------------------------------debir////-----------
+                          Container(
+                            width: double.infinity,
+                            height: 250.0,
+                            margin: const EdgeInsets.only(bottom: 0, top: 0),
+                            color: Colors.white,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                FutureBuilder<List<BankData>>(
+                                  future: bankdatalist,
+                                  builder: (context, snapshot) {
+                                    return ExpansionPanelList(
+                                      animationDuration:
+                                          Duration(milliseconds: 2000),
+                                      children: snapshot.data!
+                                          .map<ExpansionPanel>((BankData item) {
+                                        return ExpansionPanel(
+                                          headerBuilder: (BuildContext context,
+                                              bool isExpanded) {
+                                            return ListTile(
+                                              iconColor: Colors.red,
+                                              leading: CircleAvatar(
+                                                radius: 30,
+                                                child: Image.memory(
+                                                  Base64Codec().decode(
+                                                      item.banklogo.toString()),
+                                                  // height: 30,
+                                                  // width: 30,
+                                                  // backgroundImage: new AssetImage(
+                                                  // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                item.bankname.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              trailing: Text(
+                                                dollar + item.mask.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              subtitle: Text(
+                                                item.accountname.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              selected: false,
+                                            );
+                                          },
+                                          body: _buildExpandableContent(
+                                              item.accesstoken.toString(),
+                                              item.accountid.toString(),
+                                              cmonth),
+                                          isExpanded: item.isExpaneded,
+                                        );
+                                      }).toList(),
+                                      dividerColor: Colors.grey,
+                                      expansionCallback:
+                                          (int index, bool isExpanded) {
+                                        setState(() {
+                                          snapshot.data![index].isExpaneded =
+                                              !isExpanded;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          //--------------------------
+                        ],
+                      )),
+                    ),
+                  ],
+                ),
+              ),
+              //------------credit------------------
+              Container(
+                height: 30,
+                width: 100,
+                margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xffECDCFF)),
+                child: Text('Credit: 0'),
+              ),
+              Container(
+                  height: 35,
+                  width: double.infinity,
+                  margin:
+                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: const Color(0xffF7F6FA)),
+                  child: Row(
+                    children: [
+                      FlatButton(
+                        padding: const EdgeInsets.all(5),
+                        onPressed: () {
+                          setState(() {
+                            viewVisible2 = !viewVisible2;
+                          });
+                          // hideWidget();
+                        },
+                        child: Image(
+                          image: AssetImage("asset/images/Plus.png"),
+                          width: 100,
+                          height: 100,
+                        ),
+                      ),
+                      Text('Connect To Credit Account'),
+                    ],
+                  )),
+              Container(
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: viewVisible2,
                       child: Container(
                           // height: 250.0,
                           // color: Colors.yellow,
@@ -335,126 +506,70 @@ class tdashboardState extends State<Dashboard> {
                                 FutureBuilder<List<BankData>>(
                                   future: bankdatalist,
                                   builder: (context, snapshot) {
-                                    return ListView.separated(
-                                        separatorBuilder: (context, index) =>
-                                            Divider(),
-                                        itemCount: snapshot.data!.length,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        physics: ScrollPhysics(),
-                                        itemBuilder: (context, i) {
-                                          return ExpansionPanelList(
-                                            animationDuration:
-                                                Duration(milliseconds: 2000),
-                                            children: [
-                                              ExpansionPanel(
-                                                headerBuilder:
-                                                    (context, isExpanded) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      print(
-                                                          "clikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkKKKKKKKKKKKKKKKKKKKKKKKKKKK");
-                                                      print(i);
-                                                      // transactionResponseList = transactionResponse(snapshot.data![i].accesstoken.toString(),
-                                                      //     snapshot.data![i].accountid.toString(), cmonth);
-                                                      // print(snapshot.data![i].accesstoken);
-                                                      bname = snapshot
-                                                          .data![i].bankname
-                                                          .toString();
-                                                      acname = snapshot
-                                                          .data![i].accountname
-                                                          .toString();
-                                                      setState(() {
-                                                        if (selectedIndex ==
-                                                            i) {
-                                                          selectedIndex = -1;
-                                                        } else {
-                                                          selectedIndex = i;
-                                                        }
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      child: ListTile(
-                                                        leading: CircleAvatar(
-                                                          radius: 30,
-                                                          child: Image.memory(
-                                                            Base64Codec()
-                                                                .decode(snapshot
-                                                                    .data![i]
-                                                                    .banklogo
-                                                                    .toString()),
-                                                            // height: 30,
-                                                            // width: 30,
-                                                            // backgroundImage: new AssetImage(
-                                                            // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                                          ),
-                                                        ),
-                                                        title: Text(
-                                                          snapshot
-                                                              .data![i].bankname
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                        trailing: Text(
-                                                          dollar + "0000",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                        subtitle: Text(
-                                                          snapshot.data![i]
-                                                              .accountname
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                        selected: true,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                body: _buildExpandableContent(
-                                                    snapshot
-                                                        .data![i].accesstoken
-                                                        .toString(),
-                                                    snapshot.data![i].accountid
-                                                        .toString(),
-                                                    cmonth),
-                                                //ListTile(title:   Text('sssee', style: TextStyle(color: Colors.black),),),
-                                                isExpanded: selectedIndex == i,
-                                                //canTapOnHeader: true,
+                                    return ExpansionPanelList(
+                                      animationDuration:
+                                          Duration(milliseconds: 2000),
+                                      children: snapshot.data!
+                                          .map<ExpansionPanel>((BankData item) {
+                                        return ExpansionPanel(
+                                          headerBuilder: (BuildContext context,
+                                              bool isExpanded) {
+                                            return ListTile(
+                                              iconColor: Colors.red,
+                                              leading: CircleAvatar(
+                                                radius: 30,
+                                                child: Image.memory(
+                                                  Base64Codec().decode(
+                                                      item.banklogo.toString()),
+                                                  // height: 30,
+                                                  // width: 30,
+                                                  // backgroundImage: new AssetImage(
+                                                  // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                                                ),
                                               ),
-                                            ],
-                                            dividerColor: Colors.grey,
-                                            expansionCallback:
-                                                (panelIndex, isExpanded) {
-                                              if (selectedIndex == panelIndex) {
-                                                print('indexxxxxxx');
-                                                print(panelIndex);
-                                                _expanded = !_expanded;
-                                              } else {
-                                                _expanded = false;
-                                              }
-
-                                              setState(() {});
-                                            },
-                                          );
+                                              title: Text(
+                                                item.bankname.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              trailing: Text(
+                                                dollar + item.mask.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              subtitle: Text(
+                                                item.accountname.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              selected: false,
+                                            );
+                                          },
+                                          body: _buildExpandableContent(
+                                              item.accesstoken.toString(),
+                                              item.accountid.toString(),
+                                              cmonth),
+                                          isExpanded: item.isExpaneded,
+                                        );
+                                      }).toList(),
+                                      dividerColor: Colors.grey,
+                                      expansionCallback:
+                                          (int index, bool isExpanded) {
+                                        setState(() {
+                                          snapshot.data![index].isExpaneded =
+                                              !isExpanded;
                                         });
+                                      },
+                                    );
                                   },
                                 ),
                               ],
@@ -468,39 +583,8 @@ class tdashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              Container(
-                height: 30,
-                width: 100,
-                margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffECDCFF)),
-                child: Text('Credit: 0'),
-              ),
-              Container(
-                  height: 35,
-                  width: double.infinity,
-                  margin:
-                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xffF7F6FA)),
-                  child: Row(
-                    children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
-                        onPressed: () {},
-                        child: Image(
-                          image: AssetImage("asset/images/addbtn.png"),
-                          width: 60,
-                        ),
-                      ),
-                      Text('Connect To Credit Account'),
-                    ],
-                  )),
-              //  color: const Color(0xFFA781D3),
+              //------------credit------------------
+              ////////////////visibility////////////////
               Container(
                 height: 38,
                 width: double.infinity,

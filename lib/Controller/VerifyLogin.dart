@@ -18,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:swipeapp/Model%20Helper.dart';
 
 class VerifyLogin extends StatefulWidget {
+
   const VerifyLogin({Key? key}) : super(key: key);
 
   @override
@@ -32,10 +33,15 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
 
+
     super.initState();
   }
 late String countryCode;
   late String phoneNumber;
+  TextEditingController phoneController = TextEditingController();
+  String LoginKey = "LoginKey";
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +115,7 @@ late String countryCode;
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
                       ),
-                      child: new Column(
+                      child: Column(
                         children: [
                           Container(
                             margin: EdgeInsets.only(
@@ -150,14 +156,20 @@ late String countryCode;
                                           ),
                                           useUiOverlay: false,
                                           useSafeArea: false,
-                                          onChanged: print,
-                                          initialSelection: 'US'),
+                                          initialSelection: 'US',
+                                          onChanged: (CountryCode? code) {
+                                            countryCode = (code!).dialCode!;
+                                            print('-----+++++__QQQQQQQQQQQQ)');
+                                            print(countryCode);
+                                      }),
+
                                     ),
                                   ),
                                   SizedBox(
                                       height: 30,
                                       width: 170,
                                       child: TextField(
+                                        controller: phoneController,
                                         autocorrect: true,
                                         decoration: InputDecoration(
 
@@ -170,18 +182,16 @@ late String countryCode;
                           ),
                           Container(
                             width: double.infinity,
-
                             margin: const EdgeInsets.only(
                                 top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                               child: RaisedButton(
                                 onPressed: () {
+                                  phoneNumber = phoneController.value.text.toString();
                                   login(countryCode,phoneNumber,);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => PhoneSignup()), );
-
-                                },
+                                          builder: (_) => PhoneSignup()), );},
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                 padding: const EdgeInsets.all(0.0),
                                 child: Ink(
@@ -428,15 +438,19 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   loginRequest.mobileNumber = mobilenumber;
   loginRequest.deviceName = "devicename";
   loginRequest.deviceToken = "devicetoken";
-  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + 'api/User/MobileLogin'),
+
+  // TODO: Uncomment after signup screen implementation.
+  // loginRequest.deviceName = Constants.read(Constants.DevicName);
+  // loginRequest.deviceToken = Constants.read(Constants.DeviceToken);
+
+  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
       headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
       body: jsonEncode(loginRequest));
-  print('respose44 body-----: ${jsonEncode(response5.body)}');
+  print(jsonEncode(loginRequest));
+  print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
+  print(response5.body);
   if (response5.statusCode == 200) {
-    void dispose() {
-
-      // super.dispose();
-    }
+    Constants.save(Constants.LoginKey, loginRequest.deviceToken!);
     return LoginResponse.fromJson(jsonDecode(response5.body));
   } else {
     //void dispose() {
@@ -449,25 +463,3 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   }
 }
 
-Future<CountryCodeResponse> countrycode() async {
-
-  final response6 = await http.post(Uri.parse(Constants.baseUrl2 + '/api/General/GetCountries'),
-      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
-      body: jsonEncode(CountryCodeResponse));
-  print('respose44 body-----: ${jsonEncode(response6.body)}');
-  if (response6.statusCode == 200) {
-    void dispose() {
-
-      // super.dispose();
-    }
-    return CountryCodeResponse.fromJson(jsonDecode(response6.body));
-  } else {
-    //void dispose() {
-    // Loader.hide();
-
-    // super.dispose();
-    //}
-
-    throw Exception('Failed to call transaction .');
-  }
-}

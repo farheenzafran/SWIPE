@@ -12,6 +12,8 @@ class Constants{
   static String baseUrl = "https://breakbulkdevservices.azurewebsites.net/api";
   static  String baseUrl2 = "http://swipe-test.us-east-1.elasticbeanstalk.com/api";
   static String LoginKey = "LoginSession";
+  static String DevicName = "DeviceName";
+  static String DeviceToken = "DeviceToken";
   static String UserObject = "UserObject";
   static read( String key) async {
     final prefs = await SharedPreferences.getInstance();
