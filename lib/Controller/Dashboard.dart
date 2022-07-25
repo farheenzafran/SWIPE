@@ -7,14 +7,17 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/Liability.dart';
 import '../Model Helper.dart';
 import 'BankData.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
+import 'Request/LiabilityRequest.dart';
 import 'Request/TokenResquest.dart';
 import 'Request/TransactionRequest.dart';
 import 'Response/AccessTokenResponse.dart';
 import 'Response/InstitutionResponse.dart';
+import 'Response/LiabilityResponse.dart';
 import 'Response/LinkTokenResponse.dart';
 import 'Response/TransactionResponse.dart';
 import 'VerifyLogin.dart';
@@ -78,7 +81,18 @@ class tdashboardState extends State<Dashboard> {
   Future<TransactionResponse>? transactionResponseList;
   late LegacyLinkConfiguration _publicKeyConfiguration;
   late LinkTokenConfiguration _linkTokenConfiguration;
+//---liability
+  // List<BankData> bankdatalist = [];
 
+
+  Liabilities liabilitylist = new Liabilities();
+  List<Student> stdlist = [];
+  List<Credit> crdlist = [];
+  List<Mortgage> mrtlist = [];
+  final children = <Widget>[];
+  String LiabilityKey = "data";
+
+//---liability
   int selectedIndex = -1;
 
   void initState() {
@@ -155,7 +169,36 @@ class tdashboardState extends State<Dashboard> {
       // print('---calling end accessTokenResponse---');
     }
   }
+  void saveBankData2(LinkSuccessMetadata metadata) async {
+    for (int i = 0; i < metadata.accounts.length; i++) {
+      bankDataobj.accountid = metadata.accounts[i].id;
+      bankDataobj.accountname = metadata.accounts[i].name;
+      bankDataobj.mask = metadata.accounts[i].mask;
+    }
+    if (metadata.institution.id != "") {
+      var insres = await institutionResponse(metadata.institution.id);
+      bankDataobj.banklogo = insres.institution?.logo;
+      bankDataobj.bankthemecolor = insres.institution?.primaryColor;
+      bankDataobj.bankname = insres.institution?.name;
+      var accesstokenres =
+      await accessTokenResponse(bankDataobj.publictoken.toString());
+      bankDataobj.accesstoken = accesstokenres.accessToken;
+      List<BankData> templstbankdata = await bankdatalist;
+      // print(templstbankdata.length);
+      //print(jsonEncode(bankDataobj));
+      templstbankdata.add(bankDataobj);
+      // print('#######***^^%^%###@@@@@@@');
+      // print(templstbankdata.length);
+      await Constants.save(LiabilityKey, jsonEncode(templstbankdata));
+      ;
+      setState(() {
+        bankdatalist = getBankData();
+      });
 
+
+      // print('---calling end accessTokenResponse---');
+    }
+  }
   Future<List<BankData>> getBankData() async {
     List<BankData> bankdatalist = [];
     try {
@@ -172,6 +215,26 @@ class tdashboardState extends State<Dashboard> {
     }
     return bankdatalist;
   }
+  Future<List<BankData>>getBankData2() async {
+    List<BankData> bankdatalist = [];
+    try {
+      String bdata = await Constants.read(LiabilityKey);
+      if (bdata != "") {
+        List<dynamic> dicData = jsonDecode(bdata);
+        bankdatalist =
+            List<BankData>.from(dicData.map((i) => BankData.fromJson(i))).toList();
+
+      }
+      // print('&&&&&&&&');
+      // print(bankdatalist.length);
+      // print(bdata);
+      return bankdatalist ;
+    } catch (Excepetion) {
+      throw Exception('Failed to load album');
+      return bankdatalist;
+    }
+  }
+
 
   String tname = "";
 
@@ -239,90 +302,111 @@ class tdashboardState extends State<Dashboard> {
                 height: 30,
                 width: 100,
                 margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                alignment: Alignment.topLeft,
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: const Color(0xffECDCFF)),
                 child: Text('Debit: 0'),
               ),
-              Container(
-                  height: 35,
-                  width: double.infinity,
-                  margin:
-                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xffF7F6FA)),
-                  child: Row(
-                    children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
-                        onPressed: () {
-                          setState(() {
-                            viewVisible = !viewVisible;
-                          });
-                          // hideWidget();
-                        },
-                        child: Image(
-                          image: AssetImage("asset/images/Plus.png"),
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      Text('Connect To Debit Account'),
-                    ],
-                  )),
-              Container(
-                child: Column(
-                  children: [
-                    Visibility(
-                      visible: viewVisible,
-                      child: Container(
+
+              // Container(
+              //   child: Column(
+              //     children: [
+              //       Visibility(
+                     // visible: viewVisible,
+                      Container(
                           // height: 250.0,
                           // color: Colors.yellow,
                           child: Column(
                         children: [
-                          Container(
-                            alignment: Alignment.topRight,
-                            width: double.infinity,
-                            height: 40.0,
-                            color: Colors.white,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: FlatButton(
-                              onPressed: () async {
-                                Loader.show(context,
-                                    isSafeAreaOverlay: false,
-                                    progressIndicator:
-                                        CircularProgressIndicator(),
-                                    isBottomBarOverlay: false,
-                                    overlayFromBottom: 80,
-                                    themeData: Theme.of(context)
-                                        .copyWith(accentColor: Colors.black),
-                                    overlayColor: Color(0x0000ffff));
-                                Future.delayed(Duration(seconds: 4), () {
-                                  Loader.hide();
-                                });
-                                var linktoken = await linktokenResponse();
-                                _linkTokenConfiguration =
-                                    LinkTokenConfiguration(
-                                  token: linktoken.linkToken.toString(),
-                                );
+                          // Container(
+                          //   alignment: Alignment.topRight,
+                          //   width: double.infinity,
+                          //   height: 40.0,
+                          //   color: Colors.white,
+                          //   margin: const EdgeInsets.only(bottom: 10),
+                          //   child: FlatButton(
+                          //     onPressed: () async {
+                          //       Loader.show(context,
+                          //           isSafeAreaOverlay: false,
+                          //           progressIndicator:
+                          //               CircularProgressIndicator(),
+                          //           isBottomBarOverlay: false,
+                          //           overlayFromBottom: 80,
+                          //           themeData: Theme.of(context)
+                          //               .copyWith(accentColor: Colors.black),
+                          //           overlayColor: Color(0x0000ffff));
+                          //       Future.delayed(Duration(seconds: 4), () {
+                          //         Loader.hide();
+                          //       });
+                          //       var linktoken = await linktokenResponse();
+                          //       _linkTokenConfiguration =
+                          //           LinkTokenConfiguration(
+                          //         token: linktoken.linkToken.toString(),
+                          //       );
+                          //
+                          //       PlaidLink.open(
+                          //           configuration: _linkTokenConfiguration);
+                          //     },
+                          //     child: Image(
+                          //         image: AssetImage(
+                          //           "asset/images/Plus.png",
+                          //         ),
+                          //         alignment: Alignment.topRight),
+                          //   ),
+                          // ),
 
-                                PlaidLink.open(
-                                    configuration: _linkTokenConfiguration);
-                              },
-                              child: Image(
-                                  image: AssetImage(
-                                    "asset/images/Plus.png",
+
+
+                          Container(
+                              height: 35,
+                              width: double.infinity,
+                              margin:
+                              EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: const Color(0xffF7F6FA)),
+                              child: Row(
+                                children: [
+                                  FlatButton(
+                                    padding: const EdgeInsets.all(5),
+                                    onPressed: () async {
+                                      Loader.show(context,
+                                          isSafeAreaOverlay: false,
+                                          progressIndicator:
+                                          CircularProgressIndicator(),
+                                          isBottomBarOverlay: false,
+                                          overlayFromBottom: 80,
+                                          themeData: Theme.of(context)
+                                              .copyWith(accentColor: Colors.black),
+                                          overlayColor: Color(0x0000ffff));
+                                      Future.delayed(Duration(seconds: 4), () {
+                                        Loader.hide();
+                                      });
+                                      var linktoken = await linktokenResponse();
+                                      _linkTokenConfiguration =
+                                          LinkTokenConfiguration(
+                                            token: linktoken.linkToken.toString(),
+                                          );
+
+                                      PlaidLink.open(
+                                          configuration: _linkTokenConfiguration);
+                                    },
+                                    child: Image(
+                                      image: AssetImage("asset/images/Plus.png"),
+                                      width: 100,
+                                      height: 100,
+                                    ),
                                   ),
-                                  alignment: Alignment.topRight),
-                            ),
-                          ),
+                                  Text('Connect To Debit Account'),
+                                ],
+                              )),
                           //-----------------------------------debir////-----------
                           Container(
                             width: double.infinity,
-                            height: 250.0,
+                            height: 150.0,
                             margin: const EdgeInsets.only(bottom: 0, top: 0),
                             color: Colors.white,
                             child: ListView(
@@ -404,10 +488,10 @@ class tdashboardState extends State<Dashboard> {
                           //--------------------------
                         ],
                       )),
-                    ),
-                  ],
-                ),
-              ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               //------------credit------------------
               Container(
                 height: 30,
@@ -419,172 +503,150 @@ class tdashboardState extends State<Dashboard> {
                     color: const Color(0xffECDCFF)),
                 child: Text('Credit: 0'),
               ),
+
               Container(
-                  height: 35,
-                  width: double.infinity,
-                  margin:
-                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xffF7F6FA)),
-                  child: Row(
+                // height: 250.0,
+                // color: Colors.yellow,
+                  child: Column(
                     children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
-                        onPressed: () {
-                          setState(() {
-                            viewVisible2 = !viewVisible2;
-                          });
-                          // hideWidget();
-                        },
-                        child: Image(
-                          image: AssetImage("asset/images/Plus.png"),
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      Text('Connect To Credit Account'),
+                      Container(
+                          height: 35,
+                          width: double.infinity,
+                          margin:
+                          EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: const Color(0xffF7F6FA)),
+                          child: Row(
+                            children: [
+                              FlatButton(
+                                padding: const EdgeInsets.all(5),
+                                onPressed: ()  {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => Liability()));
+                                  //Liability();
+
+                                  // Loader.show(context,
+                                  //     isSafeAreaOverlay: false,
+                                  //     progressIndicator:
+                                  //     CircularProgressIndicator(),
+                                  //     isBottomBarOverlay: false,
+                                  //     overlayFromBottom: 80,
+                                  //     themeData: Theme.of(context)
+                                  //         .copyWith(accentColor: Colors.black),
+                                  //     overlayColor: Color(0x0000ffff));
+                                  // Future.delayed(Duration(seconds: 4), () {
+                                  //   Loader.hide();
+                                  // });
+                                  // var linktoken = await linktokenResponse();
+                                  //
+                                  // _linkTokenConfiguration =
+                                  //     LinkTokenConfiguration(
+                                  //       token: linktoken.linkToken.toString(),
+                                  //     );
+                                  //
+                                  //
+                                  // PlaidLink.open(
+                                  //     configuration: _linkTokenConfiguration);
+                                },
+                                child: Image(
+                                  image: AssetImage("asset/images/Plus.png"),
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              ),
+                              Text('Connect To Credit Account'),
+                            ],
+                          )),
+                      //-----------------------------------debir////-----------
+                     // Liability(),
+                      // Container(
+                      //   width: double.infinity,
+                      //   height: 250.0,
+                      //   margin: const EdgeInsets.only(bottom: 0, top: 0),
+                      //   color: Colors.white,
+                      //   child: ListView(
+                      //     shrinkWrap: true,
+                      //     children: [
+                      //       FutureBuilder<List<BankData>>(
+                      //         future: bankdatalist,
+                      //         builder: (context, snapshot) {
+                      //           return ExpansionPanelList(
+                      //             animationDuration:
+                      //             Duration(milliseconds: 2000),
+                      //             children: snapshot.data!
+                      //                 .map<ExpansionPanel>((BankData item) {
+                      //               return ExpansionPanel(
+                      //                 headerBuilder: (BuildContext context,
+                      //                     bool isExpanded) {
+                      //                   return ListTile(
+                      //                     iconColor: Colors.red,
+                      //                     leading: CircleAvatar(
+                      //                       radius: 30,
+                      //                       child: Image.memory(
+                      //                         Base64Codec().decode(
+                      //                             item.banklogo.toString()),
+                      //
+                      //                       ),
+                      //                     ),
+                      //                     title: Text(
+                      //                       item.bankname.toString(),
+                      //                       style: TextStyle(
+                      //                           color: Colors.black,
+                      //                           fontSize: 14,
+                      //                           fontWeight:
+                      //                           FontWeight.w600),
+                      //                     ),
+                      //                     trailing: Text(
+                      //                       dollar + item.mask.toString(),
+                      //                       style: TextStyle(
+                      //                           color: Colors.black,
+                      //                           fontSize: 16,
+                      //                           fontWeight:
+                      //                           FontWeight.w500),
+                      //                     ),
+                      //                     subtitle: Text(
+                      //                       item.accountname.toString(),
+                      //                       style: TextStyle(
+                      //                           color: Colors.grey,
+                      //                           fontSize: 14,
+                      //                           fontWeight:
+                      //                           FontWeight.w500),
+                      //                     ),
+                      //                     selected: false,
+                      //                   );
+                      //                 },
+                      //                 body: _buildExpandableContent(
+                      //                     item.accesstoken.toString(),
+                      //                     item.accountid.toString(),
+                      //                     cmonth),
+                      //                 isExpanded: item.isExpaneded,
+                      //               );
+                      //             }).toList(),
+                      //             dividerColor: Colors.grey,
+                      //             expansionCallback:
+                      //                 (int index, bool isExpanded) {
+                      //               setState(() {
+                      //                 snapshot.data![index].isExpaneded =
+                      //                 !isExpanded;
+                      //               });
+                      //             },
+                      //           );
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
+                      //--------------------------
                     ],
                   )),
-              Container(
-                child: Column(
-                  children: [
-                    Visibility(
-                      visible: viewVisible2,
-                      child: Container(
-                          // height: 250.0,
-                          // color: Colors.yellow,
-                          child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.topRight,
-                            width: double.infinity,
-                            height: 40.0,
-                            color: Colors.white,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: FlatButton(
-                              onPressed: () async {
-                                Loader.show(context,
-                                    isSafeAreaOverlay: false,
-                                    progressIndicator:
-                                        CircularProgressIndicator(),
-                                    isBottomBarOverlay: false,
-                                    overlayFromBottom: 80,
-                                    themeData: Theme.of(context)
-                                        .copyWith(accentColor: Colors.black),
-                                    overlayColor: Color(0x0000ffff));
-                                Future.delayed(Duration(seconds: 4), () {
-                                  Loader.hide();
-                                });
-                                var linktoken = await linktokenResponse();
-                                _linkTokenConfiguration =
-                                    LinkTokenConfiguration(
-                                  token: linktoken.linkToken.toString(),
-                                );
 
-                                PlaidLink.open(
-                                    configuration: _linkTokenConfiguration);
-                              },
-                              child: Image(
-                                  image: AssetImage(
-                                    "asset/images/Plus.png",
-                                  ),
-                                  alignment: Alignment.topRight),
-                            ),
-                          ),
-
-                          //--------------------------
-                          Container(
-                            width: double.infinity,
-                            height: 250.0,
-                            margin: const EdgeInsets.only(bottom: 0, top: 0),
-                            color: Colors.white,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: [
-                                FutureBuilder<List<BankData>>(
-                                  future: bankdatalist,
-                                  builder: (context, snapshot) {
-                                    return ExpansionPanelList(
-                                      animationDuration:
-                                          Duration(milliseconds: 2000),
-                                      children: snapshot.data!
-                                          .map<ExpansionPanel>((BankData item) {
-                                        return ExpansionPanel(
-                                          headerBuilder: (BuildContext context,
-                                              bool isExpanded) {
-                                            return ListTile(
-                                              iconColor: Colors.red,
-                                              leading: CircleAvatar(
-                                                radius: 30,
-                                                child: Image.memory(
-                                                  Base64Codec().decode(
-                                                      item.banklogo.toString()),
-                                                  // height: 30,
-                                                  // width: 30,
-                                                  // backgroundImage: new AssetImage(
-                                                  // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                                ),
-                                              ),
-                                              title: Text(
-                                                item.bankname.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              trailing: Text(
-                                                dollar + item.mask.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              subtitle: Text(
-                                                item.accountname.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              selected: false,
-                                            );
-                                          },
-                                          body: _buildExpandableContent(
-                                              item.accesstoken.toString(),
-                                              item.accountid.toString(),
-                                              cmonth),
-                                          isExpanded: item.isExpaneded,
-                                        );
-                                      }).toList(),
-                                      dividerColor: Colors.grey,
-                                      expansionCallback:
-                                          (int index, bool isExpanded) {
-                                        setState(() {
-                                          snapshot.data![index].isExpaneded =
-                                              !isExpanded;
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          //--------------------------
-                        ],
-                      )),
-                    ),
-                  ],
-                ),
-              ),
-              //------------credit------------------
-              ////////////////visibility////////////////
+             // ------------credit------------------
+              //////////////visibility////////////////
               Container(
                 height: 38,
                 width: double.infinity,
@@ -819,6 +881,9 @@ class tdashboardState extends State<Dashboard> {
   }
 }
 
+
+
+
 //--------------------------------------------------------------------------------------------------------
 Future<LinkTokenResponse> linktokenResponse() async {
   User user = User();
@@ -999,6 +1064,43 @@ Future<TransactionResponse> transactionResponse(
     //}
 
     throw Exception('Failed to call transaction .');
+  }
+}
+Future<LiabilityResponse> liabilityResponse(String accesstoken,
+    String accountid) async {
+  bool _isLoading = true;
+  LiabilityOptions liabilityOptions = LiabilityOptions();
+  liabilityOptions.accountIds = [accountid];
+  LiabilityRequest liabilityRequest = LiabilityRequest();
+  liabilityRequest.clientId = Constants.ClientId;
+  liabilityRequest.secret = Constants.Secret;
+  liabilityRequest.accessToken = accesstoken;
+  liabilityRequest.options = liabilityOptions;
+  // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
+  final response4 =
+  await http.post(Uri.parse(Constants.URL + '/liabilities/get'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(liabilityRequest));
+
+  print('##########################################'
+      '###################################################'
+      '##############');
+  print('respose44 body44-----: ${jsonEncode(response4.body)}');
+  print('#################################credit##################################################');
+
+  print(response4.body);
+  print('#################################credit##################################################');
+
+  if (response4.statusCode == 200) {
+    bool _isLoading = false;
+
+    return LiabilityResponse.fromJson(jsonDecode(response4.body));
+  } else {
+    bool _isLoading = false;
+    throw Exception('Failed to call  .');
   }
 }
 

@@ -16,6 +16,7 @@ import 'dart:ffi';
 import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:swipeapp/Model%20Helper.dart';
+import 'package:swipeapp/main.dart';
 
 class VerifyLogin extends StatefulWidget {
 
@@ -36,7 +37,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
 
     super.initState();
   }
-late String countryCode;
+  late String countryCode;
   late String phoneNumber;
   TextEditingController phoneController = TextEditingController();
   String LoginKey = "LoginKey";
@@ -159,8 +160,8 @@ late String countryCode;
                                           initialSelection: 'US',
                                           onChanged: (CountryCode? code) {
                                             countryCode = (code!).dialCode!;
-                                            print('-----+++++__QQQQQQQQQQQQ)');
-                                            print(countryCode);
+                                          //  print('-----+++++__QQQQQQQQQQQQ)');
+                                          //  print(countryCode);
                                       }),
 
                                     ),
@@ -187,11 +188,11 @@ late String countryCode;
                               child: RaisedButton(
                                 onPressed: () {
                                   phoneNumber = phoneController.value.text.toString();
-                                  login(countryCode,phoneNumber,);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => PhoneSignup()), );},
+                                  login(countryCode,phoneNumber)
+                                      .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
+                                      .then((value) => Navigator.push(context, MaterialPageRoute(
+                                        builder: (_) => PhoneSignup(phoneNumber, countryCode)),));
+                                  },
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                 padding: const EdgeInsets.all(0.0),
                                 child: Ink(
@@ -446,11 +447,18 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
       headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
       body: jsonEncode(loginRequest));
-  print(jsonEncode(loginRequest));
-  print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
-  print(response5.body);
+  // print(jsonEncode(loginRequest));
+  // print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
+  // print(response5.body);
   if (response5.statusCode == 200) {
     Constants.save(Constants.LoginKey, loginRequest.deviceToken!);
+    Constants.save(Constants.DevicName, loginRequest.deviceName!);
+    Constants.save(Constants.DeviceToken, loginRequest.deviceToken!);
+    Constants.save(Constants.CountryCode, loginRequest.countryCode!);
+
+    deviceName = loginRequest.deviceName!;
+    deviceToken = loginRequest.deviceToken!;
+
     return LoginResponse.fromJson(jsonDecode(response5.body));
   } else {
     //void dispose() {

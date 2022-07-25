@@ -15,6 +15,9 @@ class Constants{
   static String DevicName = "DeviceName";
   static String DeviceToken = "DeviceToken";
   static String UserObject = "UserObject";
+  static String CountryCode = "CountryCode";
+
+
   static read( String key) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(key) ?? "";

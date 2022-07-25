@@ -160,7 +160,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => PhoneSignup()));
+                                          builder: (_) => PhoneSignup("", "")));
                                 },
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                                 padding: const EdgeInsets.all(0.0),

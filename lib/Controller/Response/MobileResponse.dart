@@ -1,6 +1,6 @@
 class MobileResponse {
   bool? status;
-  String? result;
+  Map? result;
   String? message;
 
   MobileResponse({this.status, this.result, this.message});

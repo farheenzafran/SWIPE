@@ -1,26 +1,35 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeapp/Controller/Request/MobileRequest.dart';
 import 'package:swipeapp/Controller/Response/MobileResponse.dart';
+import 'package:swipeapp/main.dart';
 
 import '../Model Helper.dart';
 import 'Dashboard.dart';
 import 'package:http/http.dart' as http;
-
-
 void main() {
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Poppins'),
-      home: PhoneSignup()));
+      theme: ThemeData(fontFamily: 'Poppins')));
 }
-
 class PhoneSignup extends StatelessWidget {
-  @override
+   String phoneNumber;
+   String countryCode;
+   late String otpno;
+
+   PhoneSignup(this.phoneNumber, this.countryCode);
+
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
+
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
@@ -118,6 +127,7 @@ class PhoneSignup extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 5,left: 15 , right: 15),
                 child: TextField(
+                  controller: otpController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -135,10 +145,13 @@ class PhoneSignup extends StatelessWidget {
                   // Will take 50% of screen space
                   child: RaisedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Dashboard()),
-                      );
+                      otpno = otpController.value.text.toString();
+
+                       otpLogin(phoneNumber, this.countryCode, otpno)
+                           .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty))
+                       .then((value) => Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                       ));
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                     padding: const EdgeInsets.all(0.0),
@@ -197,31 +210,40 @@ class PhoneSignup extends StatelessWidget {
     );
   }
 }
-Future<MobileResponse> otpLogin(String countrycode , String mobilenumber) async {
+Future<MobileResponse> otpLogin( String mobilenumber, String countryCode,
+    String otp) async {
   MobileRequest loginRequest = MobileRequest();
-  loginRequest.countryCode = countrycode;
+  loginRequest.countryCode = countryCode;
   loginRequest.mobileNumber = mobilenumber;
-  loginRequest.deviceName = "devicename";
-  loginRequest.deviceToken = "devicetoken";
-  loginRequest.otp = "otp" ;
-  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/api/User/VerifyUser'),
+  loginRequest.deviceName = deviceName;
+  loginRequest.deviceToken = deviceToken;
+  loginRequest.otp = otp ;
+
+  print("^^^^^^^^^^^^^^^Otp input");
+  print(mobilenumber);
+  print(deviceName);
+  print(deviceToken);
+  print(otp);
+  final response6 = await http.post(Uri.parse(Constants.baseUrl2 + '/User/VerifyUser'),
       headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
       body: jsonEncode(loginRequest));
-  print('respose44 body-----: ${jsonEncode(response5.body)}');
-  if (response5.statusCode == 200) {
+  print('respose6 body-----: ${jsonEncode(response6.body)}');
+  print(jsonEncode(loginRequest));
+  print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
+  print(response6.body);
+  if (response6.statusCode == 200) {
     void dispose() {
 
       // super.dispose();
     }
-    return MobileResponse.fromJson(jsonDecode(response5.body));
+    return MobileResponse.fromJson(jsonDecode(response6.body));
   } else {
     //void dispose() {
     // Loader.hide();
 
     // super.dispose();
     //}
-
-    throw Exception('Failed to call transaction .');
+    throw Exception('Failed to call opt verification.');
   }
 }
 //jhvfhkbvhkdfbhujvndfjknvdfhvjkfhd//jhvfhkbvhkdfbhujvndfjknvdfhvjkfhd//jhvfhkbvhkdfbhujvndfjknvdfhvjkfhd

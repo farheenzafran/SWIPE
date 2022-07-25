@@ -34,9 +34,13 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+late String authenticated;
+late String deviceName;
+late String deviceToken;
+late String countryCode;
+
 class _MyHomePageState extends State<MyHomePage> {
   get color => null;
-  late String authenticated;
   @override
   void initState() {
     super.initState();
@@ -55,6 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       authenticated = (prefs.getString(Constants.LoginKey) ?? "");
+      deviceName = (prefs.getString(Constants.DevicName) ?? "");
+      deviceToken = (prefs.getString(Constants.DeviceToken) ?? "");
+      countryCode = (prefs.getString(Constants.CountryCode) ?? "");
     });
   }
 
