@@ -68,3 +68,8 @@ class Constants{
 
 }
 
+class Logic {
+  void doSomething() {
+    print("doing something");
+  }
+}

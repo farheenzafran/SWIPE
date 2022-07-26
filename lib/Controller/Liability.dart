@@ -22,14 +22,16 @@ import 'Response/InstitutionResponse.dart';
 import 'Response/LiabilityResponse.dart';
 import 'Response/LinkTokenResponse.dart';
 
-void main() => runApp(Liability());
 
 class Liability extends StatefulWidget {
+  final ValueChanged<String> update;
+  Liability({required this.update});
   @override
   _MyAppStates createState() => _MyAppStates();
 }
 
 class _MyAppStates extends State<Liability> {
+
   late Future<List<BankData>> bankdatalist = [] as Future<List<BankData>>;
   // List<BankData> bankdatalist = [];
   BankData bankDataobj = BankData();
@@ -90,10 +92,10 @@ class _MyAppStates extends State<Liability> {
       userEmailAddress: "jappleseed@youapp.com",
       userPhoneNumber: "+1 (512) 555-1234",
     );
-    PlaidLink.onSuccess(_onSuccessCallback);
-    PlaidLink.onEvent(_onEventCallback);
-    PlaidLink.onExit(_onExitCallback);
-    bankdatalist = getBankData();// as List<BankData>;
+    PlaidLink.onSuccess(_onSuccessCallback2);
+    PlaidLink.onEvent(_onEventCallback2);
+    PlaidLink.onExit(_onExitCallback2);
+    bankdatalist = getBankData2();// as List<BankData>;
     var linktoken = linktokenResponse();
     // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
 
@@ -101,18 +103,18 @@ class _MyAppStates extends State<Liability> {
 
   }
 
-  void _onSuccessCallback(String publicToken, LinkSuccessMetadata metadata) {
+  void _onSuccessCallback2(String publicToken, LinkSuccessMetadata metadata) {
     //  print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
     bankDataobj.publictoken = publicToken;
     bankDataobj.accesstoken = accesstoken;
-    saveBankData(metadata);
+    saveBankData2(metadata);
   }
 
-  void _onEventCallback(String event, LinkEventMetadata metadata) {
+  void _onEventCallback2(String event, LinkEventMetadata metadata) {
     //print("onEvent123: $event, metadata: ${metadata.description()}");
   }
 
-  void _onExitCallback(LinkError? error, LinkExitMetadata metadata) {
+  void _onExitCallback2(LinkError? error, LinkExitMetadata metadata) {
     // print("onExit metadata: ${metadata.description()}");
 
     if (error != null) {
@@ -120,7 +122,7 @@ class _MyAppStates extends State<Liability> {
     }
   }
 
-  void saveBankData(LinkSuccessMetadata metadata) async {
+  void saveBankData2(LinkSuccessMetadata metadata) async {
     for (int i = 0; i < metadata.accounts.length; i++) {
       bankDataobj.accountid = metadata.accounts[i].id;
       bankDataobj.accountname = metadata.accounts[i].name;
@@ -143,7 +145,7 @@ class _MyAppStates extends State<Liability> {
       await Constants.save(Key, jsonEncode(templstbankdata));
       ;
       setState(() {
-        bankdatalist = getBankData();
+        bankdatalist = getBankData2();
       });
 
 
@@ -151,7 +153,7 @@ class _MyAppStates extends State<Liability> {
     }
   }
 
-  Future<List<BankData>>getBankData() async {
+  Future<List<BankData>>getBankData2() async {
     List<BankData> bankdatalist = [];
     try {
       String bdata = await Constants.read(Key);
@@ -185,85 +187,10 @@ class _MyAppStates extends State<Liability> {
   String std1 = "";
   String save = "";
   late final cardselectedIndex;
-  void _delete(BuildContext context, String accountId) {
-    showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: Text('Confirmation'),
-            content: Text('Are you sure this card?'),
-            actions: [
-              // The "Yes" button
-              TextButton(
-                onPressed: () async {
-                  setState(() async {
-                    _isShown = false;
-                    var index = -1;
-                    var i = 0;
-                    List<BankData> tdata = await bankdatalist;
-                    for (var item in tdata) {
-                      if (item.accountid == accountId) {
-                        //print(item.accountid);
-                        index = i;
-                        // print(index);
-                      }
-                      i++;
-                    }
-                    //  print(index);
-                    if (index != -1) {
-                      tdata.removeAt(index);
-                      await Constants.save(Key, jsonEncode(tdata));
-                      hideWidget();
-                      setState(() {
-                        bankdatalist = getBankData() ;//as List<BankData>;
-                      });
-                    }
-                    Navigator.of(context).pop(true);
+  //-------------------------------
 
-                  });
-                },
-                child: Text('Yes'),
-              ),
-              TextButton(
-                  onPressed: () {
-                    _isShown = false;
+  //-------------------------------
 
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('No')
-
-              )
-            ],
-          );//??false;
-        });
-
-  }
-
-
-
-  void undoDeletion(i,item) async {
-    List<BankData> tdata = await bankdatalist;
-
-    setState(() {
-      tdata.insert(i, item);
-    });
-  }
-
-
-
-
-  void _onReorder(int oldIndex, int newIndex) async {
-    List<BankData> cdata = await bankdatalist;
-
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final dynamic x = cdata[oldIndex];
-      cdata.removeAt(oldIndex);
-      cdata.insert(newIndex, x);
-    });
-  }
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -281,7 +208,7 @@ class _MyAppStates extends State<Liability> {
                 Container(
                   alignment: Alignment.topRight,
                   width: double.infinity,
-                  height: 50.0,
+                  height: 35.0,
                  // color: Colors.white,
                   margin: const EdgeInsets.only(bottom: 10),
                   child: FlatButton(
@@ -311,291 +238,6 @@ class _MyAppStates extends State<Liability> {
                         alignment: Alignment.center),
                   ),
                 ),
-
-
-                // Container(
-                //   width: double.infinity,
-                //   height: 170.0,
-                //   margin: const EdgeInsets.only(bottom: 0, top: 0),
-                //   color: Colors.white,//const Color( 0xffEFF4F8),
-                //   //  padding: const  EdgeInsets.only(bottom: 15, top: 0),
-                //
-                //   child: FutureBuilder<List<BankData>>(
-                //     future: bankdatalist,
-                //     builder: (context, snapshot) {
-                //       if (snapshot.data == null) {
-                //         return Container();
-                //       } else {
-                //         return ListView.builder(
-                //           // physics: ClampingScrollPhysics(),
-                //           controller: _scrollController,
-                //           itemCount: snapshot.data!.length+1,
-                //           shrinkWrap: true,
-                //           scrollDirection: Axis.vertical,
-                //           physics: ScrollPhysics(),
-                //           itemBuilder: (context, i) {
-                //             if (i == snapshot.data!.length) {
-                //               return SizedBox(height: 70);
-                //             } else {
-                //               return
-                //                 Dismissible(
-                //                   // key: ValueKey(i),
-                //                   key: UniqueKey(),
-                //                   onDismissed: (direction) async {
-                //                     // Remove the dismissed item from the list
-                //                     direction: DismissDirection.endToStart;
-                //
-                //                     setState(() {
-                //                       // if (_isShown == true) {
-                //                       _delete(
-                //                           context,
-                //                           snapshot
-                //                               .data![i]
-                //                               .accountid
-                //                               .toString());
-                //                       // }
-                //
-                //                       hideWidget();
-                //                     });
-                //
-                //                   },
-                //                   background: Container(
-                //                     color: Colors.white,
-                //                     padding: EdgeInsets.symmetric(horizontal: 20),
-                //                     alignment: AlignmentDirectional.centerStart,
-                //                     key: UniqueKey(),
-                //                     //   direction: DismissDirection.endToStart,
-                //                     child: Icon(
-                //                       Icons.delete,
-                //                       color: Colors.white,
-                //                     ),
-                //                   ),
-                //
-                //                   child:
-                //                   Align(
-                //                     alignment: Alignment.topCenter,
-                //                     heightFactor: 0.5 ,
-                //
-                //                     child:
-                //                     GestureDetector(
-                //                       behavior: HitTestBehavior.translucent,
-                //                       onTap: () async {
-                //                         LiabilityResponse tempresponse =
-                //                         await liabilityResponse(
-                //                             snapshot.data![i].accesstoken
-                //                                 .toString(),
-                //                             snapshot.data![i].accountid
-                //                                 .toString());
-                //                         liabilitylist = tempresponse.liabilities
-                //                         as Liabilities;
-                //                         viewVisible = false;
-                //                         viewVisible2 = false;
-                //                         viewVisible3 = false;
-                //                         if (liabilitylist.student != null) {
-                //                           stdlist = liabilitylist.student!;
-                //                           viewVisible = true;
-                //                           //  print("student");
-                //                           setStudentLoanContainer(
-                //                               liabilitylist.student!.first, 0);
-                //                         }
-                //                         if (liabilitylist.mortgage != null) {
-                //                           mrtlist = liabilitylist.mortgage!;
-                //                           viewVisible2 = true;
-                //                           //  print("mortgage");
-                //                           setMortgage(
-                //                               liabilitylist.mortgage!.first, 0);
-                //                         }
-                //                         if (liabilitylist.credit != null) {
-                //                           crdlist = liabilitylist.credit!;
-                //                           viewVisible3 = true;
-                //                           //  print("credit");
-                //                         }
-                //                         bname = snapshot.data![i].bankname
-                //                             .toString();
-                //                         acname = snapshot.data![i].accountname
-                //                             .toString();
-                //                         sloanmaxvalue =
-                //                             sbalanceamount.toDouble();
-                //                         displayStudentloan();
-                //
-                //                         mloanmaxvalue =
-                //                             mbalanceamount.toDouble();
-                //                         displayMortgage();
-                //                         // _delete(
-                //                         //     context,
-                //                         //     snapshot
-                //                         //         .data![i]
-                //                         //         .accountid
-                //                         //         .toString());
-                //                         // print("start position end");
-                //                         //  cardpostion(snapshot
-                //                         //      .data![i]
-                //                         //      .accountid
-                //                         //      .toString());
-                //                         // print(" position end");
-                //
-                //                         setState(() {
-                //                           //selectedIndex = i;
-                //
-                //                         });
-                //                       },
-                //                       // child: Align(
-                //                       //    heightFactor: 0.8,
-                //                       // alignment: Alignment.topCenter,
-                //
-                //
-                //                       child:   Container(
-                //                         width: double.infinity,
-                //                         height: 160.0,
-                //                         margin: const EdgeInsets.only(
-                //                           right: 15,
-                //                           left: 15,
-                //                           top: 0,
-                //                           // bottom: 15
-                //                         ),
-                //                         padding: new EdgeInsets.only(
-                //                           right: -0.0,
-                //                           left: 10.0,
-                //                           top: 10,
-                //                           //bottom: 15,
-                //                         ),
-                //
-                //                         decoration: BoxDecoration(
-                //                           border: Border.all(
-                //                             color: Colors.white,
-                //                             width: 3,
-                //                           ),
-                //                           borderRadius: BorderRadius.only(
-                //                             topRight: Radius.circular(10.0),
-                //                             bottomRight: Radius.circular(
-                //                                 10.0),
-                //                             topLeft: Radius.circular(10.0),
-                //                             bottomLeft: Radius.circular(
-                //                                 10.0),
-                //                           ),
-                //                           color: HexColor(snapshot
-                //                               .data![i].bankthemecolor
-                //                               .toString()),
-                //                         ),
-                //                         child: Row(
-                //                           mainAxisAlignment: MainAxisAlignment
-                //                               .spaceBetween,
-                //                           //  crossAxisAlignment : CrossAxisAlignment.end,
-                //                           children: [
-                //                             Row(
-                //                               mainAxisAlignment: MainAxisAlignment
-                //                                   .spaceBetween,
-                //                               children: [
-                //                                 Align(
-                //                                   alignment: Alignment.topLeft,
-                //                                   child: CircleAvatar(
-                //                                     radius: 30,
-                //                                     child: Image.memory(
-                //                                       Base64Codec().decode(
-                //                                           snapshot
-                //                                               .data![i]
-                //                                               .banklogo
-                //                                               .toString()),
-                //                                       // backgroundImage: new AssetImage(
-                //                                       // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                //                                     ),
-                //                                   ),),
-                //
-                //                                 Column(
-                //                                   children: [
-                //                                     Padding(
-                //                                       padding: const EdgeInsets
-                //                                           .only(left: 5),
-                //                                       child: Text(snapshot
-                //                                           .data![i].bankname
-                //                                           .toString(),
-                //                                         style: TextStyle(
-                //                                             color: Colors.white,
-                //                                             fontSize: 16,
-                //                                             fontWeight:
-                //                                             FontWeight.w700),
-                //                                       ),
-                //                                     ),
-                //                                     Padding(
-                //                                       padding: const EdgeInsets
-                //                                           .only(
-                //                                           left: 5, top: 4),
-                //                                       child: Text(
-                //                                         snapshot.data![i]
-                //                                             .accountname
-                //                                             .toString(),
-                //                                         style: TextStyle(
-                //                                             color: Colors.white,
-                //                                             fontSize: 11,
-                //                                             fontWeight:
-                //                                             FontWeight.w500),
-                //                                       ),
-                //                                     ),
-                //                                   ],
-                //                                 ),
-                //                                 //   Spacer(),
-                //
-                //
-                //                               ],
-                //                             ),
-                //
-                //
-                //
-                //                           ],
-                //
-                //                         ),
-                //                       ),//),
-                //
-                //                     ),
-                //                     // ),
-                //                     //  ),
-                //                     // ],
-                //
-                //                     //),
-                //                   ),
-                //                   // onDismissed: (direction) async {
-                //                   //   // Remove the dismissed item from the list
-                //                   //   setState(() {
-                //                   //   if (_isShown ==
-                //                   //        true) {
-                //                   //     _delete(
-                //                   //         context,
-                //                   //         snapshot
-                //                   //             .data![i]
-                //                   //             .accountid
-                //                   //             .toString());
-                //                   //   }
-                //                   //   // else
-                //                   //   //   {
-                //                   //   //     List<BankData> tdata = await bankdatalist;
-                //                   //   //     var item = tdata.elementAt(i);
-                //                   //   //     Scaffold.of(context).showSnackBar(SnackBar(
-                //                   //   //         content: Text("Item deleted"),
-                //                   //   //         action: SnackBarAction(
-                //                   //   //             label: "UNDO",
-                //                   //   //             onPressed: () {
-                //                   //   //               undoDeletion(i, item); //undo deletion
-                //                   //   //             })));
-                //                   //   //
-                //                   //   //   }
-                //                   //   hideWidget();
-                //                   //
-                //                   //
-                //                   //
-                //                   //                       });
-                //                   // },
-                //                 );
-                //               //  ),
-                //             }
-                //             //);
-                //           }, );
-                //       }
-                //     },
-                //
-                //   ),
-                // ),
-
-
                 Container(
                   width: double.infinity,
                   height: 150.0,
@@ -657,8 +299,8 @@ class _MyAppStates extends State<Liability> {
                                     selected: false,
                                   );
                                 },
-                                body:
-                                Text("hvohfdvhodfhvouhfdvh"),
+                                body: status(),
+                               // Text("hvohfdvhodfhvouhfdvh"),
                                // _buildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
                                 isExpanded: item.isExpaneded,
                               );
@@ -1242,6 +884,8 @@ class _MyAppStates extends State<Liability> {
                       ],
                     ),
                   ),
+
+
                 if (viewVisible2)
                   Container(
                     width: double.infinity,
@@ -1992,6 +1636,7 @@ class _MyAppStates extends State<Liability> {
       ),
       //),
     );
+
   }
 
 
@@ -2092,6 +1737,27 @@ class _MyAppStates extends State<Liability> {
   void displayMortgage()
   {
     m_saveamount = mloanmaxvalue - mbalanceamount;
+  }
+  status() async{
+    if (liabilitylist.student != null) {
+      stdlist = liabilitylist.student!;
+      viewVisible = true;
+      //  print("student");
+      setStudentLoanContainer(
+          liabilitylist.student!.first, 0);
+    }
+    if (liabilitylist.mortgage != null) {
+      mrtlist = liabilitylist.mortgage!;
+      viewVisible2 = true;
+      //  print("mortgage");
+      setMortgage(
+          liabilitylist.mortgage!.first, 0);
+    }
+    if (liabilitylist.credit != null) {
+      crdlist = liabilitylist.credit!;
+      viewVisible3 = true;
+      //  print("credit");
+    }
   }
 }
 

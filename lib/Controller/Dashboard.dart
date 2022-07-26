@@ -38,6 +38,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class tdashboardState extends State<Dashboard> {
+  String value = "0";
+  // Pass this method to the child page.
+  void _update(String newValue) {
+    setState(() => value = newValue);
+  }
+  late final Logic logic;
   bool viewVisible = false;
   bool viewVisible1 = false;
   bool viewVisible2 = false;
@@ -297,67 +303,25 @@ class tdashboardState extends State<Dashboard> {
 
                 //  ),
               ),
-
-              Container(
+              //--------------
+              Align(
+                alignment: Alignment.topLeft,
+             child: Container(
                 height: 30,
                 width: 100,
                 margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
                 alignment: Alignment.topLeft,
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: const Color(0xffECDCFF)),
-                child: Text('Debit: 0'),
-              ),
-
-              // Container(
-              //   child: Column(
-              //     children: [
-              //       Visibility(
-                     // visible: viewVisible,
+                child: Text('Debit: 0', textAlign: TextAlign.center,),
+              ),   ),
                       Container(
                           // height: 250.0,
                           // color: Colors.yellow,
                           child: Column(
                         children: [
-                          // Container(
-                          //   alignment: Alignment.topRight,
-                          //   width: double.infinity,
-                          //   height: 40.0,
-                          //   color: Colors.white,
-                          //   margin: const EdgeInsets.only(bottom: 10),
-                          //   child: FlatButton(
-                          //     onPressed: () async {
-                          //       Loader.show(context,
-                          //           isSafeAreaOverlay: false,
-                          //           progressIndicator:
-                          //               CircularProgressIndicator(),
-                          //           isBottomBarOverlay: false,
-                          //           overlayFromBottom: 80,
-                          //           themeData: Theme.of(context)
-                          //               .copyWith(accentColor: Colors.black),
-                          //           overlayColor: Color(0x0000ffff));
-                          //       Future.delayed(Duration(seconds: 4), () {
-                          //         Loader.hide();
-                          //       });
-                          //       var linktoken = await linktokenResponse();
-                          //       _linkTokenConfiguration =
-                          //           LinkTokenConfiguration(
-                          //         token: linktoken.linkToken.toString(),
-                          //       );
-                          //
-                          //       PlaidLink.open(
-                          //           configuration: _linkTokenConfiguration);
-                          //     },
-                          //     child: Image(
-                          //         image: AssetImage(
-                          //           "asset/images/Plus.png",
-                          //         ),
-                          //         alignment: Alignment.topRight),
-                          //   ),
-                          // ),
-
-
 
                           Container(
                               height: 35,
@@ -406,7 +370,7 @@ class tdashboardState extends State<Dashboard> {
                           //-----------------------------------debir////-----------
                           Container(
                             width: double.infinity,
-                            height: 150.0,
+                            height: 210.0,
                             margin: const EdgeInsets.only(bottom: 0, top: 0),
                             color: Colors.white,
                             child: ListView(
@@ -417,7 +381,7 @@ class tdashboardState extends State<Dashboard> {
                                   builder: (context, snapshot) {
                                     return ExpansionPanelList(
                                       animationDuration:
-                                          Duration(milliseconds: 2000),
+                                      Duration(milliseconds: 2000),
                                       children: snapshot.data!
                                           .map<ExpansionPanel>((BankData item) {
                                         return ExpansionPanel(
@@ -442,7 +406,7 @@ class tdashboardState extends State<Dashboard> {
                                                     color: Colors.black,
                                                     fontSize: 14,
                                                     fontWeight:
-                                                        FontWeight.w600),
+                                                    FontWeight.w600),
                                               ),
                                               trailing: Text(
                                                 dollar + item.mask.toString(),
@@ -450,7 +414,7 @@ class tdashboardState extends State<Dashboard> {
                                                     color: Colors.black,
                                                     fontSize: 16,
                                                     fontWeight:
-                                                        FontWeight.w500),
+                                                    FontWeight.w500),
                                               ),
                                               subtitle: Text(
                                                 item.accountname.toString(),
@@ -458,7 +422,7 @@ class tdashboardState extends State<Dashboard> {
                                                     color: Colors.grey,
                                                     fontSize: 14,
                                                     fontWeight:
-                                                        FontWeight.w500),
+                                                    FontWeight.w500),
                                               ),
                                               selected: false,
                                             );
@@ -475,7 +439,7 @@ class tdashboardState extends State<Dashboard> {
                                           (int index, bool isExpanded) {
                                         setState(() {
                                           snapshot.data![index].isExpaneded =
-                                              !isExpanded;
+                                          !isExpanded;
                                         });
                                       },
                                     );
@@ -488,27 +452,27 @@ class tdashboardState extends State<Dashboard> {
                           //--------------------------
                         ],
                       )),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              //------------credit------------------
-              Container(
-                height: 30,
-                width: 100,
-                margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffECDCFF)),
-                child: Text('Credit: 0'),
-              ),
 
+              //------------credit------------------
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 30,
+                  width: 100,
+                  margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: const Color(0xffECDCFF)),
+                  child: Text('Credit: 0', textAlign: TextAlign.center,),
+                ),   ),
               Container(
                 // height: 250.0,
                 // color: Colors.yellow,
                   child: Column(
                     children: [
+
                       Container(
                           height: 35,
                           width: double.infinity,
@@ -522,35 +486,27 @@ class tdashboardState extends State<Dashboard> {
                             children: [
                               FlatButton(
                                 padding: const EdgeInsets.all(5),
-                                onPressed: ()  {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => Liability()));
-                                  //Liability();
+                                onPressed: () async {
+                                  Loader.show(context,
+                                      isSafeAreaOverlay: false,
+                                      progressIndicator:
+                                      CircularProgressIndicator(),
+                                      isBottomBarOverlay: false,
+                                      overlayFromBottom: 80,
+                                      themeData: Theme.of(context)
+                                          .copyWith(accentColor: Colors.black),
+                                      overlayColor: Color(0x0000ffff));
+                                  Future.delayed(Duration(seconds: 4), () {
+                                    Loader.hide();
+                                  });
+                                  var linktoken = await linktokenResponse();
+                                  _linkTokenConfiguration =
+                                      LinkTokenConfiguration(
+                                        token: linktoken.linkToken.toString(),
+                                      );
 
-                                  // Loader.show(context,
-                                  //     isSafeAreaOverlay: false,
-                                  //     progressIndicator:
-                                  //     CircularProgressIndicator(),
-                                  //     isBottomBarOverlay: false,
-                                  //     overlayFromBottom: 80,
-                                  //     themeData: Theme.of(context)
-                                  //         .copyWith(accentColor: Colors.black),
-                                  //     overlayColor: Color(0x0000ffff));
-                                  // Future.delayed(Duration(seconds: 4), () {
-                                  //   Loader.hide();
-                                  // });
-                                  // var linktoken = await linktokenResponse();
-                                  //
-                                  // _linkTokenConfiguration =
-                                  //     LinkTokenConfiguration(
-                                  //       token: linktoken.linkToken.toString(),
-                                  //     );
-                                  //
-                                  //
-                                  // PlaidLink.open(
-                                  //     configuration: _linkTokenConfiguration);
+                                  PlaidLink.open(
+                                      configuration: _linkTokenConfiguration);
                                 },
                                 child: Image(
                                   image: AssetImage("asset/images/Plus.png"),
@@ -562,84 +518,82 @@ class tdashboardState extends State<Dashboard> {
                             ],
                           )),
                       //-----------------------------------debir////-----------
-                     // Liability(),
-                      // Container(
-                      //   width: double.infinity,
-                      //   height: 250.0,
-                      //   margin: const EdgeInsets.only(bottom: 0, top: 0),
-                      //   color: Colors.white,
-                      //   child: ListView(
-                      //     shrinkWrap: true,
-                      //     children: [
-                      //       FutureBuilder<List<BankData>>(
-                      //         future: bankdatalist,
-                      //         builder: (context, snapshot) {
-                      //           return ExpansionPanelList(
-                      //             animationDuration:
-                      //             Duration(milliseconds: 2000),
-                      //             children: snapshot.data!
-                      //                 .map<ExpansionPanel>((BankData item) {
-                      //               return ExpansionPanel(
-                      //                 headerBuilder: (BuildContext context,
-                      //                     bool isExpanded) {
-                      //                   return ListTile(
-                      //                     iconColor: Colors.red,
-                      //                     leading: CircleAvatar(
-                      //                       radius: 30,
-                      //                       child: Image.memory(
-                      //                         Base64Codec().decode(
-                      //                             item.banklogo.toString()),
-                      //
-                      //                       ),
-                      //                     ),
-                      //                     title: Text(
-                      //                       item.bankname.toString(),
-                      //                       style: TextStyle(
-                      //                           color: Colors.black,
-                      //                           fontSize: 14,
-                      //                           fontWeight:
-                      //                           FontWeight.w600),
-                      //                     ),
-                      //                     trailing: Text(
-                      //                       dollar + item.mask.toString(),
-                      //                       style: TextStyle(
-                      //                           color: Colors.black,
-                      //                           fontSize: 16,
-                      //                           fontWeight:
-                      //                           FontWeight.w500),
-                      //                     ),
-                      //                     subtitle: Text(
-                      //                       item.accountname.toString(),
-                      //                       style: TextStyle(
-                      //                           color: Colors.grey,
-                      //                           fontSize: 14,
-                      //                           fontWeight:
-                      //                           FontWeight.w500),
-                      //                     ),
-                      //                     selected: false,
-                      //                   );
-                      //                 },
-                      //                 body: _buildExpandableContent(
-                      //                     item.accesstoken.toString(),
-                      //                     item.accountid.toString(),
-                      //                     cmonth),
-                      //                 isExpanded: item.isExpaneded,
-                      //               );
-                      //             }).toList(),
-                      //             dividerColor: Colors.grey,
-                      //             expansionCallback:
-                      //                 (int index, bool isExpanded) {
-                      //               setState(() {
-                      //                 snapshot.data![index].isExpaneded =
-                      //                 !isExpanded;
-                      //               });
-                      //             },
-                      //           );
-                      //         },
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      Container(
+                        width: double.infinity,
+                        height: 50.0,
+                        margin: const EdgeInsets.only(bottom: 0, top: 0),
+                        color: Colors.white,
+                        // child: ListView(
+                        //   shrinkWrap: true,
+                        //   children: [
+                        //     FutureBuilder<List<BankData>>(
+                        //       future: bankdatalist,
+                        //       builder: (context, snapshot) {
+                        //         return ExpansionPanelList(
+                        //           animationDuration:
+                        //           Duration(milliseconds: 2000),
+                        //           children: snapshot.data!
+                        //               .map<ExpansionPanel>((BankData item) {
+                        //             return ExpansionPanel(
+                        //               headerBuilder: (BuildContext context,
+                        //                   bool isExpanded) {
+                        //                 return ListTile(
+                        //                   iconColor: Colors.red,
+                        //                   leading: CircleAvatar(
+                        //                     radius: 30,
+                        //                     child: Image.memory(
+                        //                       Base64Codec().decode(
+                        //                           item.banklogo.toString()),
+                        //                     ),
+                        //                   ),
+                        //                   title: Text(
+                        //                     item.bankname.toString(),
+                        //                     style: TextStyle(
+                        //                         color: Colors.black,
+                        //                         fontSize: 14,
+                        //                         fontWeight:
+                        //                         FontWeight.w600),
+                        //                   ),
+                        //                   trailing: Text(
+                        //                     dollar + item.mask.toString(),
+                        //                     style: TextStyle(
+                        //                         color: Colors.black,
+                        //                         fontSize: 16,
+                        //                         fontWeight:
+                        //                         FontWeight.w500),
+                        //                   ),
+                        //                   subtitle: Text(
+                        //                     item.accountname.toString(),
+                        //                     style: TextStyle(
+                        //                         color: Colors.grey,
+                        //                         fontSize: 14,
+                        //                         fontWeight:
+                        //                         FontWeight.w500),
+                        //                   ),
+                        //                   selected: false,
+                        //                 );
+                        //               },
+                        //               body: _buildExpandableContent(
+                        //                   item.accesstoken.toString(),
+                        //                   item.accountid.toString(),
+                        //                   cmonth),
+                        //               isExpanded: item.isExpaneded,
+                        //             );
+                        //           }).toList(),
+                        //           dividerColor: Colors.grey,
+                        //           expansionCallback:
+                        //               (int index, bool isExpanded) {
+                        //             setState(() {
+                        //               snapshot.data![index].isExpaneded =
+                        //               !isExpanded;
+                        //             });
+                        //           },
+                        //         );
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
+                      ),
 
                       //--------------------------
                     ],
