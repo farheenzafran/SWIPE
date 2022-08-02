@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:swipeapp/Controller/Liability.dart';
 
 import 'Dashboard.dart';
+import 'Test.dart';
 
 
 void main() {
@@ -11,10 +13,13 @@ void main() {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Poppins'),
       home: EmailSignup()));
+
 }
 
 class EmailSignup extends StatelessWidget {
+
   @override
+
   Widget build(BuildContext context) {
     // final appTitle = 'Form Validation Demo';
     return Scaffold(
@@ -116,7 +121,7 @@ class EmailSignup extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Dashboard()),
+                        MaterialPageRoute(builder: (context) => Test()),
                       );
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
