@@ -765,7 +765,8 @@ class tdashboardState extends State<Dashboard> {
         height: 60,
         margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
           padding: EdgeInsets.all(10),
-          color: const Color(0xffF5F5F5),
+          //color: const Color(0xffF5F5F5),
+        color: const Color(0xffEFF4F8),
 
 
        // child: ListTile(
