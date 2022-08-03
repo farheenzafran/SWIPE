@@ -121,7 +121,7 @@ class EmailSignup extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Test()),
+                        MaterialPageRoute(builder: (context) => Dashboard()),
                       );
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
