@@ -237,7 +237,7 @@ class tdashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                height: 90,
+                height: 70,
                 width: double.infinity,
                 padding: EdgeInsets.all(15),
                 //color: const Color(0xDEB46FEA),
@@ -285,7 +285,7 @@ class tdashboardState extends State<Dashboard> {
                 child: Container(
                   height: 30,
                   width: 100,
-                  margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                  margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
                   alignment: Alignment.topLeft,
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -306,7 +306,7 @@ class tdashboardState extends State<Dashboard> {
                       height: 35,
                       width: double.infinity,
                       margin: EdgeInsets.only(
-                          top: 15, left: 15, bottom: 15, right: 15),
+                          top: 5, left: 15, bottom: 10, right: 15),
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
@@ -349,7 +349,7 @@ class tdashboardState extends State<Dashboard> {
                   //-----------------------------------debir////-----------
                   Container(
                     width: double.infinity,
-                    height: 200.0,
+                    height: 150.0,
                     margin: const EdgeInsets.only(bottom: 0, top: 0),
                     color: Colors.white,
                     child: ListView(
@@ -434,7 +434,7 @@ class tdashboardState extends State<Dashboard> {
                 child: Container(
                   height: 30,
                   width: 100,
-                  margin: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+                  margin: EdgeInsets.only(top: 10, left: 15, bottom: 5),
                   alignment: Alignment.topLeft,
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -605,11 +605,11 @@ class tdashboardState extends State<Dashboard> {
                 height: 38,
                 width: double.infinity,
                 margin: const EdgeInsets.only(
-                    top: 15, bottom: 5.0, left: 25, right: 25),
+                    top: 15, bottom: 20.0, left: 25, right: 25),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      color: const Color(0xFFA781D3),
+                      //color: const Color(0xFFA781D3),
                     )),
                 child: FlatButton(
                   color: const Color(0xFFA781D3),
@@ -626,9 +626,9 @@ class tdashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-              Spacer(),
-              Container(
-                height: 50,
+             Spacer(),
+             Container(
+                height: 45,
                 padding: const EdgeInsets.all(
                   8,
                 ),
@@ -761,11 +761,8 @@ class tdashboardState extends State<Dashboard> {
     for (var t in tdata.transactions!) {
       var card = Container(
         margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
-        color: Colors.white,
+          color: const Color(0xffF5F5F5),
         child:Scrollbar(
-        // children: [
-        //    Scrollbar(
-        //     children: <Widget>[
        child: ListTile(
           contentPadding: EdgeInsets.all(8),
           leading: CircleAvatar(
@@ -1871,6 +1868,8 @@ class tdashboardState extends State<Dashboard> {
           ),
       ],
     );
+    selected: true;
+
   }
 
   void setStudentLoanContainer(Student student, double sliderValue) {

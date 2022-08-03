@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(authenticated);
       return Dashboard();
     } else {
-      return Dashboard();//change to login again
+      return LoginScreen();//change to login again
     }
   }
   @override
