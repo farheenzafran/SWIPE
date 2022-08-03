@@ -760,12 +760,12 @@ class tdashboardState extends State<Dashboard> {
     List<Widget> listTiles = [];
     for (var t in tdata.transactions!) {
       var card = Container(
-        margin: EdgeInsets.all(15),
-        color: const Color(0xffF5F5F5),
-        child:ListView(
-          children: [
-            Scrollbar(
-            //children: <Widget>[
+        margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
+        color: Colors.white,
+        child:Scrollbar(
+        // children: [
+        //    Scrollbar(
+        //     children: <Widget>[
        child: ListTile(
           contentPadding: EdgeInsets.all(8),
           leading: CircleAvatar(
@@ -821,14 +821,101 @@ class tdashboardState extends State<Dashboard> {
             ),
           ),
           selected: true,
-        ),
+
+        )
+        )
+      );
 
    // ]
-        ),
-],
-        ),
+   //     ),
+        // child:    Container(
+        //       width: double.infinity,
+        //      // height: 130.0,
+        //       margin: const EdgeInsets.only(
+        //           right: 15,
+        //           left: 15,
+        //           top: 0,
+        //           bottom: 15),
+        //       padding: new EdgeInsets.only(
+        //         right: 0.0,
+        //         left: 10.0,
+        //         top: 10,
+        //       ),
+        //       decoration: BoxDecoration(
+        //         border: Border.all(
+        //           color: Colors.white,
+        //           width: 3,
+        //         ),
+        //         borderRadius: BorderRadius.only(
+        //             topRight: Radius.circular(10.0),
+        //             bottomRight: Radius.circular(10.0),
+        //             topLeft: Radius.circular(10.0),
+        //             bottomLeft: Radius.circular(10.0)),
+        //       ),
+        //       child: Row(
+        //         mainAxisAlignment:
+        //         MainAxisAlignment.spaceBetween,
+        //         //  crossAxisAlignment : CrossAxisAlignment.end,
+        //         children: [
+        //           Row(
+        //             mainAxisAlignment:
+        //             MainAxisAlignment.spaceBetween,
+        //             children: [
+        //               Align(
+        //                 alignment: Alignment.topLeft,
+        //                 child:
+        //                 CircleAvatar(
+        //                        radius: 20,
+        //                        child: Image(
+        //                          image: AssetImage("asset/images/cart.png"),
+        //                          //width: 40,
+        //                          //color: const Color(0xffECDCFF)
+        //                        ),
+        //                      ),
+        //               ),
+        //
+        //               Column(
+        //                 children: [
+        //                   Padding(
+        //                     padding:
+        //                     const EdgeInsets.only(
+        //                         left: 4),
+        //                     child:
+        //                     Text(
+        //                                  t.date.toString(),
+        //                                  style: TextStyle(
+        //                                      color: Colors.grey,
+        //                                      fontSize: 13,
+        //                                      fontWeight: FontWeight.w400),
+        //                                ),
+        //                   ),
+        //                   Padding(
+        //                     padding:
+        //                     const EdgeInsets.only(
+        //                         left: 4, top: 4),
+        //                     child: Text(
+        //                              t.name.toString(),
+        //                              style: TextStyle(
+        //                                  color: Colors.grey,
+        //                                  fontSize: 13,
+        //                                  fontWeight: FontWeight.w400),
+        //                            ),
+        //                   ),
+        //
+        //                 ],
+        //               ),
+        //
+        //               //   Spacer(),
+        //             ],
+        //           ),
+        //
+        //         ],
+        //       ),
+        //     ),
+//],
+        //),
 
-      );
+     // );
 
       // var tile = ListTile(
       //        title: Text(
@@ -837,7 +924,7 @@ class tdashboardState extends State<Dashboard> {
       //        ),
       //      );
       //      listTiles.add(tile);
-
+//      selected: true;
       listTiles.add(card);
     }
     return listTiles;
