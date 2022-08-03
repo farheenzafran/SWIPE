@@ -41,6 +41,7 @@ class Dashboard extends StatefulWidget {
 
 class tdashboardState extends State<Dashboard> {
   BankData bankDataobj = BankData();
+
   //creditBankData creditbankDataobj = creditBankData();
 
 //<<<<<<<<<<<<<<<<Debit>>>>>>>>>>>>>>>>>>>>
@@ -70,6 +71,12 @@ class tdashboardState extends State<Dashboard> {
   bool isFavourite3 = true;
   bool isLoading = false;
   bool isexpanse = true;
+  bool viewVisibleTransaction = true;
+  void showWidget() {
+    setState(() {
+      viewVisible = true;
+    });
+  }
 
 //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
   late Future<List<BankData>> creditbankdatalist = [] as Future<List<BankData>>;
@@ -117,21 +124,24 @@ class tdashboardState extends State<Dashboard> {
     // PlaidLink.onSuccess(creditonSuccessCallback);
     // PlaidLink.onEvent(creditonEventCallback);
     // PlaidLink.onExit(creditonExitCallback);
-    creditbankdatalist = creditgetBankData(); // as Future<List<creditBankData>>;// as List<BankData>;
+    creditbankdatalist =
+        creditgetBankData(); // as Future<List<creditBankData>>;// as List<BankData>;
     var creditlinktoken = creditlinktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
   }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>start>>>>>>>>>>>>>>>>>>>>>>>>
   String libKey = "data";
+
   Future<List<BankData>> creditgetBankData() async {
     List<BankData> creditbankdatalist = [];
     try {
       String cdata = await Constants.read(libKey);
       if (cdata != "") {
         List<dynamic> dicData = jsonDecode(cdata);
-        creditbankdatalist = List<BankData>.from(
-            dicData.map((i) => BankData.fromJson(i))).toList();
+        creditbankdatalist =
+            List<BankData>.from(dicData.map((i) => BankData.fromJson(i)))
+                .toList();
       }
       // print('&&&&&&&&');
       // print(bankdatalist.length);
@@ -142,6 +152,7 @@ class tdashboardState extends State<Dashboard> {
       return creditbankdatalist;
     }
   }
+
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   void _onSuccessCallback(String publicToken, LinkSuccessMetadata metadata) {
@@ -161,7 +172,6 @@ class tdashboardState extends State<Dashboard> {
     if (error != null) {
       print("onExit error: ${error.description()}");
     }
-
   }
 
   void saveBankData(LinkSuccessMetadata metadata) async {
@@ -217,15 +227,18 @@ class tdashboardState extends State<Dashboard> {
     }
     return bankdatalist;
   }
+
   @override
   Widget build(BuildContext context) {
+    double c_width = MediaQuery.of(context).size.width*0.8;
+
     var screenSize = MediaQuery.of(context).size;
     final mq = MediaQueryData.fromWindow(window);
     var _val;
     var chidern;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
+      body: Center(
         // child: SingleChildScrollView(
         child: SafeArea(
           // child: Scrollbar(
@@ -564,6 +577,19 @@ class tdashboardState extends State<Dashboard> {
                             print(index);
                             print(isExpanded);
                             print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                            TransactionResponse tempresponse2 =
+                            await transactionResponse(
+                                snapshot.data![index].accesstoken
+                                    .toString(),
+                                snapshot.data![index].accountid
+                                    .toString(),
+                                cmonth);
+
+                            transactionlist = tempresponse2.transactions
+                            as List<Transactions>;
+                            // viewVisible = true;
+                            viewVisibleTransaction = true;
+                            showWidget();
                             LiabilityResponse tempresponse =
                                 await liabilityResponse(
                                     snapshot.data![index].accesstoken
@@ -609,8 +635,8 @@ class tdashboardState extends State<Dashboard> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      //color: const Color(0xFFA781D3),
-                    )),
+                        //color: const Color(0xFFA781D3),
+                        )),
                 child: FlatButton(
                   color: const Color(0xFFA781D3),
                   padding: const EdgeInsets.all(5),
@@ -626,8 +652,8 @@ class tdashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-             //Spacer(),
-             Container(
+              //Spacer(),
+              Container(
                 height: 45,
                 padding: const EdgeInsets.all(
                   8,
@@ -713,7 +739,6 @@ class tdashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-
             ],
           ),
 
@@ -747,10 +772,13 @@ class tdashboardState extends State<Dashboard> {
             //   children: _buildTransactionListView(snapshot.data!),
             // );
 
-            return ListView(
-              children: _buildTransactionListView(snapshot.data!),
-              shrinkWrap: true,
-            );
+            return debitBuildLiabilityListView(snapshot.data!);
+
+            // ListView(
+            //   children:
+            //       //_buildTransactionListView(snapshot.data!),
+            //   shrinkWrap: true,
+            // );
           });
     }
     ;
@@ -759,79 +787,75 @@ class tdashboardState extends State<Dashboard> {
   _buildTransactionListView(TransactionResponse tdata) {
     List<Widget> listTiles = [];
     for (var t in tdata.transactions!) {
-      var card =
-      Container(
+      var card = Container(
         alignment: Alignment.center,
         height: 60,
-        margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
-          padding: EdgeInsets.all(10),
-          //color: const Color(0xffF5F5F5),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+        padding: EdgeInsets.all(10),
+        //color: const Color(0xffF5F5F5),
         color: const Color(0xffEFF4F8),
 
+        // child: ListTile(
+        //    contentPadding: EdgeInsets.all(8),
+        //    leading: CircleAvatar(
+        //      radius: 20,
+        //      child: Image(
+        //        image: AssetImage("asset/images/cart.png"),
+        //        //width: 40,
+        //        //color: const Color(0xffECDCFF)
+        //      ),
+        //    ),
+        //    title: Padding(
+        //      padding: EdgeInsets.only(top: 5, bottom: 8),
+        //      child: Text(
+        //        t.category.toString(),
+        //        style: TextStyle(
+        //            color: Colors.black,
+        //            fontSize: 13,
+        //            fontWeight: FontWeight.w700),
+        //      ),
+        //    ),
+        //    trailing: Column(
+        //      children: <Widget>[
+        //        Padding(
+        //          padding: EdgeInsets.only(bottom: 10, top: 5),
+        //          child: Text(
+        //            dollar + t.amount.toString(),
+        //            style: TextStyle(
+        //                color: Colors.black,
+        //                fontSize: 13,
+        //                fontWeight: FontWeight.w700),
+        //          ),
+        //        ),
+        //        Padding(
+        //          padding: EdgeInsets.only(bottom: 2),
+        //          child: Text(
+        //            t.date.toString(),
+        //            style: TextStyle(
+        //                color: Colors.grey,
+        //                fontSize: 13,
+        //                fontWeight: FontWeight.w400),
+        //          ),
+        //        ),
+        //      ],
+        //    ),
+        //    subtitle: Padding(
+        //      padding: EdgeInsets.only(bottom: 2),
+        //      child: Text(
+        //        t.name.toString(),
+        //        style: TextStyle(
+        //            color: Colors.grey,
+        //            fontSize: 13,
+        //            fontWeight: FontWeight.w400),
+        //      ),
+        //    ),
+        //    selected: true,
+        //
+        //  )
 
-       // child: ListTile(
-       //    contentPadding: EdgeInsets.all(8),
-       //    leading: CircleAvatar(
-       //      radius: 20,
-       //      child: Image(
-       //        image: AssetImage("asset/images/cart.png"),
-       //        //width: 40,
-       //        //color: const Color(0xffECDCFF)
-       //      ),
-       //    ),
-       //    title: Padding(
-       //      padding: EdgeInsets.only(top: 5, bottom: 8),
-       //      child: Text(
-       //        t.category.toString(),
-       //        style: TextStyle(
-       //            color: Colors.black,
-       //            fontSize: 13,
-       //            fontWeight: FontWeight.w700),
-       //      ),
-       //    ),
-       //    trailing: Column(
-       //      children: <Widget>[
-       //        Padding(
-       //          padding: EdgeInsets.only(bottom: 10, top: 5),
-       //          child: Text(
-       //            dollar + t.amount.toString(),
-       //            style: TextStyle(
-       //                color: Colors.black,
-       //                fontSize: 13,
-       //                fontWeight: FontWeight.w700),
-       //          ),
-       //        ),
-       //        Padding(
-       //          padding: EdgeInsets.only(bottom: 2),
-       //          child: Text(
-       //            t.date.toString(),
-       //            style: TextStyle(
-       //                color: Colors.grey,
-       //                fontSize: 13,
-       //                fontWeight: FontWeight.w400),
-       //          ),
-       //        ),
-       //      ],
-       //    ),
-       //    subtitle: Padding(
-       //      padding: EdgeInsets.only(bottom: 2),
-       //      child: Text(
-       //        t.name.toString(),
-       //        style: TextStyle(
-       //            color: Colors.grey,
-       //            fontSize: 13,
-       //            fontWeight: FontWeight.w400),
-       //      ),
-       //    ),
-       //    selected: true,
-       //
-       //  )
-
-
-child: Center(
+        child: Center(
           child: Row(
-            mainAxisAlignment:
-            MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //  crossAxisAlignment : CrossAxisAlignment.end,
             children: [
               Row(
@@ -840,198 +864,80 @@ child: Center(
                   Align(
                     alignment: Alignment.topLeft,
                     child: CircleAvatar(
-                           radius: 20,
-                           child: Image(
-                             image: AssetImage("asset/images/cart.png"),
+                      radius: 20,
+                      child: Image(
+                        image: AssetImage("asset/images/cart.png"),
 
-                             //width: 40,
-                             //color: const Color(0xffECDCFF)
-                           ),
-                         ),
+                        //width: 40,
+                        //color: const Color(0xffECDCFF)
+                      ),
                     ),
-
-
+                  ),
                   Column(
                     children: [
                       Padding(
-                        padding:
-                        const EdgeInsets.only(
-                            left: 4 , bottom: 4),
+                        padding: const EdgeInsets.only(left: 4, bottom: 4),
                         child: Flexible(
-                     child:   Text(
-                     t.category.toString(),
-                       maxLines: 2,
-                       overflow: TextOverflow.ellipsis,
-
-
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontWeight:
-                              FontWeight.w700),
-                        ),
+                          child: Text(
+                            t.category.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-
-
                       Padding(
                         padding:
-                        const EdgeInsets.only(
-                            left: 4, top: 4 , right: 8),
+                            const EdgeInsets.only(left: 4, top: 4, right: 8),
                         child: Text(
-                          t.name
-                              .toString(),
-                            overflow: TextOverflow.ellipsis,
+                          t.name.toString(),
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 11,
-                              fontWeight:
-                              FontWeight.w500),
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
-
-
-
                     ],
                   ),
-                Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child:Text(
-                        dollar + t.amount.toString(),textAlign: TextAlign.right,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700),
+                  Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Text(
+                          dollar + t.amount.toString(),
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-
-                      child:Text(
-                        dollar + t.date.toString(),textAlign: TextAlign.right,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          dollar + t.date.toString(),
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-
-
+                    ],
+                  )
                 ],
-
-
               ),
-
             ],
           ),
-),
-
+        ),
       );
 
-   // ]
-   //     ),
-        // child:    Container(
-        //       width: double.infinity,
-        //      // height: 130.0,
-        //       margin: const EdgeInsets.only(
-        //           right: 15,
-        //           left: 15,
-        //           top: 0,
-        //           bottom: 15),
-        //       padding: new EdgeInsets.only(
-        //         right: 0.0,
-        //         left: 10.0,
-        //         top: 10,
-        //       ),
-        //       decoration: BoxDecoration(
-        //         border: Border.all(
-        //           color: Colors.white,
-        //           width: 3,
-        //         ),
-        //         borderRadius: BorderRadius.only(
-        //             topRight: Radius.circular(10.0),
-        //             bottomRight: Radius.circular(10.0),
-        //             topLeft: Radius.circular(10.0),
-        //             bottomLeft: Radius.circular(10.0)),
-        //       ),
-        //       child: Row(
-        //         mainAxisAlignment:
-        //         MainAxisAlignment.spaceBetween,
-        //         //  crossAxisAlignment : CrossAxisAlignment.end,
-        //         children: [
-        //           Row(
-        //             mainAxisAlignment:
-        //             MainAxisAlignment.spaceBetween,
-        //             children: [
-        //               Align(
-        //                 alignment: Alignment.topLeft,
-        //                 child:
-        //                 CircleAvatar(
-        //                        radius: 20,
-        //                        child: Image(
-        //                          image: AssetImage("asset/images/cart.png"),
-        //                          //width: 40,
-        //                          //color: const Color(0xffECDCFF)
-        //                        ),
-        //                      ),
-        //               ),
-        //
-        //               Column(
-        //                 children: [
-        //                   Padding(
-        //                     padding:
-        //                     const EdgeInsets.only(
-        //                         left: 4),
-        //                     child:
-        //                     Text(
-        //                                  t.date.toString(),
-        //                                  style: TextStyle(
-        //                                      color: Colors.grey,
-        //                                      fontSize: 13,
-        //                                      fontWeight: FontWeight.w400),
-        //                                ),
-        //                   ),
-        //                   Padding(
-        //                     padding:
-        //                     const EdgeInsets.only(
-        //                         left: 4, top: 4),
-        //                     child: Text(
-        //                              t.name.toString(),
-        //                              style: TextStyle(
-        //                                  color: Colors.grey,
-        //                                  fontSize: 13,
-        //                                  fontWeight: FontWeight.w400),
-        //                            ),
-        //                   ),
-        //
-        //                 ],
-        //               ),
-        //
-        //               //   Spacer(),
-        //             ],
-        //           ),
-        //
-        //         ],
-        //       ),
-        //     ),
-//],
-        //),
 
-     // );
-
-      // var tile = ListTile(
-      //        title: Text(
-      //          t.name.toString(),
-      //          style: TextStyle(fontWeight: FontWeight.w700),
-      //        ),
-      //      );
-      //      listTiles.add(tile);
-//      selected: true;
-     listTiles.add(card);
+      listTiles.add(card);
     }
     return listTiles;
   }
@@ -1042,25 +948,23 @@ child: Center(
     print('+++++++++++++++++}');
     var libilityresponse = liabilityResponse(accessToken, accountID);
     print(libilityresponse);
-   // return Text("abcd55555555");
+    // return Text("abcd55555555");
     if (libilityresponse == null) {
       //return ListTile(
-      return
-          Text(
+      return Text(
         'sssee',
         style: TextStyle(color: Colors.black),
       );
       //  );
     } else {
-     // return Text("222222222222");
-      return
-        FutureBuilder<LiabilityResponse>(
+      // return Text("222222222222");
+      return FutureBuilder<LiabilityResponse>(
           future: libilityresponse,
           builder: (context, snapshot) {
             print('snnnnnnnnapshot');
             print(snapshot.data!.liabilities.toString());
-           // return Text("233222222222");
-            return  //ExpansionTile(title:
+            // return Text("233222222222");
+            return //ExpansionTile(title:
                 //Text('libtest',),
                 creditBuildLiabilityListView(snapshot.data!);
 
@@ -1076,14 +980,154 @@ child: Center(
     ;
   }
 
+  debitBuildLiabilityListView(TransactionResponse tdata) {
+    //Text("jhbvkjndfkjvnfdv");
+    return //Text("4444444444444");
+        Column(
+      children: [
+        for (var t in tdata.transactions!)
+          if (viewVisibleTransaction)
+            ...[
+Container(
+    width: double.infinity,
+    color: Colors.white,
+  child:  Container(
+    alignment: Alignment.center,
+    height: 60,
+    margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
+    padding: EdgeInsets.only(left: 12, top: 6, bottom: 3),
+    //color: const Color(0xffF5F5F5),
+    color: const Color(0xffEFF4F8),
+    child: Center(
+    child: Row(
+    mainAxisAlignment:
+    MainAxisAlignment.spaceBetween,
+    //  crossAxisAlignment : CrossAxisAlignment.end,
+    children: [
+    Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+    Align(
+    alignment: Alignment.topLeft,
+    child: CircleAvatar(
+    radius: 20,
+    child: Image(
+    image: AssetImage("asset/images/cart.png"),
+
+    //width: 40,
+    //color: const Color(0xffECDCFF)
+    ),
+    ),
+    ),
+
+
+    Column(
+    children: [
+    Padding(
+    padding:
+    const EdgeInsets.only(
+    left: 4 , bottom: 4),
+    child: Flexible(
+    child:   Text(
+    t.category.toString(),
+    maxLines: 2,
+    overflow: TextOverflow.fade,
+
+
+    style: TextStyle(
+    color: Colors.black,
+    fontSize: 13,
+    fontWeight:
+    FontWeight.w700),
+    ),
+    ),
+    ),
+
+
+    Container(
+      alignment: Alignment.center,
+    padding:
+    const EdgeInsets.all(2),
+      margin:
+    const EdgeInsets.all(2),
+    child: Text(
+    t.name
+        .toString(),
+   // overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.fade,
+
+      style: TextStyle(
+    color: Colors.grey,
+    fontSize: 11,
+    fontWeight:
+    FontWeight.w500),
+    ),
+    ),
+
+
+
+
+
+    ],
+    ),
+    Column(
+    children: [
+    Align(
+    alignment: Alignment.topRight,
+    child:Text(
+    dollar + t.amount.toString(),textAlign: TextAlign.right,
+    style: TextStyle(
+    color: Colors.black,
+    fontSize: 13,
+    fontWeight: FontWeight.w700),
+    ),
+    ),
+    Container(
+    alignment: Alignment.bottomRight,
+      margin: EdgeInsets.all(5),
+
+    child:Text(
+    dollar + t.date.toString(),textAlign: TextAlign.right,
+    style: TextStyle(
+    color: Colors.grey,
+    fontSize: 13,
+    fontWeight: FontWeight.w700),
+    ),
+    ),
+    ],
+    )
+
+
+    ],
+
+
+    ),
+
+    ],
+    ),
+    ),
+
+    ),
+    ),
+            ]
+          else
+            Container(
+              child: Text("Loading..."),
+            ),
+      ],
+    );
+    //selected: true;
+  }
+
   creditBuildLiabilityListView(LiabilityResponse ldata) {
     // List<Widget> listTiles = [];
-    print("%%%%%%%%%%%%%'''''''&&&&&&&&&&&&&&&&&&&&&&&&&>>>>>>>>>>>>>>>>>>>>>>>>");
+    print(
+        "%%%%%%%%%%%%%'''''''&&&&&&&&&&&&&&&&&&&&&&&&&>>>>>>>>>>>>>>>>>>>>>>>>");
     print(viewVisible);
     print(viewVisible2);
     print(viewVisible3);
     return //Text("4444444444444");
-    Column(
+        Column(
       children: [
         if (viewVisible) ...[
           Container(
@@ -1096,33 +1140,11 @@ child: Center(
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      // Container(
-                      //   width: double.infinity,
-                      //   height: 7,
-                      //   child: Column(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       Text(
-                      //         bname,
-                      //         style: TextStyle(
-                      //             color: Colors.black,
-                      //             fontSize: 12,
-                      //             fontWeight: FontWeight.w700),
-                      //       ),
-                      //       Text(
-                      //         acname,
-                      //         style: TextStyle(
-                      //             color: Colors.black,
-                      //             fontSize: 10,
-                      //             fontWeight: FontWeight.w500),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       Container(
                         width: double.infinity,
                         height: 100,
-                        margin: const EdgeInsets.only(right: 15, left: 15, top: 4, bottom: 4),
+                        margin: const EdgeInsets.only(
+                            right: 15, left: 15, top: 4, bottom: 4),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -1461,11 +1483,11 @@ child: Center(
                   // ListView(
                   Column(
                     children: [
-
                       Container(
                         width: double.infinity,
                         height: 100,
-                        margin: const EdgeInsets.only(right: 20, left: 20 , top: 4, bottom: 4),
+                        margin: const EdgeInsets.only(
+                            right: 20, left: 20, top: 4, bottom: 4),
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -1476,7 +1498,6 @@ child: Center(
                           color: const Color(0xffEFF4F8),
                         ),
                         child: ListView(children: [
-
                           Row(children: <Widget>[
                             Align(
                               alignment: Alignment.topLeft,
@@ -1825,14 +1846,11 @@ child: Center(
                     mainAxisAlignment: MainAxisAlignment.start,
                     // use whichever suits your need
                     children: <Widget>[
-
                       Container(
                           width: double.infinity,
                           height: 100.0,
-                          margin: const EdgeInsets.only(
-                              right: 15, left: 15),
+                          margin: const EdgeInsets.only(right: 15, left: 15),
                           padding: const EdgeInsets.all(10),
-
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(8.0),
@@ -1841,128 +1859,115 @@ child: Center(
                                 bottomLeft: Radius.circular(8.0)),
                             color: const Color(0xffEFF4F8),
                           ),
-                          child: ListView(
-                              children: [
-
-                                Row(children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("LAST PAYMENT DATE",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight
-                                                .w700)),
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Text(
-                                      dollar +
-                                          i.lastPaymentAmount
-                                              .toStringAsFixed(2),
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ]),
-                                Row(children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("LAST STATEMENT",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight
-                                                .w700)),
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Text(
-                                      dollar +
-                                          i.lastPaymentAmount
-                                              .toStringAsFixed(2),
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ]),
-                                Row(children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("DUE DATE ",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight
-                                                .w700)),
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        i.nextPaymentDueDate.toString(),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight
-                                                .w500),
-                                      )),
-                                ]),
-                                Row(children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("MINIMUM PAYMENT",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight
-                                                .w700)),
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        dollar +
-                                            i.minimumPaymentAmount!
-                                                .toStringAsFixed(2),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight
-                                                .w500),
-                                      )),
-                                ]),
-                                Row(children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("LAST PAYMENT",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight
-                                                .w700)),
-                                  ),
-                                  Spacer(),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        dollar +
-                                            i.lastPaymentAmount
-                                                .toStringAsFixed(2),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight
-                                                .w500),
-                                      )),
-                                ]),
-                              ])),
+                          child: ListView(children: [
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("LAST PAYMENT DATE",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar +
+                                      i.lastPaymentAmount.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("LAST STATEMENT",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar +
+                                      i.lastPaymentAmount.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("DUE DATE ",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              Spacer(),
+                              Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    i.nextPaymentDueDate.toString(),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("MINIMUM PAYMENT",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              Spacer(),
+                              Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    dollar +
+                                        i.minimumPaymentAmount!
+                                            .toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("LAST PAYMENT",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              Spacer(),
+                              Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    dollar +
+                                        i.lastPaymentAmount.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            ]),
+                          ])),
                     ],
                   ),
               ],
@@ -1977,8 +1982,8 @@ child: Center(
           ),
       ],
     );
-    selected: true;
-
+    selected:
+    true;
   }
 
   void setStudentLoanContainer(Student student, double sliderValue) {
