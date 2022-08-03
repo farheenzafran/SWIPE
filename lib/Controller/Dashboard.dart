@@ -350,7 +350,7 @@ class tdashboardState extends State<Dashboard> {
                   Container(
                     width: double.infinity,
                     height: 150.0,
-                    margin: const EdgeInsets.only(bottom: 0, top: 0),
+                    margin: const EdgeInsets.only(bottom: 4, top: 4),
                     color: Colors.white,
                     child: ListView(
                       shrinkWrap: true,
@@ -626,7 +626,7 @@ class tdashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-             Spacer(),
+             //Spacer(),
              Container(
                 height: 45,
                 padding: const EdgeInsets.all(
@@ -759,68 +759,176 @@ class tdashboardState extends State<Dashboard> {
   _buildTransactionListView(TransactionResponse tdata) {
     List<Widget> listTiles = [];
     for (var t in tdata.transactions!) {
-      var card = Container(
+      var card =
+      Container(
+        alignment: Alignment.center,
+        height: 60,
         margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
+          padding: EdgeInsets.all(10),
           color: const Color(0xffF5F5F5),
-        child:Scrollbar(
-       child: ListTile(
-          contentPadding: EdgeInsets.all(8),
-          leading: CircleAvatar(
-            radius: 20,
-            child: Image(
-              image: AssetImage("asset/images/cart.png"),
-              //width: 40,
-              //color: const Color(0xffECDCFF)
-            ),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 8),
-            child: Text(
-              t.category.toString(),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-          trailing: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 10, top: 5),
-                child: Text(
-                  dollar + t.amount.toString(),
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700),
-                ),
+
+
+       // child: ListTile(
+       //    contentPadding: EdgeInsets.all(8),
+       //    leading: CircleAvatar(
+       //      radius: 20,
+       //      child: Image(
+       //        image: AssetImage("asset/images/cart.png"),
+       //        //width: 40,
+       //        //color: const Color(0xffECDCFF)
+       //      ),
+       //    ),
+       //    title: Padding(
+       //      padding: EdgeInsets.only(top: 5, bottom: 8),
+       //      child: Text(
+       //        t.category.toString(),
+       //        style: TextStyle(
+       //            color: Colors.black,
+       //            fontSize: 13,
+       //            fontWeight: FontWeight.w700),
+       //      ),
+       //    ),
+       //    trailing: Column(
+       //      children: <Widget>[
+       //        Padding(
+       //          padding: EdgeInsets.only(bottom: 10, top: 5),
+       //          child: Text(
+       //            dollar + t.amount.toString(),
+       //            style: TextStyle(
+       //                color: Colors.black,
+       //                fontSize: 13,
+       //                fontWeight: FontWeight.w700),
+       //          ),
+       //        ),
+       //        Padding(
+       //          padding: EdgeInsets.only(bottom: 2),
+       //          child: Text(
+       //            t.date.toString(),
+       //            style: TextStyle(
+       //                color: Colors.grey,
+       //                fontSize: 13,
+       //                fontWeight: FontWeight.w400),
+       //          ),
+       //        ),
+       //      ],
+       //    ),
+       //    subtitle: Padding(
+       //      padding: EdgeInsets.only(bottom: 2),
+       //      child: Text(
+       //        t.name.toString(),
+       //        style: TextStyle(
+       //            color: Colors.grey,
+       //            fontSize: 13,
+       //            fontWeight: FontWeight.w400),
+       //      ),
+       //    ),
+       //    selected: true,
+       //
+       //  )
+
+
+child: Center(
+          child: Row(
+            mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
+            //  crossAxisAlignment : CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: CircleAvatar(
+                           radius: 20,
+                           child: Image(
+                             image: AssetImage("asset/images/cart.png"),
+
+                             //width: 40,
+                             //color: const Color(0xffECDCFF)
+                           ),
+                         ),
+                    ),
+
+
+                  Column(
+                    children: [
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(
+                            left: 4 , bottom: 4),
+                        child: Flexible(
+                     child:   Text(
+                     t.category.toString(),
+                       maxLines: 2,
+                       overflow: TextOverflow.ellipsis,
+
+
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight:
+                              FontWeight.w700),
+                        ),
+                        ),
+                      ),
+
+
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(
+                            left: 4, top: 4 , right: 8),
+                        child: Text(
+                          t.name
+                              .toString(),
+                            overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                              fontWeight:
+                              FontWeight.w500),
+                        ),
+                      ),
+
+
+
+                    ],
+                  ),
+                Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child:Text(
+                        dollar + t.amount.toString(),textAlign: TextAlign.right,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+
+                      child:Text(
+                        dollar + t.date.toString(),textAlign: TextAlign.right,
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                )
+
+
+                ],
+
+
               ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 2),
-                child: Text(
-                  t.date.toString(),
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
+
             ],
           ),
-          subtitle: Padding(
-            padding: EdgeInsets.only(bottom: 2),
-            child: Text(
-              t.name.toString(),
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400),
-            ),
-          ),
-          selected: true,
+),
 
-        )
-        )
       );
 
    // ]
@@ -922,7 +1030,7 @@ class tdashboardState extends State<Dashboard> {
       //      );
       //      listTiles.add(tile);
 //      selected: true;
-      listTiles.add(card);
+     listTiles.add(card);
     }
     return listTiles;
   }
