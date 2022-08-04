@@ -239,9 +239,9 @@ class tdashboardState extends State<Dashboard> {
     var chidern;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
+      body: SafeArea(
         // child: SingleChildScrollView(
-        child: SafeArea(
+        //child: SafeArea(
           // child: Scrollbar(
           //   mainAxisAlignment: MainAxisAlignment.start,
           //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,12 +417,9 @@ class tdashboardState extends State<Dashboard> {
                                     );
                                   },
                                   body: //SingleChildScrollView(
-                                     // _buildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
+                                      _buildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
 
-                                  debitBuildExpandableContent(
-                                      item.accesstoken.toString(),
-                                      item.accountid.toString(),
-                                      cmonth),
+                               //   debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
                                   isExpanded: item.isExpaneded,
                                 );
                               }).toList(),
@@ -629,128 +626,140 @@ class tdashboardState extends State<Dashboard> {
               ),
               // ------------credit------------------
               ////////visibility////////////////
-              Container(
-                height: 38,
-                width: double.infinity,
-                margin: const EdgeInsets.only(
-                    top: 15, bottom: 20.0, left: 25, right: 25),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                        //color: const Color(0xFFA781D3),
-                        )),
-                child: FlatButton(
-                  color: const Color(0xFFA781D3),
-                  padding: const EdgeInsets.all(5),
-                  onPressed: () {},
-                  child: Text(
-                    'Make a Payment',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
               //Spacer(),
-              Container(
-                height: 45,
-                padding: const EdgeInsets.all(
-                  8,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  color: const Color(0xF5F7F6FA),
-                ),
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      // icon: Image.asset('assets/images/dashboard.png'),
-                      icon: ImageIcon(
-                        AssetImage("asset/images/home2.png"),
-                        size: 140,
-                        color:
-                            isFavourite ? const Color(0xFFA781D3) : Colors.grey,
-                      ),
-
-                      onPressed: () {
-                        setState(() {
-                          isFavourite = false;
-                          isFavourite1 = true;
-                          isFavourite2 = true;
-                          isFavourite3 = true;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: ImageIcon(
-                        AssetImage("asset/images/pbox.png"),
-                        size: 140,
-                        color: isFavourite1
-                            ? const Color(0xFFA781D3)
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isFavourite = true;
-                          isFavourite1 = false;
-                          isFavourite2 = true;
-                          isFavourite3 = true;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: ImageIcon(
-                        AssetImage("asset/images/pmoney.png"),
-                        size: 140,
-                        color: isFavourite2
-                            ? const Color(0xFFA781D3)
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isFavourite = true;
-                          isFavourite1 = true;
-                          isFavourite2 = false;
-                          isFavourite3 = true;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: ImageIcon(
-                        AssetImage("asset/images/paccount.png"),
-                        size: 140,
-                        color: isFavourite3
-                            ? const Color(0xFFA781D3)
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isFavourite = true;
-                          isFavourite1 = true;
-                          isFavourite2 = true;
-                          isFavourite3 = false;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              paymentButton(),
+              bottionBar (),
             ],
           ),
 
           // )
-        ),
+        //),
       ),
       // ),
     );
   }
 //-------
+  paymentButton()
+  {
+    return
+    Container(
+      height: 38,
+      width: double.infinity,
+      margin: const EdgeInsets.only(
+          top: 15, bottom: 20.0, left: 25, right: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            //color: const Color(0xFFA781D3),
+          )),
+      child: FlatButton(
+        color: const Color(0xFFA781D3),
+        padding: const EdgeInsets.all(5),
+        onPressed: () {},
+        child: Text(
+          'Make a Payment',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+  }
+  bottionBar ()
+   {
+     return
+     Container(
+       height: 45,
+       padding: const EdgeInsets.all(
+         8,
+       ),
+       decoration: BoxDecoration(
+         borderRadius: BorderRadius.circular(2),
+         color: const Color(0xF5F7F6FA),
+       ),
+       alignment: Alignment.bottomCenter,
+       child: Row(
+         mainAxisSize: MainAxisSize.max,
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+         children: [
+           IconButton(
+             // icon: Image.asset('assets/images/dashboard.png'),
+             icon: ImageIcon(
+               AssetImage("asset/images/home2.png"),
+               size: 140,
+               color:
+               isFavourite ? const Color(0xFFA781D3) : Colors.grey,
+             ),
+
+             onPressed: () {
+               setState(() {
+                 isFavourite = false;
+                 isFavourite1 = true;
+                 isFavourite2 = true;
+                 isFavourite3 = true;
+               });
+             },
+           ),
+           IconButton(
+             icon: ImageIcon(
+               AssetImage("asset/images/pbox.png"),
+               size: 140,
+               color: isFavourite1
+                   ? const Color(0xFFA781D3)
+                   : Colors.grey,
+             ),
+             onPressed: () {
+               setState(() {
+                 isFavourite = true;
+                 isFavourite1 = false;
+                 isFavourite2 = true;
+                 isFavourite3 = true;
+               });
+             },
+           ),
+           IconButton(
+             icon: ImageIcon(
+               AssetImage("asset/images/pmoney.png"),
+               size: 140,
+               color: isFavourite2
+                   ? const Color(0xFFA781D3)
+                   : Colors.grey,
+             ),
+             onPressed: () {
+               setState(() {
+                 isFavourite = true;
+                 isFavourite1 = true;
+                 isFavourite2 = false;
+                 isFavourite3 = true;
+               });
+             },
+           ),
+           IconButton(
+             icon: ImageIcon(
+               AssetImage("asset/images/paccount.png"),
+               size: 140,
+               color: isFavourite3
+                   ? const Color(0xFFA781D3)
+                   : Colors.grey,
+             ),
+             onPressed: () {
+               setState(() {
+                 isFavourite = true;
+                 isFavourite1 = true;
+                 isFavourite2 = true;
+                 isFavourite3 = false;
+               });
+             },
+           ),
+         ],
+       ),
+     );
+
+  }
   debitBuildExpandableContent(String accessToken, String accountID, int cmonth) {
     print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
@@ -2415,3 +2424,91 @@ Future<LiabilityResponse> liabilityResponse(
 //   }
 //   return listTiles;
 // }
+
+
+// Container(
+// height: 45,
+// padding: const EdgeInsets.all(
+// 8,
+// ),
+// decoration: BoxDecoration(
+// borderRadius: BorderRadius.circular(2),
+// color: const Color(0xF5F7F6FA),
+// ),
+// alignment: Alignment.bottomCenter,
+// child: Row(
+// mainAxisSize: MainAxisSize.max,
+// mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+// children: [
+// IconButton(
+// // icon: Image.asset('assets/images/dashboard.png'),
+// icon: ImageIcon(
+// AssetImage("asset/images/home2.png"),
+// size: 140,
+// color:
+// isFavourite ? const Color(0xFFA781D3) : Colors.grey,
+// ),
+//
+// onPressed: () {
+// setState(() {
+// isFavourite = false;
+// isFavourite1 = true;
+// isFavourite2 = true;
+// isFavourite3 = true;
+// });
+// },
+// ),
+// IconButton(
+// icon: ImageIcon(
+// AssetImage("asset/images/pbox.png"),
+// size: 140,
+// color: isFavourite1
+// ? const Color(0xFFA781D3)
+// : Colors.grey,
+// ),
+// onPressed: () {
+// setState(() {
+// isFavourite = true;
+// isFavourite1 = false;
+// isFavourite2 = true;
+// isFavourite3 = true;
+// });
+// },
+// ),
+// IconButton(
+// icon: ImageIcon(
+// AssetImage("asset/images/pmoney.png"),
+// size: 140,
+// color: isFavourite2
+// ? const Color(0xFFA781D3)
+// : Colors.grey,
+// ),
+// onPressed: () {
+// setState(() {
+// isFavourite = true;
+// isFavourite1 = true;
+// isFavourite2 = false;
+// isFavourite3 = true;
+// });
+// },
+// ),
+// IconButton(
+// icon: ImageIcon(
+// AssetImage("asset/images/paccount.png"),
+// size: 140,
+// color: isFavourite3
+// ? const Color(0xFFA781D3)
+// : Colors.grey,
+// ),
+// onPressed: () {
+// setState(() {
+// isFavourite = true;
+// isFavourite1 = true;
+// isFavourite2 = true;
+// isFavourite3 = false;
+// });
+// },
+// ),
+// ],
+// ),
+// ),
