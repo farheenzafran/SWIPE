@@ -822,8 +822,8 @@ class tdashboardState extends State<Dashboard> {
                                         children: [
                                           Container(
                                             alignment: Alignment.center,
-                                            margin: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-                                            padding: EdgeInsets.only(left: 5, top: 6, ),
+                                            margin: EdgeInsets.only(left: 3, right: 3, top: 4, bottom: 4),
+                                            padding: EdgeInsets.only( top: 3, ),
                                             child: Flexible(
                                               child: Text(
                                                 t.category.toString(),
@@ -857,8 +857,8 @@ class tdashboardState extends State<Dashboard> {
                                         children: [
                                           Container(
                                             alignment: Alignment.topRight,
-                                            padding: const EdgeInsets.all(4),
-                                            margin: const EdgeInsets.all(4),
+                                            padding: const EdgeInsets.all(3),
+                                            margin: const EdgeInsets.all(3),
                                             child: Text(
                                               dollar + t.amount.toString(),
                                               textAlign: TextAlign.right,
@@ -870,8 +870,8 @@ class tdashboardState extends State<Dashboard> {
                                           ),
                                           Container(
                                             alignment: Alignment.bottomRight,
-                                            padding: const EdgeInsets.all(5),
-                                            margin: const EdgeInsets.all(5),
+                                            padding: const EdgeInsets.all(3),
+                                            margin: const EdgeInsets.all(3),
                                             child: Text(
                                               dollar + t.date.toString(),
                                               textAlign: TextAlign.right,
