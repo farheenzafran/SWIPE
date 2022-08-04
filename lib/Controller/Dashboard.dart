@@ -72,6 +72,7 @@ class tdashboardState extends State<Dashboard> {
   bool isLoading = false;
   bool isexpanse = true;
   bool viewVisibleTransaction = true;
+
   void showWidget() {
     setState(() {
       viewVisible = true;
@@ -230,7 +231,7 @@ class tdashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    double c_width = MediaQuery.of(context).size.width*0.8;
+    double c_width = MediaQuery.of(context).size.width * 0.8;
 
     var screenSize = MediaQuery.of(context).size;
     final mq = MediaQueryData.fromWindow(window);
@@ -416,10 +417,12 @@ class tdashboardState extends State<Dashboard> {
                                     );
                                   },
                                   body: //SingleChildScrollView(
-                                      _buildExpandableContent(
-                                          item.accesstoken.toString(),
-                                          item.accountid.toString(),
-                                          cmonth),
+                                     // _buildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
+
+                                  debitBuildExpandableContent(
+                                      item.accesstoken.toString(),
+                                      item.accountid.toString(),
+                                      cmonth),
                                   isExpanded: item.isExpaneded,
                                 );
                               }).toList(),
@@ -578,15 +581,14 @@ class tdashboardState extends State<Dashboard> {
                             print(isExpanded);
                             print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
                             TransactionResponse tempresponse2 =
-                            await transactionResponse(
-                                snapshot.data![index].accesstoken
-                                    .toString(),
-                                snapshot.data![index].accountid
-                                    .toString(),
-                                cmonth);
+                                await transactionResponse(
+                                    snapshot.data![index].accesstoken
+                                        .toString(),
+                                    snapshot.data![index].accountid.toString(),
+                                    cmonth);
 
                             transactionlist = tempresponse2.transactions
-                            as List<Transactions>;
+                                as List<Transactions>;
                             // viewVisible = true;
                             viewVisibleTransaction = true;
                             showWidget();
@@ -748,19 +750,171 @@ class tdashboardState extends State<Dashboard> {
       // ),
     );
   }
+//-------
+  debitBuildExpandableContent(String accessToken, String accountID, int cmonth) {
+    print('+++++++++++++++++}');
+    var response = transactionResponse(accessToken, accountID, cmonth);
+    print(response);
+    if (response == null) {
+      return Text(
+        'error ',
+        style: TextStyle(color: Colors.black),
+        //  ),
+      );
+    } else {
+      return //Text("jhbvkjndfkjvnfdv");
+        FutureBuilder<TransactionResponse>(
+          future: response,
+          builder: (context, snapshot) {
+            print('snnnnnnnnapshot');
+            print(snapshot.data!.transactions.toString());
+            return debitBuildTransactionListView(snapshot.data!);
 
+          });
+    };
+  }
+  debitBuildTransactionListView(TransactionResponse tdata) {
+    //Text("jhbvkjndfkjvnfdv");
+    return //Text("credit4444444444444credit");
+      Column(
+        children: [
+          //for (var t in tdata.transactions!)
+          if (viewVisibleTransaction) ...[
+            Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    for (var t in tdata.transactions!)
+                      Column(
+                          children: <Widget>[
+
+                            Container(
+                              alignment: Alignment.center,
+                              height: 75,
+                              margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+                              padding: EdgeInsets.only(left: 5, top: 5, ),
+                              //color: const Color(0xffF5F5F5),
+                              color: const Color(0xffEFF4F8),
+
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //  crossAxisAlignment : CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.topLeft,
+                                        margin: EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 5),
+                                        padding: EdgeInsets.only(left: 5, top: 6, ),
+                                        child: CircleAvatar(
+                                          radius: 20,
+                                          child: Image(
+                                            image: AssetImage("asset/images/cart.png"),
+
+                                            //width: 40,
+                                            //color: const Color(0xffECDCFF)
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.center,
+                                            margin: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+                                            padding: EdgeInsets.only(left: 5, top: 6, ),
+                                            child: Flexible(
+                                              child: Text(
+                                                t.category.toString(),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.fade,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize:9 ,
+                                                    fontWeight: FontWeight.w700),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.all(3),
+                                            margin: const EdgeInsets.all(4),
+                                            child: Text(
+                                              t.name.toString(),
+                                              // overflow: TextOverflow.ellipsis,
+                                              overflow: TextOverflow.fade,
+
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.topRight,
+                                            padding: const EdgeInsets.all(4),
+                                            margin: const EdgeInsets.all(4),
+                                            child: Text(
+                                              dollar + t.amount.toString(),
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.bottomRight,
+                                            padding: const EdgeInsets.all(5),
+                                            margin: const EdgeInsets.all(5),
+                                            child: Text(
+                                              dollar + t.date.toString(),
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+
+                            ),
+                          ]
+
+                      ),
+                  ],
+                )
+            ),
+          ]
+          else
+            Container(
+              child: Text("Loading..."),
+            ),
+        ],
+      );
+    //selected: true;
+  }
+  //-------
   _buildExpandableContent(String accessToken, String accountID, int cmonth) {
     print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
     print(response);
     if (response == null) {
-      return
-       // ListTile(
-       // title:
-        Text(
-          'error ',
+      return ListTile(
+        title: Text(
+          'sssee',
           style: TextStyle(color: Colors.black),
-      //  ),
+        ),
       );
     } else {
       return FutureBuilder<TransactionResponse>(
@@ -774,178 +928,94 @@ class tdashboardState extends State<Dashboard> {
             //   children: _buildTransactionListView(snapshot.data!),
             // );
 
-            return debitBuildLiabilityListView(snapshot.data!);
-
-            // ListView(
-            //   children:
-            //       //_buildTransactionListView(snapshot.data!),
-            //   shrinkWrap: true,
-            // );
+            return ListView(
+              children: _buildTransactionListView(snapshot.data!),
+              shrinkWrap: true,
+            );
           });
     }
     ;
   }
-
   _buildTransactionListView(TransactionResponse tdata) {
     List<Widget> listTiles = [];
     for (var t in tdata.transactions!) {
       var card = Container(
-        alignment: Alignment.center,
-        height: 60,
-        margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-        padding: EdgeInsets.all(10),
-        //color: const Color(0xffF5F5F5),
-        color: const Color(0xffEFF4F8),
-
-        // child: ListTile(
-        //    contentPadding: EdgeInsets.all(8),
-        //    leading: CircleAvatar(
-        //      radius: 20,
-        //      child: Image(
-        //        image: AssetImage("asset/images/cart.png"),
-        //        //width: 40,
-        //        //color: const Color(0xffECDCFF)
-        //      ),
-        //    ),
-        //    title: Padding(
-        //      padding: EdgeInsets.only(top: 5, bottom: 8),
-        //      child: Text(
-        //        t.category.toString(),
-        //        style: TextStyle(
-        //            color: Colors.black,
-        //            fontSize: 13,
-        //            fontWeight: FontWeight.w700),
-        //      ),
-        //    ),
-        //    trailing: Column(
-        //      children: <Widget>[
-        //        Padding(
-        //          padding: EdgeInsets.only(bottom: 10, top: 5),
-        //          child: Text(
-        //            dollar + t.amount.toString(),
-        //            style: TextStyle(
-        //                color: Colors.black,
-        //                fontSize: 13,
-        //                fontWeight: FontWeight.w700),
-        //          ),
-        //        ),
-        //        Padding(
-        //          padding: EdgeInsets.only(bottom: 2),
-        //          child: Text(
-        //            t.date.toString(),
-        //            style: TextStyle(
-        //                color: Colors.grey,
-        //                fontSize: 13,
-        //                fontWeight: FontWeight.w400),
-        //          ),
-        //        ),
-        //      ],
-        //    ),
-        //    subtitle: Padding(
-        //      padding: EdgeInsets.only(bottom: 2),
-        //      child: Text(
-        //        t.name.toString(),
-        //        style: TextStyle(
-        //            color: Colors.grey,
-        //            fontSize: 13,
-        //            fontWeight: FontWeight.w400),
-        //      ),
-        //    ),
-        //    selected: true,
-        //
-        //  )
-
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //  crossAxisAlignment : CrossAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: CircleAvatar(
-                      radius: 20,
-                      child: Image(
-                        image: AssetImage("asset/images/cart.png"),
-
-                        //width: 40,
-                        //color: const Color(0xffECDCFF)
-                      ),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4, bottom: 4),
-                        child: Flexible(
-                          child: Text(
-                            t.category.toString(),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 4, top: 4, right: 8),
-                        child: Text(
-                          t.name.toString(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          dollar + t.amount.toString(),
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          dollar + t.date.toString(),
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+        margin: EdgeInsets.all(15),
+        color: const Color(0xffF5F5F5),
+        child:
+        //ListTile(title:Text(t.name.toString()) ,)
+        ListTile(
+          contentPadding: EdgeInsets.all(8),
+          leading: CircleAvatar(
+            radius: 20,
+            child: Image(
+              image: AssetImage("asset/images/cart.png"),
+              //width: 40,
+              //color: const Color(0xffECDCFF)
+            ),
+          ),
+          title: Padding(
+            padding: EdgeInsets.only(top: 5, bottom: 8),
+            child: Text(
+              t.category.toString(),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+          trailing: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(bottom: 10, top: 5),
+                child: Text(
+                  dollar + t.amount.toString(),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 2),
+                child: Text(
+                  t.date.toString(),
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ],
           ),
+          subtitle: Padding(
+            padding: EdgeInsets.only(bottom: 2),
+            child: Text(
+              t.name.toString(),
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+          selected: true,
         ),
       );
 
+      // var tile = ListTile(
+      //        title: Text(
+      //          t.name.toString(),
+      //          style: TextStyle(fontWeight: FontWeight.w700),
+      //        ),
+      //      );
+      //      listTiles.add(tile);
 
       listTiles.add(card);
     }
     return listTiles;
   }
 
-//------->>>>>>>>>>>
-
+//------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
     print('+++++++++++++++++}');
     var libilityresponse = liabilityResponse(accessToken, accountID);
@@ -966,168 +1036,13 @@ class tdashboardState extends State<Dashboard> {
             print('snnnnnnnnapshot');
             print(snapshot.data!.liabilities.toString());
             // return Text("233222222222");
-            return //ExpansionTile(title:
-                //Text('libtest',),
-                creditBuildLiabilityListView(snapshot.data!);
-
-            //
-            // );
-
-            // return ListView(
-            //   children: _buildTransactionListView(snapshot.data!!),
-            //   shrinkWrap: true,
-            // );
+            return creditBuildLiabilityListView(snapshot.data!);
           });
     }
     ;
   }
 
-  debitBuildLiabilityListView(TransactionResponse tdata) {
-    //Text("jhbvkjndfkjvnfdv");
-    return //Text("4444444444444");
-        Column(
-      children: [
-        for (var t in tdata.transactions!)
-          if (viewVisibleTransaction)
-            ...[
-Container(
-    width: double.infinity,
-    color: Colors.white,
-  child:  Container(
-    alignment: Alignment.center,
-    height: 60,
-    margin: EdgeInsets.only(left: 15,right: 15,top: 5,bottom: 5),
-    padding: EdgeInsets.only(left: 12, top: 6, bottom: 3),
-    //color: const Color(0xffF5F5F5),
-    color: const Color(0xffEFF4F8),
-    child: Center(
-    child: Row(
-    mainAxisAlignment:
-    MainAxisAlignment.spaceBetween,
-    //  crossAxisAlignment : CrossAxisAlignment.end,
-    children: [
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-    Align(
-    alignment: Alignment.topLeft,
-    child: CircleAvatar(
-    radius: 20,
-    child: Image(
-    image: AssetImage("asset/images/cart.png"),
-
-    //width: 40,
-    //color: const Color(0xffECDCFF)
-    ),
-    ),
-    ),
-
-
-    Column(
-    children: [
-    Padding(
-    padding:
-    const EdgeInsets.only(
-    left: 4 , bottom: 4),
-    child: Flexible(
-    child:   Text(
-    t.category.toString(),
-    maxLines: 2,
-    overflow: TextOverflow.fade,
-
-
-    style: TextStyle(
-    color: Colors.black,
-    fontSize: 13,
-    fontWeight:
-    FontWeight.w700),
-    ),
-    ),
-    ),
-
-
-    Container(
-      alignment: Alignment.center,
-    padding:
-    const EdgeInsets.all(2),
-      margin:
-    const EdgeInsets.all(2),
-    child: Text(
-    t.name
-        .toString(),
-   // overflow: TextOverflow.ellipsis,
-      overflow: TextOverflow.fade,
-
-      style: TextStyle(
-    color: Colors.grey,
-    fontSize: 11,
-    fontWeight:
-    FontWeight.w500),
-    ),
-    ),
-
-
-
-
-
-    ],
-    ),
-    Column(
-    children: [
-    Align(
-    alignment: Alignment.topRight,
-    child:Text(
-    dollar + t.amount.toString(),textAlign: TextAlign.right,
-    style: TextStyle(
-    color: Colors.black,
-    fontSize: 13,
-    fontWeight: FontWeight.w700),
-    ),
-    ),
-    Container(
-    alignment: Alignment.bottomRight,
-      margin: EdgeInsets.all(5),
-
-    child:Text(
-    dollar + t.date.toString(),textAlign: TextAlign.right,
-    style: TextStyle(
-    color: Colors.grey,
-    fontSize: 13,
-    fontWeight: FontWeight.w700),
-    ),
-    ),
-    ],
-    )
-
-
-    ],
-
-
-    ),
-
-    ],
-    ),
-    ),
-
-    ),
-    ),
-            ]
-          else
-            Container(
-              child: Text("Loading..."),
-            ),
-      ],
-    );
-    //selected: true;
-  }
-
   creditBuildLiabilityListView(LiabilityResponse ldata) {
-    // List<Widget> listTiles = [];
-    print(
-        "%%%%%%%%%%%%%'''''''&&&&&&&&&&&&&&&&&&&&&&&&&>>>>>>>>>>>>>>>>>>>>>>>>");
-    print(viewVisible);
-    print(viewVisible2);
-    print(viewVisible3);
     return //Text("4444444444444");
         Column(
       children: [
@@ -1987,9 +1902,8 @@ Container(
     selected:
     true;
   }
-
   void setStudentLoanContainer(Student student, double sliderValue) {
-    var currentdate = new DateTime.now(); //DateTime.parse(currentdate);
+    var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
     var startdate = DateTime.parse(student.disbursementDates!.first);
     var enddate = DateTime.parse(student.expectedPayoffDate.toString());
     int yearpassed = (currentdate.year - startdate.year);
@@ -1997,16 +1911,54 @@ Container(
     // num yearpassed = (currentdate.year - startdate.year);
     //int endyear = (enddate.year - currentdate.year)
     // ;
-    int endyear = enddate.year - startdate.year;
+    int endyear = enddate.year - startdate.year ;
+    // print(yearpassed.toString());
+    // print(endyear.toString());
+    // print(student.disbursementDates!.first);
+    // print(student.expectedPayoffDate);
+    // print(_loanyearvalues.toString());
+
   }
 
+
   void setMortgage(Mortgage mortgage, double mtgsliderValue) {
-    var currentdate = new DateTime.now(); //DateTime.parse(currentdate);
-    var enddate = DateTime.parse(mortgage.maturityDate!);
+
+    // var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
+    // var startdate = DateTime.parse(mortgage.maturityDate!);
+    // var enddate = DateTime.parse(mortgage.originationDate!);
+    // int myearpassed = (currentdate.year - startdate.year);
+    // int mendyear = enddate.year - startdate.year ;
+    // print(myearpassed.toString());
+    // print(mendyear.toString());
+    // print(_mloanyearvalues.toString());
+    // m_minrange =  double.parse(myearpassed.toString()); ;
+    // m_maxrange =double.parse(mendyear.toString());   ;
+    // double mtgint =  m_maxrange  ;
+    // print("###3333####33hvcudfyhvuyfuyvuy");
+    // if(mtgsliderValue != 0)
+    // {
+    //   mtgint = mtgsliderValue ;
+    // }
+    // if(_mloanyearvalues <m_minrange) {
+    //   _mloanyearvalues = m_maxrange;
+    // }
+    // mbalanceamount = Constants.mAmortization(mortgage.originationPrincipalAmount,
+    //     mortgage.interestRate!.percentage as double, mtgint , myearpassed.toInt() );
+    // m_saveamount = mloanmaxvalue - mbalanceamount;
+    var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
+    var enddate  = DateTime.parse(mortgage.maturityDate!);
     var startdate = DateTime.parse(mortgage.originationDate.toString());
     int yearpassed = (currentdate.year - startdate.year);
-    int endyear = enddate.year - startdate.year;
+    int endyear = enddate.year - startdate.year ;
+    // print(yearpassed.toString());
+    // print(endyear.toString());
+    // print(mortgage.maturityDate);
+    // print(mortgage.originationDate);
+    // print(_mloanyearvalues.toString());
+
   }
+
+
 
 //------
 }
@@ -2364,3 +2316,100 @@ Future<LiabilityResponse> liabilityResponse(
   }
 }
 //>>>>>>>>>>>>>>>>>>>>>>>>>>liability>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// _buildTransactionListView(TransactionResponse tdata) {
+//   List<Widget> listTiles = [];
+//   for (var t in tdata.transactions!) {
+//     var card = Container(
+//       alignment: Alignment.center,
+//       height: 60,
+//       margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+//       padding: EdgeInsets.all(10),
+//       //color: const Color(0xffF5F5F5),
+//       color: const Color(0xffEFF4F8),
+//       child: Center(
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           //  crossAxisAlignment : CrossAxisAlignment.end,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 Align(
+//                   alignment: Alignment.topLeft,
+//                   child: CircleAvatar(
+//                     radius: 20,
+//                     child: Image(
+//                       image: AssetImage("asset/images/cart.png"),
+//
+//                       //width: 40,
+//                       //color: const Color(0xffECDCFF)
+//                     ),
+//                   ),
+//                 ),
+//                 Column(
+//                   children: [
+//                     Padding(
+//                       padding: const EdgeInsets.only(left: 4, bottom: 4),
+//                       child: Flexible(
+//                         child: Text(
+//                           t.category.toString(),
+//                           maxLines: 2,
+//                           overflow: TextOverflow.ellipsis,
+//                           style: TextStyle(
+//                               color: Colors.black,
+//                               fontSize: 13,
+//                               fontWeight: FontWeight.w700),
+//                         ),
+//                       ),
+//                     ),
+//                     Padding(
+//                       padding:
+//                           const EdgeInsets.only(left: 4, top: 4, right: 8),
+//                       child: Text(
+//                         t.name.toString(),
+//                         overflow: TextOverflow.ellipsis,
+//                         style: TextStyle(
+//                             color: Colors.grey,
+//                             fontSize: 11,
+//                             fontWeight: FontWeight.w500),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 Column(
+//                   children: [
+//                     Align(
+//                       alignment: Alignment.topRight,
+//                       child: Text(
+//                         dollar + t.amount.toString(),
+//                         textAlign: TextAlign.right,
+//                         style: TextStyle(
+//                             color: Colors.black,
+//                             fontSize: 13,
+//                             fontWeight: FontWeight.w700),
+//                       ),
+//                     ),
+//                     Align(
+//                       alignment: Alignment.bottomRight,
+//                       child: Text(
+//                         dollar + t.date.toString(),
+//                         textAlign: TextAlign.right,
+//                         style: TextStyle(
+//                             color: Colors.grey,
+//                             fontSize: 13,
+//                             fontWeight: FontWeight.w700),
+//                       ),
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//
+//     listTiles.add(card);
+//   }
+//   return listTiles;
+// }
