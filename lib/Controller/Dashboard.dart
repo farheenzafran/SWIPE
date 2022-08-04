@@ -793,12 +793,12 @@ class tdashboardState extends State<Dashboard> {
                               alignment: Alignment.center,
                               height: 75,
                               margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-                              padding: EdgeInsets.only(left: 5, top: 5, ),
+                              padding: EdgeInsets.all(5 ),
                               //color: const Color(0xffF5F5F5),
                               color: const Color(0xffEFF4F8),
 
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 //  crossAxisAlignment : CrossAxisAlignment.end,
                                 children: [
                                   Row(
@@ -807,7 +807,7 @@ class tdashboardState extends State<Dashboard> {
                                       Container(
                                         alignment: Alignment.topLeft,
                                         margin: EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 5),
-                                        padding: EdgeInsets.only(left: 5, top: 6, ),
+                                        //padding: EdgeInsets.only(left: 5, top: 6, ),
                                         child: CircleAvatar(
                                           radius: 20,
                                           child: Image(
@@ -821,29 +821,31 @@ class tdashboardState extends State<Dashboard> {
                                       Column(
                                         children: [
                                           Container(
-                                            alignment: Alignment.center,
+                                            width: 50,
+                                            //alignment: Alignment.center,
                                             margin: EdgeInsets.only(left: 3, right: 3, top: 4, bottom: 4),
-                                            padding: EdgeInsets.only( top: 3, ),
+                                           // padding: EdgeInsets.only( top: 3, ),
                                             child: Flexible(
                                               child: Text(
                                                 t.category.toString(),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.fade,
+                                                //maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize:9 ,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.w700),
                                               ),
                                             ),
                                           ),
                                           Container(
+                                            width: 40,
                                             alignment: Alignment.center,
-                                            padding: const EdgeInsets.all(3),
+                                            //padding: const EdgeInsets.all(3),
                                             margin: const EdgeInsets.all(4),
                                             child: Text(
                                               t.name.toString(),
                                               // overflow: TextOverflow.ellipsis,
-                                              overflow: TextOverflow.fade,
+                                              overflow: TextOverflow.ellipsis,
 
                                               style: TextStyle(
                                                   color: Colors.grey,
@@ -857,7 +859,7 @@ class tdashboardState extends State<Dashboard> {
                                         children: [
                                           Container(
                                             alignment: Alignment.topRight,
-                                            padding: const EdgeInsets.all(3),
+                                            //padding: const EdgeInsets.all(3),
                                             margin: const EdgeInsets.all(3),
                                             child: Text(
                                               dollar + t.amount.toString(),
@@ -870,7 +872,7 @@ class tdashboardState extends State<Dashboard> {
                                           ),
                                           Container(
                                             alignment: Alignment.bottomRight,
-                                            padding: const EdgeInsets.all(3),
+                                           // padding: const EdgeInsets.all(3),
                                             margin: const EdgeInsets.all(3),
                                             child: Text(
                                               dollar + t.date.toString(),
