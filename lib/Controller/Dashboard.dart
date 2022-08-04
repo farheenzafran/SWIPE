@@ -240,418 +240,413 @@ class tdashboardState extends State<Dashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        // child: SingleChildScrollView(
-        //child: SafeArea(
-          // child: Scrollbar(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //  child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 70,
-                width: double.infinity,
-                padding: EdgeInsets.all(15),
-                //color: const Color(0xDEB46FEA),
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                  image: AssetImage("asset/images/background.png"),
-                  fit: BoxFit.cover,
-                )),
-                //child: Align(alignment: Alignment.center,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Debit',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      Image.asset(
-                        "asset/images/downarrow.png", // width: 300,
-                        height: 20,
-                        width: 20,
-                        alignment: Alignment.center,
-                      ),
-                      Text(
-                        'Credit',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ]),
+        child: ListView(
+          children: [
+        Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                dashboardHeader(),
+                debitTransaction(),
+                creditLiability(),
+                paymentButton(),
+                bottomNavBar(),
+              ],
+            ),
+          ],
 
-                //  ),
-              ),
-              //--------------
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 30,
-                  width: 100,
-                  margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: const Color(0xffECDCFF)),
-                  child: Text(
-                    'Debit: 0',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                  // height: 250.0,
-                  // color: Colors.yellow,
-                  child: Column(
-                children: [
-                  Container(
-                      height: 35,
-                      width: double.infinity,
-                      margin: EdgeInsets.only(
-                          top: 5, left: 15, bottom: 10, right: 15),
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: const Color(0xffF7F6FA)),
-                      child: Row(
-                        children: [
-                          FlatButton(
-                            padding: const EdgeInsets.all(5),
-                            onPressed: () async {
-                              isexpanse = true;
-                              Loader.show(context,
-                                  isSafeAreaOverlay: false,
-                                  progressIndicator:
-                                      CircularProgressIndicator(),
-                                  isBottomBarOverlay: false,
-                                  overlayFromBottom: 80,
-                                  themeData: Theme.of(context)
-                                      .copyWith(accentColor: Colors.black),
-                                  overlayColor: Color(0x0000ffff));
-                              Future.delayed(Duration(seconds: 4), () {
-                                Loader.hide();
-                              });
-                              var linktoken = await linktokenResponse();
-                              _linkTokenConfiguration = LinkTokenConfiguration(
-                                token: linktoken.linkToken.toString(),
-                              );
+        )
 
-                              PlaidLink.open(
-                                  configuration: _linkTokenConfiguration);
-                            },
-                            child: Image(
-                              image: AssetImage("asset/images/Plus.png"),
-                              width: 100,
-                              height: 100,
-                            ),
-                          ),
-                          Text('Connect To Debit Account'),
-                        ],
-                      )),
-                  //-----------------------------------debir////-----------
-                  Container(
-                    width: double.infinity,
-                    height: 150.0,
-                    margin: const EdgeInsets.only(bottom: 4, top: 4),
-                    color: Colors.white,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        FutureBuilder<List<BankData>>(
-                          future: bankdatalist,
-                          builder: (context, snapshot) {
-                            return ExpansionPanelList(
-                              animationDuration: Duration(milliseconds: 2000),
-                              children: snapshot.data!
-                                  .map<ExpansionPanel>((BankData item) {
-                                return ExpansionPanel(
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      iconColor: Colors.red,
-                                      leading: CircleAvatar(
-                                        radius: 30,
-                                        child: Image.memory(
-                                          Base64Codec()
-                                              .decode(item.banklogo.toString()),
-                                          // height: 30,
-                                          // width: 30,
-                                          // backgroundImage: new AssetImage(
-                                          // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        item.bankname.toString(),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      trailing: Text(
-                                        dollar + item.mask.toString(),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      subtitle: Text(
-                                        item.accountname.toString(),
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      selected: false,
-                                    );
-                                  },
-                                  body: //SingleChildScrollView(
-                                      _buildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
-
-                               //   debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
-                                  isExpanded: item.isExpaneded,
-                                );
-                              }).toList(),
-                              dividerColor: Colors.grey,
-                              expansionCallback: (int index, bool isExpanded) {
-                                setState(() {
-                                  snapshot.data![index].isExpaneded =
-                                      !isExpanded;
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-//chnage heiught to 200
-                  //--------------------------
-                ],
-              )),
-
-              //------------credit------------------
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 30,
-                  width: 100,
-                  margin: EdgeInsets.only(top: 10, left: 15, bottom: 5),
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: const Color(0xffECDCFF)),
-                  child: Text(
-                    'Credit: 0',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                  height: 35,
-                  width: double.infinity,
-                  margin:
-                      EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xffF7F6FA)),
-                  child: Row(
-                    children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
-                        onPressed: () async {
-                          isexpanse = false;
-                          Loader.show(context,
-                              isSafeAreaOverlay: false,
-                              progressIndicator: CircularProgressIndicator(),
-                              isBottomBarOverlay: false,
-                              overlayFromBottom: 80,
-                              themeData: Theme.of(context)
-                                  .copyWith(accentColor: Colors.black),
-                              overlayColor: Color(0x0000ffff));
-                          Future.delayed(Duration(seconds: 4), () {
-                            Loader.hide();
-                          });
-                          var creditlinktoken = await creditlinktokenResponse();
-                          creditlinkTokenConfiguration = LinkTokenConfiguration(
-                            token: creditlinktoken.linkToken.toString(),
-                          );
-
-                          PlaidLink.open(
-                              configuration: creditlinkTokenConfiguration);
-                        },
-                        child: Image(
-                          image: AssetImage("asset/images/Plus.png"),
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      Text('Connect To Credit Account'),
-                      //Text('Connect To Credit Account2'),
-                    ],
-                  )),
-
-              Container(
-                width: double.infinity,
-                height: 150.0,
-                margin: const EdgeInsets.only(bottom: 0, top: 0),
-                color: Colors.white,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    FutureBuilder<List<BankData>>(
-                      future: creditbankdatalist,
-                      builder: (context, snapshot) {
-                        return ExpansionPanelList(
-                          animationDuration: Duration(milliseconds: 2000),
-                          children: snapshot.data!
-                              .map<ExpansionPanel>((BankData item) {
-                            return ExpansionPanel(
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  iconColor: Colors.red,
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    child: Image.memory(
-                                      Base64Codec()
-                                          .decode(item.banklogo.toString()),
-                                      // height: 30,
-                                      // width: 30,
-                                      // backgroundImage: new AssetImage(
-                                      // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    item.bankname.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  trailing: Text(
-                                    dollar + item.mask.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  subtitle: Text(
-                                    item.accountname.toString(),
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  selected: false,
-                                );
-                              },
-                              body: //Text('hgsdvfghjbvsdjhcgsdh'),
-                                  creditBuildExpandableContent(
-                                item.accesstoken.toString(),
-                                item.accountid.toString(),
-                              ),
-                              isExpanded: item.isExpaneded,
-                            );
-                          }).toList(),
-                          dividerColor: Colors.grey,
-                          expansionCallback:
-                              (int index, bool isExpanded) async {
-                            setState(() {
-                              snapshot.data![index].isExpaneded = !isExpanded;
-                            });
-                            print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                            print(index);
-                            print(isExpanded);
-                            print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                            TransactionResponse tempresponse2 =
-                                await transactionResponse(
-                                    snapshot.data![index].accesstoken
-                                        .toString(),
-                                    snapshot.data![index].accountid.toString(),
-                                    cmonth);
-
-                            transactionlist = tempresponse2.transactions
-                                as List<Transactions>;
-                            // viewVisible = true;
-                            viewVisibleTransaction = true;
-                            showWidget();
-                            LiabilityResponse tempresponse =
-                                await liabilityResponse(
-                                    snapshot.data![index].accesstoken
-                                        .toString(),
-                                    snapshot.data![index].accountid.toString());
-                            liabilitylist =
-                                tempresponse.liabilities as Liabilities;
-                            viewVisible = false;
-                            viewVisible2 = false;
-                            viewVisible3 = false;
-                            if (liabilitylist.student != null) {
-                              stdlist = liabilitylist.student!;
-                              viewVisible = true;
-                              //  print("student");
-                              setStudentLoanContainer(
-                                  liabilitylist.student!.first, 0);
-                            }
-                            if (liabilitylist.mortgage != null) {
-                              mrtlist = liabilitylist.mortgage!;
-                              viewVisible2 = true;
-                              //  print("mortgage");
-                              setMortgage(liabilitylist.mortgage!.first, 0);
-                            }
-                            if (liabilitylist.credit != null) {
-                              crdlist = liabilitylist.credit!;
-                              viewVisible3 = true;
-                              //  print("credit");
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              // ------------credit------------------
-              ////////visibility////////////////
-              //Spacer(),
-              paymentButton(),
-              bottionBar (),
-            ],
-          ),
-
-          // )
-        //),
       ),
-      // ),
     );
   }
-//-------
-  paymentButton()
-  {
+
+//<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+  dashboardHeader() {
+    return Container(
+      height: 70,
+      width: double.infinity,
+      padding: EdgeInsets.all(15),
+      //color: const Color(0xDEB46FEA),
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage("asset/images/background.png"),
+        fit: BoxFit.cover,
+      )),
+      //child: Align(alignment: Alignment.center,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Debit',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            Image.asset(
+              "asset/images/downarrow.png", // width: 300,
+              height: 20,
+              width: 20,
+              alignment: Alignment.center,
+            ),
+            Text(
+              'Credit',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ]),
+
+      //  ),
+    );
+  }
+
+  debitTransaction() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            height: 30,
+            width: 100,
+            margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
+            alignment: Alignment.topLeft,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xffECDCFF)),
+            child: Text(
+              'Debit: 0',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Container(
+            // height: 250.0,
+            // color: Colors.yellow,
+            child: Column(
+          children: [
+            Container(
+                height: 35,
+                width: double.infinity,
+                margin:
+                    EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: const Color(0xffF7F6FA)),
+                child: Row(
+                  children: [
+                    FlatButton(
+                      padding: const EdgeInsets.all(5),
+                      onPressed: () async {
+                        isexpanse = true;
+                        Loader.show(context,
+                            isSafeAreaOverlay: false,
+                            progressIndicator: CircularProgressIndicator(),
+                            isBottomBarOverlay: false,
+                            overlayFromBottom: 80,
+                            themeData: Theme.of(context)
+                                .copyWith(accentColor: Colors.black),
+                            overlayColor: Color(0x0000ffff));
+                        Future.delayed(Duration(seconds: 4), () {
+                          Loader.hide();
+                        });
+                        var linktoken = await linktokenResponse();
+                        _linkTokenConfiguration = LinkTokenConfiguration(
+                          token: linktoken.linkToken.toString(),
+                        );
+
+                        PlaidLink.open(configuration: _linkTokenConfiguration);
+                      },
+                      child: Image(
+                        image: AssetImage("asset/images/Plus.png"),
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                    Text('Connect To Debit Account'),
+                  ],
+                )),
+            //-----------------------------------debir////-----------
+            Container(
+              width: double.infinity,
+              height: 150.0,
+              margin: const EdgeInsets.only(bottom: 4, top: 4),
+              color: Colors.white,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  FutureBuilder<List<BankData>>(
+                    future: bankdatalist,
+                    builder: (context, snapshot) {
+                      return ExpansionPanelList(
+                        animationDuration: Duration(milliseconds: 2000),
+                        children:
+                            snapshot.data!.map<ExpansionPanel>((BankData item) {
+                          return ExpansionPanel(
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                iconColor: Colors.red,
+                                leading: CircleAvatar(
+                                  radius: 30,
+                                  child: Image.memory(
+                                    Base64Codec()
+                                        .decode(item.banklogo.toString()),
+                                    // height: 30,
+                                    // width: 30,
+                                    // backgroundImage: new AssetImage(
+                                    // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                                  ),
+                                ),
+                                title: Text(
+                                  item.bankname.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                trailing: Text(
+                                  dollar + item.mask.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                subtitle: Text(
+                                  item.accountname.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                selected: false,
+                              );
+                            },
+                            body: //SingleChildScrollView(
+                             //   _buildExpandableContent(
+                             //        item.accesstoken.toString(),
+                             //        item.accountid.toString(),
+                             //        cmonth),
+
+                               debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
+                            isExpanded: item.isExpaneded,
+                          );
+                        }).toList(),
+                        dividerColor: Colors.grey,
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            snapshot.data![index].isExpaneded = !isExpanded;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+//chnage heiught to 200
+            //--------------------------
+          ],
+        )),
+      ],
+    );
+  }
+
+  creditLiability() {
     return
-    Container(
+    Column(children: [
+      Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          height: 30,
+          width: 100,
+          margin: EdgeInsets.only(top: 10, left: 15, bottom: 5),
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xffECDCFF)),
+          child: Text(
+            'Credit: 0',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      Container(
+          height: 35,
+          width: double.infinity,
+          margin: EdgeInsets.only(top: 15, left: 15, bottom: 15, right: 15),
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: const Color(0xffF7F6FA)),
+          child: Row(
+            children: [
+              FlatButton(
+                padding: const EdgeInsets.all(5),
+                onPressed: () async {
+                  isexpanse = false;
+                  Loader.show(context,
+                      isSafeAreaOverlay: false,
+                      progressIndicator: CircularProgressIndicator(),
+                      isBottomBarOverlay: false,
+                      overlayFromBottom: 80,
+                      themeData:
+                          Theme.of(context).copyWith(accentColor: Colors.black),
+                      overlayColor: Color(0x0000ffff));
+                  Future.delayed(Duration(seconds: 4), () {
+                    Loader.hide();
+                  });
+                  var creditlinktoken = await creditlinktokenResponse();
+                  creditlinkTokenConfiguration = LinkTokenConfiguration(
+                    token: creditlinktoken.linkToken.toString(),
+                  );
+
+                  PlaidLink.open(configuration: creditlinkTokenConfiguration);
+                },
+                child: Image(
+                  image: AssetImage("asset/images/Plus.png"),
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+              Text('Connect To Credit Account'),
+              //Text('Connect To Credit Account2'),
+            ],
+          )),
+      Container(
+        width: double.infinity,
+        height: 150.0,
+        margin: const EdgeInsets.only(bottom: 0, top: 0),
+        color: Colors.white,
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            FutureBuilder<List<BankData>>(
+              future: creditbankdatalist,
+              builder: (context, snapshot) {
+                return ExpansionPanelList(
+                  animationDuration: Duration(milliseconds: 2000),
+                  children: snapshot.data!.map<ExpansionPanel>((BankData item) {
+                    return ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          iconColor: Colors.red,
+                          leading: CircleAvatar(
+                            radius: 30,
+                            child: Image.memory(
+                              Base64Codec().decode(item.banklogo.toString()),
+                              // height: 30,
+                              // width: 30,
+                              // backgroundImage: new AssetImage(
+                              // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
+                            ),
+                          ),
+                          title: Text(
+                            item.bankname.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          trailing: Text(
+                            dollar + item.mask.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            item.accountname.toString(),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          selected: false,
+                        );
+                      },
+                      body: //Text('hgsdvfghjbvsdjhcgsdh'),
+                          creditBuildExpandableContent(
+                        item.accesstoken.toString(),
+                        item.accountid.toString(),
+                      ),
+                      isExpanded: item.isExpaneded,
+                    );
+                  }).toList(),
+                  dividerColor: Colors.grey,
+                  expansionCallback: (int index, bool isExpanded) async {
+                    setState(() {
+                      snapshot.data![index].isExpaneded = !isExpanded;
+                    });
+                    print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                    print(index);
+                    print(isExpanded);
+                    print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                    TransactionResponse tempresponse2 =
+                        await transactionResponse(
+                            snapshot.data![index].accesstoken.toString(),
+                            snapshot.data![index].accountid.toString(),
+                            cmonth);
+
+                    transactionlist =
+                        tempresponse2.transactions as List<Transactions>;
+                    // viewVisible = true;
+                    viewVisibleTransaction = true;
+                    showWidget();
+                    LiabilityResponse tempresponse = await liabilityResponse(
+                        snapshot.data![index].accesstoken.toString(),
+                        snapshot.data![index].accountid.toString());
+                    liabilitylist = tempresponse.liabilities as Liabilities;
+                    viewVisible = false;
+                    viewVisible2 = false;
+                    viewVisible3 = false;
+                    if (liabilitylist.student != null) {
+                      stdlist = liabilitylist.student!;
+                      viewVisible = true;
+                      //  print("student");
+                      setStudentLoanContainer(liabilitylist.student!.first, 0);
+                    }
+                    if (liabilitylist.mortgage != null) {
+                      mrtlist = liabilitylist.mortgage!;
+                      viewVisible2 = true;
+                      //  print("mortgage");
+                      setMortgage(liabilitylist.mortgage!.first, 0);
+                    }
+                    if (liabilitylist.credit != null) {
+                      crdlist = liabilitylist.credit!;
+                      viewVisible3 = true;
+                      //  print("credit");
+                    }
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  paymentButton() {
+    return Container(
       height: 38,
       width: double.infinity,
-      margin: const EdgeInsets.only(
-          top: 15, bottom: 20.0, left: 25, right: 25),
+      margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            //color: const Color(0xFFA781D3),
-          )),
+              //color: const Color(0xFFA781D3),
+              )),
       child: FlatButton(
         color: const Color(0xFFA781D3),
         padding: const EdgeInsets.all(5),
@@ -667,100 +662,96 @@ class tdashboardState extends State<Dashboard> {
         ),
       ),
     );
-
   }
-  bottionBar ()
-   {
-     return
-     Container(
-       height: 45,
-       padding: const EdgeInsets.all(
-         8,
-       ),
-       decoration: BoxDecoration(
-         borderRadius: BorderRadius.circular(2),
-         color: const Color(0xF5F7F6FA),
-       ),
-       alignment: Alignment.bottomCenter,
-       child: Row(
-         mainAxisSize: MainAxisSize.max,
-         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-         children: [
-           IconButton(
-             // icon: Image.asset('assets/images/dashboard.png'),
-             icon: ImageIcon(
-               AssetImage("asset/images/home2.png"),
-               size: 140,
-               color:
-               isFavourite ? const Color(0xFFA781D3) : Colors.grey,
-             ),
 
-             onPressed: () {
-               setState(() {
-                 isFavourite = false;
-                 isFavourite1 = true;
-                 isFavourite2 = true;
-                 isFavourite3 = true;
-               });
-             },
-           ),
-           IconButton(
-             icon: ImageIcon(
-               AssetImage("asset/images/pbox.png"),
-               size: 140,
-               color: isFavourite1
-                   ? const Color(0xFFA781D3)
-                   : Colors.grey,
-             ),
-             onPressed: () {
-               setState(() {
-                 isFavourite = true;
-                 isFavourite1 = false;
-                 isFavourite2 = true;
-                 isFavourite3 = true;
-               });
-             },
-           ),
-           IconButton(
-             icon: ImageIcon(
-               AssetImage("asset/images/pmoney.png"),
-               size: 140,
-               color: isFavourite2
-                   ? const Color(0xFFA781D3)
-                   : Colors.grey,
-             ),
-             onPressed: () {
-               setState(() {
-                 isFavourite = true;
-                 isFavourite1 = true;
-                 isFavourite2 = false;
-                 isFavourite3 = true;
-               });
-             },
-           ),
-           IconButton(
-             icon: ImageIcon(
-               AssetImage("asset/images/paccount.png"),
-               size: 140,
-               color: isFavourite3
-                   ? const Color(0xFFA781D3)
-                   : Colors.grey,
-             ),
-             onPressed: () {
-               setState(() {
-                 isFavourite = true;
-                 isFavourite1 = true;
-                 isFavourite2 = true;
-                 isFavourite3 = false;
-               });
-             },
-           ),
-         ],
-       ),
-     );
+  bottomNavBar() {
+    return Container(
+      height: 45,
+      padding: const EdgeInsets.all(
+        8,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2),
+        color: const Color(0xF5F7F6FA),
+      ),
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            // icon: Image.asset('assets/images/dashboard.png'),
+            icon: ImageIcon(
+              AssetImage("asset/images/home2.png"),
+              size: 140,
+              color: isFavourite ? const Color(0xFFA781D3) : Colors.grey,
+            ),
 
+            onPressed: () {
+              setState(() {
+                isFavourite = false;
+                isFavourite1 = true;
+                isFavourite2 = true;
+                isFavourite3 = true;
+              });
+            },
+          ),
+          IconButton(
+            icon: ImageIcon(
+              AssetImage("asset/images/pbox.png"),
+              size: 140,
+              color: isFavourite1 ? const Color(0xFFA781D3) : Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                isFavourite = true;
+                isFavourite1 = false;
+                isFavourite2 = true;
+                isFavourite3 = true;
+              });
+            },
+          ),
+          IconButton(
+            icon: ImageIcon(
+              AssetImage("asset/images/pmoney.png"),
+              size: 140,
+              color: isFavourite2 ? const Color(0xFFA781D3) : Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                isFavourite = true;
+                isFavourite1 = true;
+                isFavourite2 = false;
+                isFavourite3 = true;
+              });
+            },
+          ),
+          IconButton(
+            icon: ImageIcon(
+              AssetImage("asset/images/paccount.png"),
+              size: 140,
+              color: isFavourite3 ? const Color(0xFFA781D3) : Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                isFavourite = true;
+                isFavourite1 = true;
+                isFavourite2 = true;
+                isFavourite3 = false;
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
-  debitBuildExpandableContent(String accessToken, String accountID, int cmonth) {
+
+  //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  debitBuildExpandableContent(
+      String accessToken, String accountID, int cmonth) {
     print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
     print(response);
@@ -772,149 +763,211 @@ class tdashboardState extends State<Dashboard> {
       );
     } else {
       return //Text("jhbvkjndfkjvnfdv");
-        FutureBuilder<TransactionResponse>(
-          future: response,
-          builder: (context, snapshot) {
-            print('snnnnnnnnapshot');
-            print(snapshot.data!.transactions.toString());
-            return debitBuildTransactionListView(snapshot.data!);
-
-          });
-    };
+          FutureBuilder<TransactionResponse>(
+              future: response,
+              builder: (context, snapshot) {
+                print('snnnnnnnnapshot');
+                print(snapshot.data!.transactions.toString());
+                return debitBuildTransactionListView(snapshot.data!);
+              });
+    }
+    ;
   }
+
   debitBuildTransactionListView(TransactionResponse tdata) {
     //Text("jhbvkjndfkjvnfdv");
     return //Text("credit4444444444444credit");
-      Column(
-        children: [
-          //for (var t in tdata.transactions!)
-          if (viewVisibleTransaction) ...[
-            Container(
-                width: double.infinity,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    for (var t in tdata.transactions!)
-                      Column(
-                          children: <Widget>[
+        Column(
+      children: [
+        //for (var t in tdata.transactions!)
+        if (viewVisibleTransaction) ...[
+          Container(
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  for (var t in tdata.transactions!)
+                    Column(children: <Widget>[
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   height: 75,
+                      //   margin: EdgeInsets.only(
+                      //       left: 15, right: 15, top: 5, bottom: 5),
+                      //   padding: EdgeInsets.all(5),
+                      //   //color: const Color(0xffF5F5F5),
+                      //   color: const Color(0xffEFF4F8),
+                      //
+                      //   child: Row(
+                      //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     //  crossAxisAlignment : CrossAxisAlignment.end,
+                      //     children: [
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //         children: [
+                      //           Container(
+                      //             alignment: Alignment.topLeft,
+                      //             margin: EdgeInsets.only(
+                      //                 left: 8, right: 5, top: 5, bottom: 5),
+                      //             //padding: EdgeInsets.only(left: 5, top: 6, ),
+                      //             child: CircleAvatar(
+                      //               radius: 20,
+                      //               child: Image(
+                      //                 image:
+                      //                     AssetImage("asset/images/cart.png"),
+                      //
+                      //                 //width: 40,
+                      //                 //color: const Color(0xffECDCFF)
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Column(
+                      //             children: [
+                      //               Container(
+                      //                 width: 20,
+                      //                 //alignment: Alignment.center,
+                      //                 margin: EdgeInsets.only(
+                      //                     left: 3, right: 3, top: 4, bottom: 4),
+                      //                 // padding: EdgeInsets.only( top: 3, ),
+                      //                 child: Flexible(
+                      //                   child: Text(
+                      //                     t.category.toString(),
+                      //                     //maxLines: 2,
+                      //                     overflow: TextOverflow.ellipsis,
+                      //                     style: TextStyle(
+                      //                         color: Colors.black,
+                      //                         fontSize: 12,
+                      //                         fontWeight: FontWeight.w700),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //               Container(
+                      //                 width: 20,
+                      //                 alignment: Alignment.center,
+                      //                 //padding: const EdgeInsets.all(3),
+                      //                 margin: const EdgeInsets.all(4),
+                      //                 child: Text(
+                      //                   t.name.toString(),
+                      //                   // overflow: TextOverflow.ellipsis,
+                      //                   overflow: TextOverflow.ellipsis,
+                      //
+                      //                   style: TextStyle(
+                      //                       color: Colors.grey,
+                      //                       fontSize: 8,
+                      //                       fontWeight: FontWeight.w500),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //           Column(
+                      //             children: [
+                      //               Container(
+                      //                 alignment: Alignment.topRight,
+                      //                 //padding: const EdgeInsets.all(3),
+                      //                 margin: const EdgeInsets.all(3),
+                      //                 child: Text(
+                      //                   dollar + t.amount.toString(),
+                      //                   textAlign: TextAlign.right,
+                      //                   style: TextStyle(
+                      //                       color: Colors.black,
+                      //                       fontSize: 13,
+                      //                       fontWeight: FontWeight.w700),
+                      //                 ),
+                      //               ),
+                      //               Container(
+                      //                 alignment: Alignment.bottomRight,
+                      //                 // padding: const EdgeInsets.all(3),
+                      //                 margin: const EdgeInsets.all(3),
+                      //                 child: Text(
+                      //                   dollar + t.date.toString(),
+                      //                   textAlign: TextAlign.right,
+                      //                   style: TextStyle(
+                      //                       color: Colors.grey,
+                      //                       fontSize: 13,
+                      //                       fontWeight: FontWeight.w700),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
 
-                            Container(
-                              alignment: Alignment.center,
-                              height: 75,
-                              margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-                              padding: EdgeInsets.all(5 ),
-                              //color: const Color(0xffF5F5F5),
-                              color: const Color(0xffEFF4F8),
-
-                              child: Row(
-                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //  crossAxisAlignment : CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        margin: EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 5),
-                                        //padding: EdgeInsets.only(left: 5, top: 6, ),
-                                        child: CircleAvatar(
-                                          radius: 20,
-                                          child: Image(
-                                            image: AssetImage("asset/images/cart.png"),
-
-                                            //width: 40,
-                                            //color: const Color(0xffECDCFF)
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Container(
-                                            width: 20,
-                                            //alignment: Alignment.center,
-                                            margin: EdgeInsets.only(left: 3, right: 3, top: 4, bottom: 4),
-                                           // padding: EdgeInsets.only( top: 3, ),
-                                            child: Flexible(
-                                              child: Text(
-                                                t.category.toString(),
-                                                //maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w700),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 20,
-                                            alignment: Alignment.center,
-                                            //padding: const EdgeInsets.all(3),
-                                            margin: const EdgeInsets.all(4),
-                                            child: Text(
-                                              t.name.toString(),
-                                              // overflow: TextOverflow.ellipsis,
-                                              overflow: TextOverflow.ellipsis,
-
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.topRight,
-                                            //padding: const EdgeInsets.all(3),
-                                            margin: const EdgeInsets.all(3),
-                                            child: Text(
-                                              dollar + t.amount.toString(),
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                          Container(
-                                            alignment: Alignment.bottomRight,
-                                           // padding: const EdgeInsets.all(3),
-                                            margin: const EdgeInsets.all(3),
-                                            child: Text(
-                                              dollar + t.date.toString(),
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                          Container(
+                            margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
+                            color: const Color(0xffF5F5F5),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(8),
+                              leading: CircleAvatar(
+                                radius: 20,
+                                child: Image(
+                                  image: AssetImage("asset/images/cart.png"),
+                                  //width: 40,
+                                  //color: const Color(0xffECDCFF)
+                                ),
+                              ),
+                              title: Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 8),
+                                child: Text(
+                                  t.category.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              trailing: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 10, top: 5),
+                                    child: Text(
+                                      dollar + t.amount.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 2),
+                                    child: Text(
+                                      t.date.toString(),
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                   ),
                                 ],
                               ),
-
+                              subtitle: Padding(
+                                padding: EdgeInsets.only(bottom: 2),
+                                child: Text(
+                                  t.name.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              selected: true,
                             ),
-                          ]
+                          
+                      )
 
-                      ),
-                  ],
-                )
-            ),
-          ]
-          else
-            Container(
-              child: Text("Loading..."),
-            ),
-        ],
-      );
+                    ]),
+                ],
+              )),
+        ] else
+          Container(
+            child: Text("Loading..."),
+          ),
+      ],
+    );
     //selected: true;
   }
+
   //-------
   _buildExpandableContent(String accessToken, String accountID, int cmonth) {
     print('+++++++++++++++++}');
@@ -939,23 +992,27 @@ class tdashboardState extends State<Dashboard> {
             //   children: _buildTransactionListView(snapshot.data!),
             // );
 
-            return ListView(
-              children: _buildTransactionListView(snapshot.data!),
-              shrinkWrap: true,
-            );
+            return
+              ListView(
+              children:
+              _buildTransactionListView(snapshot.data!),
+                shrinkWrap: true,
+
+              );
           });
-    }
-    ;
+    };
   }
+
   _buildTransactionListView(TransactionResponse tdata) {
     List<Widget> listTiles = [];
     for (var t in tdata.transactions!) {
-      var card = Container(
-        margin: EdgeInsets.all(15),
+      var card =
+      Container(
+        margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
         color: const Color(0xffF5F5F5),
         child:
-        //ListTile(title:Text(t.name.toString()) ,)
-        ListTile(
+            //ListTile(title:Text(t.name.toString()) ,)
+            ListTile(
           contentPadding: EdgeInsets.all(8),
           leading: CircleAvatar(
             radius: 20,
@@ -1026,6 +1083,8 @@ class tdashboardState extends State<Dashboard> {
     return listTiles;
   }
 
+//------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 //------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
     print('+++++++++++++++++}');
@@ -1080,7 +1139,9 @@ class tdashboardState extends State<Dashboard> {
                               bottomRight: Radius.circular(8.0),
                               topLeft: Radius.circular(8.0),
                               bottomLeft: Radius.circular(8.0)),
-                          color: const Color(0xffEFF4F8),
+                          color: const Color(0xffF5F5F5),
+
+                         // color: const Color(0xffEFF4F8),
                         ),
                         child: ListView(
                           children: <Widget>[
@@ -1423,7 +1484,9 @@ class tdashboardState extends State<Dashboard> {
                               bottomRight: Radius.circular(8.0),
                               topLeft: Radius.circular(8.0),
                               bottomLeft: Radius.circular(8.0)),
-                          color: const Color(0xffEFF4F8),
+                        //  color: const Color(0xffEFF4F8),
+                          color: const Color(0xffF5F5F5),
+
                         ),
                         child: ListView(children: [
                           Row(children: <Widget>[
@@ -1785,7 +1848,9 @@ class tdashboardState extends State<Dashboard> {
                                 bottomRight: Radius.circular(8.0),
                                 topLeft: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0)),
-                            color: const Color(0xffEFF4F8),
+                           // color: const Color(0xffEFF4F8),
+                            color: const Color(0xffF5F5F5),
+
                           ),
                           child: ListView(children: [
                             Row(children: <Widget>[
@@ -1913,8 +1978,9 @@ class tdashboardState extends State<Dashboard> {
     selected:
     true;
   }
+
   void setStudentLoanContainer(Student student, double sliderValue) {
-    var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
+    var currentdate = new DateTime.now(); //DateTime.parse(currentdate);
     var startdate = DateTime.parse(student.disbursementDates!.first);
     var enddate = DateTime.parse(student.expectedPayoffDate.toString());
     int yearpassed = (currentdate.year - startdate.year);
@@ -1922,18 +1988,15 @@ class tdashboardState extends State<Dashboard> {
     // num yearpassed = (currentdate.year - startdate.year);
     //int endyear = (enddate.year - currentdate.year)
     // ;
-    int endyear = enddate.year - startdate.year ;
+    int endyear = enddate.year - startdate.year;
     // print(yearpassed.toString());
     // print(endyear.toString());
     // print(student.disbursementDates!.first);
     // print(student.expectedPayoffDate);
     // print(_loanyearvalues.toString());
-
   }
 
-
   void setMortgage(Mortgage mortgage, double mtgsliderValue) {
-
     // var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
     // var startdate = DateTime.parse(mortgage.maturityDate!);
     // var enddate = DateTime.parse(mortgage.originationDate!);
@@ -1956,22 +2019,19 @@ class tdashboardState extends State<Dashboard> {
     // mbalanceamount = Constants.mAmortization(mortgage.originationPrincipalAmount,
     //     mortgage.interestRate!.percentage as double, mtgint , myearpassed.toInt() );
     // m_saveamount = mloanmaxvalue - mbalanceamount;
-    var currentdate =  new DateTime.now();//DateTime.parse(currentdate);
-    var enddate  = DateTime.parse(mortgage.maturityDate!);
+    var currentdate = new DateTime.now(); //DateTime.parse(currentdate);
+    var enddate = DateTime.parse(mortgage.maturityDate!);
     var startdate = DateTime.parse(mortgage.originationDate.toString());
     int yearpassed = (currentdate.year - startdate.year);
-    int endyear = enddate.year - startdate.year ;
+    int endyear = enddate.year - startdate.year;
     // print(yearpassed.toString());
     // print(endyear.toString());
     // print(mortgage.maturityDate);
     // print(mortgage.originationDate);
     // print(_mloanyearvalues.toString());
-
   }
 
-
-
-//------
+//############
 }
 
 //>>>>>>>>>>>>>>-------------------------API's--------------------------------->>>>>>>>>>>>>>>
@@ -2424,7 +2484,6 @@ Future<LiabilityResponse> liabilityResponse(
 //   }
 //   return listTiles;
 // }
-
 
 // Container(
 // height: 45,
