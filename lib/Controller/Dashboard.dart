@@ -821,7 +821,7 @@ class tdashboardState extends State<Dashboard> {
                                       Column(
                                         children: [
                                           Container(
-                                            width: 50,
+                                            width: 20,
                                             //alignment: Alignment.center,
                                             margin: EdgeInsets.only(left: 3, right: 3, top: 4, bottom: 4),
                                            // padding: EdgeInsets.only( top: 3, ),
@@ -838,7 +838,7 @@ class tdashboardState extends State<Dashboard> {
                                             ),
                                           ),
                                           Container(
-                                            width: 40,
+                                            width: 20,
                                             alignment: Alignment.center,
                                             //padding: const EdgeInsets.all(3),
                                             margin: const EdgeInsets.all(4),
