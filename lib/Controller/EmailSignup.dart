@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:swipeapp/Controller/Liability.dart';
-
 import 'Dashboard.dart';
 import 'Test.dart';
+import 'package:flutter/material.dart';
 
 
 void main() {
@@ -117,15 +117,19 @@ class EmailSignup extends StatelessWidget {
                 width: double.infinity,
                 margin: const EdgeInsets.only(
                     top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
-                  child: RaisedButton(
+                  child: TextButton(
+                 // RaisedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Dashboard()),
                       );
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                        padding: const EdgeInsets.all(0.0),
+                      );
                     },
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                    padding: const EdgeInsets.all(0.0),
+
                     child: Ink(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
@@ -163,27 +167,35 @@ class EmailSignup extends StatelessWidget {
                 //   style: TextStyle(color: Colors.purpleAccent,
                 //        fontWeight: FontWeight.w500),),
               ),
-              FlatButton(
-                padding: const EdgeInsets.only(
-                    top: 15.0, left: 15, right: 15),
+           TextButton(
+
                 onPressed: () {
 
                 },
+             style: TextButton.styleFrom(
+                padding: const EdgeInsets.only(
+                top: 15.0, left: 15, right: 15),
+             ),
                 child: Image(
                   image: AssetImage("asset/images/apple.png"),
                 ),
               ),
-              FlatButton(
+          TextButton(
+                style: TextButton.styleFrom(
                 padding: const EdgeInsets.only(
                     top: 10.0, bottom: 10.0, left: 15, right: 15),
+                ),
                 onPressed: () {},
                 child: Image(
                   image: AssetImage("asset/images/google.png"),
                 ),
               ),
-              FlatButton(
+              TextButton(
+                style: TextButton.styleFrom(
+
                 padding: const EdgeInsets.only(
                     bottom: 10.0, left: 15, right: 15),
+                ),
                 onPressed: () {},
                 child: Image(
                   image: AssetImage("asset/images/fb.png"),

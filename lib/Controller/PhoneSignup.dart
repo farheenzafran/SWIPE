@@ -143,7 +143,7 @@ class PhoneSignup extends StatelessWidget {
                       top: 15,  bottom: 5.0, left: 15, right: 15),
 
                   // Will take 50% of screen space
-                  child: RaisedButton(
+                  child: TextButton(
                     onPressed: () {
                       otpno = otpController.value.text.toString();
 
@@ -153,8 +153,10 @@ class PhoneSignup extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => Dashboard()),
                        ));
                     },
+                    style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                     padding: const EdgeInsets.all(0.0),
+                  ),
                     child: Ink(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(

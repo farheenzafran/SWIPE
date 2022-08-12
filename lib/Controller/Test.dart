@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/basic.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -28,6 +31,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:http/http.dart' as http;
 import 'Dashboard.dart';
+void main() => runApp(
+    MaterialApp(
+        home: Test()
+    )
+);
 
 class Test extends StatefulWidget {
   @override
@@ -253,8 +261,8 @@ class tdashboardState extends State<Test> {
                       color: const Color(0xffF7F6FA)),
                   child: Row(
                     children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
+                      TextButton(
+                        //padding: const EdgeInsets.all(5),
                         onPressed: () {
                           setState(() {
                             viewVisible = !viewVisible;
@@ -286,7 +294,7 @@ class tdashboardState extends State<Test> {
                                 height: 40.0,
                                 color: Colors.white,
                                 margin: const EdgeInsets.only(bottom: 10),
-                                child: FlatButton(
+                                child: TextButton(
                                   onPressed: () async {
                                     Loader.show(context,
                                         isSafeAreaOverlay: false,
@@ -437,9 +445,9 @@ class tdashboardState extends State<Test> {
                     border: Border.all(
                       color: const Color(0xFFA781D3),
                     )),
-                child: FlatButton(
-                  color: const Color(0xFFA781D3),
-                  padding: const EdgeInsets.all(5),
+                child: TextButton(
+                 // color: const Color(0xFFA781D3),
+                 // padding: const EdgeInsets.all(5),
                   onPressed: () {},
                   child: Text(
                     'Make a Payment',
@@ -660,6 +668,8 @@ class tdashboardState extends State<Test> {
     return listTiles;
   }
 }
+
+
 
 //--------------------------------------------------------------------------------------------------------
 Future<LinkTokenResponse> linktokenResponse() async {

@@ -319,8 +319,11 @@ class tdashboardState extends State<Liability> {
                               color: const Color(0xffF7F6FA)),
                           child: Row(
                             children: [
-                              FlatButton(
-                                padding: const EdgeInsets.all(5),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(5),
+
+                  ),
                                 onPressed: () async {
                                   isexpanse = true;
                                   Loader.show(context,
@@ -468,8 +471,10 @@ class tdashboardState extends State<Liability> {
                       color: const Color(0xffF7F6FA)),
                   child: Row(
                     children: [
-                      FlatButton(
-                        padding: const EdgeInsets.all(5),
+                      TextButton(
+                  style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(5),
+              ),
                         onPressed: () async {
                           isexpanse = false;
                           Loader.show(context,
@@ -860,9 +865,11 @@ class tdashboardState extends State<Liability> {
                     border: Border.all(
                       color: const Color(0xFFA781D3),
                     )),
-                child: FlatButton(
-                  color: const Color(0xFFA781D3),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                  primary: const Color(0xFFA781D3),
                   padding: const EdgeInsets.all(5),
+                ),
                   onPressed: () {},
                   child: Text(
                     'Make a Payment',

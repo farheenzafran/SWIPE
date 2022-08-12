@@ -2,12 +2,21 @@ import 'dart:async';
 import 'dart:ui';
 //import 'package:country_list_pick/country_list_pick.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:swipeapp/Controller/SignUp.dart';
+import 'Signup.dart';
 import 'VerifyLogin.dart';
+void main() async {
+  //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // calling of runApp
+  runApp(LoginScreen());
+}
+
 class LoginScreen extends StatefulWidget {
   LoginScreen() : super();
 
@@ -55,7 +64,7 @@ class CarouselDemoState extends State<LoginScreen> {
         type: MaterialType.transparency,
     // child: Expanded(
       child:Container(
-      decoration: new BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
 //-------------------
@@ -154,26 +163,45 @@ class CarouselDemoState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
 
-          RaisedButton(onPressed: () {
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.grey,
+              padding: const EdgeInsets.only(right: 5),
+            ),
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => VerifyLogin()),
               );
-            },child: Text("Login"),color: Colors.grey,
-              padding: const EdgeInsets.only(right: 5),
+            },
+            child:  //Text("Login" , style: TextStyle(color: Colors.white,),),
+            Container(
+              constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0), // min sizes for Material buttons
+              alignment: Alignment.center,
+              child: const Text(
+                'Login',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+
+                  color: Colors.white,
+                ),
+              ),
+            ),
             ),
 
 
 
-            RaisedButton(
+            TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Signup()),
                 );
               },
+    style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
               padding: const EdgeInsets.all(0.0),
+    ),
               child: Ink(
                 decoration: const BoxDecoration(
                  gradient: LinearGradient(
@@ -188,6 +216,10 @@ class CarouselDemoState extends State<LoginScreen> {
                   child: const Text(
                     'Signup',
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

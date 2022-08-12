@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "325976345364",
+    "project_id": "fiswipe",
+    "storage_bucket": "fiswipe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325976345364:android:55e8de50a36a76d6515001",
+        "android_client_info": {
+          "package_name": "com.financial.swipeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325976345364-ehldsnk705nmhj1s2pj980mv4fjpsh2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrsYW9nkhfXIX8RgBrE4dCMgNESIqVZS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325976345364-ehldsnk705nmhj1s2pj980mv4fjpsh2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

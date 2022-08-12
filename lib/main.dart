@@ -5,16 +5,20 @@ import 'package:swipeapp/Controller/Dashboard.dart';
 import 'Controller/LoginScreen.dart';
 import 'Model Helper.dart';
 import 'dart:async';
-
 import 'Controller/Test.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async{
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Poppins'),
-      home: MyHomePage()));
+  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  // runApp(MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     theme: ThemeData(fontFamily: 'Poppins'),
+  //     home: MyHomePage()));
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -30,7 +34,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   String LoginKey = "LoginKey";
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -53,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             )
         )
     );
+
   }
 
   _loadPf() async {

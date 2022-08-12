@@ -33,7 +33,8 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 class Dashboard extends StatefulWidget {
   @override
   tdashboardState createState() => tdashboardState();
@@ -344,8 +345,11 @@ class tdashboardState extends State<Dashboard> {
                     color: const Color(0xffF7F6FA)),
                 child: Row(
                   children: [
-                    FlatButton(
-                      padding: const EdgeInsets.all(5),
+                    TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(5),
+
+                ),
                       onPressed: () async {
                         isexpanse = true;
                         Loader.show(context,
@@ -491,8 +495,12 @@ class tdashboardState extends State<Dashboard> {
               color: const Color(0xffF7F6FA)),
           child: Row(
             children: [
-              FlatButton(
-                padding: const EdgeInsets.all(5),
+              TextButton(
+          style: TextButton.styleFrom(
+              padding:  EdgeInsets.all(5),
+
+          ),
+
                 onPressed: () async {
                   isexpanse = false;
                   Loader.show(context,
@@ -647,9 +655,12 @@ class tdashboardState extends State<Dashboard> {
           border: Border.all(
               //color: const Color(0xFFA781D3),
               )),
-      child: FlatButton(
-        color: const Color(0xFFA781D3),
-        padding: const EdgeInsets.all(5),
+      child: TextButton(
+        style: TextButton.styleFrom(
+           backgroundColor: const Color(0xFFA781D3),
+           padding: const EdgeInsets.all(5),
+        ),
+
         onPressed: () {},
         child: Text(
           'Make a Payment',
@@ -953,7 +964,7 @@ class tdashboardState extends State<Dashboard> {
                               ),
                               selected: true,
                             ),
-                          
+
                       )
 
                     ]),
