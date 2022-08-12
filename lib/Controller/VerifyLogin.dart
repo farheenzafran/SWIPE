@@ -26,22 +26,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(VerifyLogin());
 }
 
 class VerifyLogin extends StatefulWidget {
-
   // VerifyLogin({Key? key}) : super(key: key);
 
   @override
   State<VerifyLogin> createState() => _SearchState();
 }
 
-class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMixin {
+class _SearchState extends State<VerifyLogin>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
+
 //  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -57,20 +58,18 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
   late String phoneNumber;
   TextEditingController phoneController = TextEditingController();
   String LoginKey = "LoginKey";
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-
   late String name;
   late String email;
   late String imageUrl;
-
   Future<String?> signInWithGoogle() async {
     await Firebase.initializeApp();
 
-    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
     final GoogleSignInAuthentication? googleSignInAuthentication =
-    await googleSignInAccount?.authentication;
+        await googleSignInAccount?.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication?.accessToken,
@@ -78,7 +77,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
     );
 
     final UserCredential authResult =
-    await _auth.signInWithCredential(credential);
+        await _auth.signInWithCredential(credential);
     final User? user = authResult.user;
 
     if (user != null) {
@@ -110,15 +109,11 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
     return null;
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       body: Center(
         child: SafeArea(
           child: Padding(
@@ -132,9 +127,9 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("asset/images/background.png"),
-                        fit: BoxFit.cover,
-                      )),
+                    image: AssetImage("asset/images/background.png"),
+                    fit: BoxFit.cover,
+                  )),
                   child: Wrap(
                     spacing: 100,
                     children: <Widget>[
@@ -154,14 +149,14 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                       // ),
                       Text(
                         'LOGIN',
-                        style: TextStyle(color: Colors.white,
+                        style: TextStyle(
+                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-
                 ),
                 TabBar(
                   unselectedLabelColor: Colors.grey,
@@ -181,7 +176,6 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-
                       Container(
                         height: 300,
                         //padding: const EdgeInsets.all(20.0),
@@ -204,7 +198,8 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                   color: Colors.white,
                                 ),
                                 margin: const EdgeInsets.only(
-                                  top: 15,),
+                                  top: 15,
+                                ),
                                 child: Row(
                                   children: <Widget>[
                                     SizedBox(
@@ -213,8 +208,8 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                       child: Theme(
                                         data: ThemeData.light().copyWith(
                                             colorScheme: ColorScheme.light(
-                                              primary: Colors.black,
-                                            )),
+                                          primary: Colors.black,
+                                        )),
                                         child: CountryListPick(
                                             theme: CountryTheme(
                                               isShowFlag: true,
@@ -224,10 +219,10 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                               showEnglishName: true,
                                               alphabetTextColor: Colors.black,
                                               alphabetSelectedTextColor:
-                                              Colors.black,
+                                                  Colors.black,
                                               labelColor: Colors.black,
                                               alphabetSelectedBackgroundColor:
-                                              Colors.black,
+                                                  Colors.black,
                                             ),
                                             useUiOverlay: false,
                                             useSafeArea: false,
@@ -237,7 +232,6 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                               //  print('-----+++++__QQQQQQQQQQQQ)');
                                               //  print(countryCode);
                                             }),
-
                                       ),
                                     ),
                                     SizedBox(
@@ -246,11 +240,8 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                         child: TextField(
                                           controller: phoneController,
                                           autocorrect: true,
-                                          decoration: InputDecoration(
-
-                                          ),
-                                        )
-                                    ),
+                                          decoration: InputDecoration(),
+                                        )),
                                   ],
                                 ),
                               ),
@@ -266,22 +257,22 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                         phoneController.value.text.toString();
                                     login(countryCode, phoneNumber)
                                         .onError((error, stackTrace) =>
-                                        Future.error(error.toString(),
-                                            StackTrace.current))
-                                        .then((value) =>
-                                        Navigator.push(
-                                          context, MaterialPageRoute(
-                                            builder: (_) =>
-                                                PhoneSignup(phoneNumber,
-                                                    countryCode)),));
+                                            Future.error(error.toString(),
+                                                StackTrace.current))
+                                        .then((value) => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) => PhoneSignup(
+                                                      phoneNumber,
+                                                      countryCode)),
+                                            ));
                                   },
-                                    style: TextButton.styleFrom(
-
+                                  style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          80.0)),
-                                  padding: const EdgeInsets.all(0.0),
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(80.0)),
+                                    padding: const EdgeInsets.all(0.0),
+                                  ),
                                   child: Ink(
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
@@ -290,8 +281,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                           colors: [
                                             Color(0xdeb46fea),
                                             Color(0xb59e3d57),
-                                            Color(
-                                                0xff9f60d0)
+                                            Color(0xff9f60d0)
                                           ]),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0)),
@@ -302,24 +292,24 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                       // min sizes for Material buttons
                                       alignment: Alignment.center,
                                       child: const Text(
-                                        'Verify', style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
+                                        'Verify',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
-                                )
-                            ),
+                                )),
                             Padding(
                               padding: const EdgeInsets.only(
                                   top: 5, bottom: 15.0, left: 15, right: 15),
                               child: Text(
                                 'We will send you a text with a verification code. Message and data'
-                                    ' rates may apply.'
-                                    ' By continuing, you agree to our Terms of Service & Provicy Policy',
+                                ' rates may apply.'
+                                ' By continuing, you agree to our Terms of Service & Provicy Policy',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 11,
@@ -340,21 +330,22 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-                              padding: const EdgeInsets.only(
-                                  top: 15.0, left: 15, right: 15),
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, left: 15, right: 15),
                               ),
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/apple.png"),
                               ),
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-
-                              padding: const EdgeInsets.only(
-                                  top: 10.0, bottom: 10.0, left: 15, right: 15),),
+                                padding: const EdgeInsets.only(
+                                    top: 10.0,
+                                    bottom: 10.0,
+                                    left: 15,
+                                    right: 15),
+                              ),
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/google.png"),
@@ -362,20 +353,17 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-                              padding: const EdgeInsets.only(
-                                  bottom: 10.0, left: 15, right: 15),
+                                padding: const EdgeInsets.only(
+                                    bottom: 10.0, left: 15, right: 15),
                               ),
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/fb.png"),
                               ),
                             ),
-
-
                           ],
                         ),
                       ),
-
 
                       //tab 2-----------
                       Container(
@@ -388,7 +376,6 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                         ),
                         child: new Column(
                           children: [
-
                             Padding(
                               padding: EdgeInsets.only(
                                   top: 20, left: 15, right: 15, bottom: 5),
@@ -396,8 +383,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'User Name',
-                                    hintText: 'Enter valid mail '
-                                ),
+                                    hintText: 'Enter valid mail '),
                               ),
                             ),
                             Padding(
@@ -407,13 +393,11 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Password',
-                                    hintText: 'Enter your secure password'
-                                ),
+                                    hintText: 'Enter your secure password'),
                               ),
                             ),
                             Container(
                                 width: double.infinity,
-
                                 margin: const EdgeInsets.only(
                                     top: 15, bottom: 5.0, left: 15, right: 15),
                                 // Will take 50% of screen space
@@ -422,15 +406,15 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => EmailSignup()),);
+                                          builder: (_) => EmailSignup()),
+                                    );
                                   },
-                                    style: TextButton.styleFrom(
-
+                                  style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          80.0)),
-                                  padding: const EdgeInsets.all(0.0),
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(80.0)),
+                                    padding: const EdgeInsets.all(0.0),
+                                  ),
                                   child: Ink(
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
@@ -439,8 +423,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                           colors: [
                                             Color(0xdeb46fea),
                                             Color(0xb59e3d57),
-                                            Color(
-                                                0xff9f60d0)
+                                            Color(0xff9f60d0)
                                           ]),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0)),
@@ -451,21 +434,20 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                       // min sizes for Material buttons
                                       alignment: Alignment.center,
                                       child: const Text(
-                                        'Login', style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
+                                        'Login',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
                                         textAlign: TextAlign.center,
-
                                       ),
                                     ),
                                   ),
-                                )
-                            ),
+                                )),
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 20.0, left: 15),
+                              padding:
+                                  const EdgeInsets.only(bottom: 20.0, left: 15),
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -483,8 +465,6 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                                   textAlign: TextAlign.left,
                                 ),
                               ),
-
-
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -498,46 +478,42 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-
-                              padding: const EdgeInsets.only(
-                                  top: 15.0, left: 15, right: 15),
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, left: 15, right: 15),
                               ),
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/apple.png"),
                               ),
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, bottom: 10.0, left: 15, right: 15),
-
+                                padding: const EdgeInsets.only(
+                                    top: 10.0,
+                                    bottom: 10.0,
+                                    left: 15,
+                                    right: 15),
                               ),
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/google.png"),
                               ),
                             ),
-                         TextButton(
+                            TextButton(
                               style: TextButton.styleFrom(
-                              padding: const EdgeInsets.only(
-                                  bottom: 10.0, left: 15, right: 15),
+                                padding: const EdgeInsets.only(
+                                    bottom: 10.0, left: 15, right: 15),
                               ),
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/fb.png"),
                               ),
                             ),
-
+                            //>>>>>>>>this is gmail button widget>>>>>> //
                             googlebutton(),
-
                           ],
                         ),
                       ),
-
-
                     ],
                   ),
                 ),
@@ -545,10 +521,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
             ),
           ),
         ),
-
       ),
-
-
     );
   }
 
@@ -560,8 +533,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
           width: 30.0,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image:
-                AssetImage('asset/images/google.png'),
+                image: AssetImage('asset/images/google.png'),
                 fit: BoxFit.cover),
             shape: BoxShape.circle,
           ),
@@ -574,33 +546,36 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
     );
 
     // by onpressed we call the function signup function
-    onPressed:() {
+    onPressed:
+    () {
       //signup(context);
       // GoogleSignInButton(
       //     onPressed: () {
-            signInWithGoogle().whenComplete(() {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Dashboard();
-                  },
-                ),
-              );
-            });
-          // },
-          // darkMode: true);
+      signInWithGoogle().whenComplete(() {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return Dashboard();
+            },
+          ),
+        );
+      });
+      // },
+      // darkMode: true);
     };
   }
-  //
+//
 }
+
 //--
 final FirebaseAuth auth = FirebaseAuth.instance;
+
 Future<void> signup(BuildContext context) async {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
   if (googleSignInAccount != null) {
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
     final AuthCredential authCredential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
@@ -612,12 +587,12 @@ Future<void> signup(BuildContext context) async {
     if (result != null) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Dashboard()));
-    }  // if result not null we simply call the MaterialpageRoute,
+    } // if result not null we simply call the MaterialpageRoute,
     // for go to the HomePage screen
   }
 }
 
-Future<LoginResponse> login(String countrycode , String mobilenumber) async {
+Future<LoginResponse> login(String countrycode, String mobilenumber) async {
   LoginRequest loginRequest = LoginRequest();
   loginRequest.countryCode = countrycode;
   loginRequest.mobileNumber = mobilenumber;
@@ -628,9 +603,13 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   // loginRequest.deviceName = Constants.read(Constants.DevicName);
   // loginRequest.deviceToken = Constants.read(Constants.DeviceToken);
 
-  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
-      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
-      body: jsonEncode(loginRequest));
+  final response5 =
+      await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode(loginRequest));
   // print(jsonEncode(loginRequest));
   // print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
   // print(response5.body);
@@ -646,7 +625,7 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
     return LoginResponse.fromJson(jsonDecode(response5.body));
   } else {
     //void dispose() {
-   // Loader.hide();
+    // Loader.hide();
 
     // super.dispose();
     //}
@@ -654,4 +633,3 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
     throw Exception('Failed to call transaction .');
   }
 }
-
