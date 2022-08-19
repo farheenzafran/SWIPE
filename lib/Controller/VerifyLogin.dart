@@ -1,8 +1,9 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:swipeapp/Controller/Dashboard.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
 import 'package:swipeapp/Controller/PhoneSignup.dart';
 import 'package:flutter/material.dart';
@@ -20,100 +21,37 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:swipeapp/Model%20Helper.dart';
 import 'package:swipeapp/main.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:http/http.dart' as http;
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(VerifyLogin());
-}
 
 class VerifyLogin extends StatefulWidget {
-  // VerifyLogin({Key? key}) : super(key: key);
+
+  const VerifyLogin({Key? key}) : super(key: key);
 
   @override
   State<VerifyLogin> createState() => _SearchState();
 }
 
-class _SearchState extends State<VerifyLogin>
-    with SingleTickerProviderStateMixin {
+class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMixin
+{
   TabController? _tabController;
 
-//  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
-    super.initState();
-    // Firebase.initializeApp().whenComplete(() {
-    //   print("completed");
-    //   setState(() {});
-    // });
-  }
 
+
+    super.initState();
+  }
   late String countryCode;
   late String phoneNumber;
   TextEditingController phoneController = TextEditingController();
   String LoginKey = "LoginKey";
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  late String name;
-  late String email;
-  late String imageUrl;
-  Future<String?> signInWithGoogle() async {
-    await Firebase.initializeApp();
 
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
-    final GoogleSignInAuthentication? googleSignInAuthentication =
-        await googleSignInAccount?.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication?.accessToken,
-      idToken: googleSignInAuthentication?.idToken,
-    );
-
-    final UserCredential authResult =
-        await _auth.signInWithCredential(credential);
-    final User? user = authResult.user;
-
-    if (user != null) {
-      // Checking if email and name is null
-      assert(user.email != null);
-      assert(user.displayName != null);
-      assert(user.photoURL != null);
-
-      name = user.displayName!;
-      email = user.email!;
-      imageUrl = user.photoURL!;
-
-      // Only taking the first part of the name, i.e., First Name
-      if (name.contains(" ")) {
-        name = name.substring(0, name.indexOf(" "));
-      }
-
-      assert(!user.isAnonymous);
-      assert(await user.getIdToken() != null);
-
-      final User? currentUser = _auth.currentUser;
-      assert(user.uid == currentUser?.uid);
-
-      print('signInWithGoogle succeeded: $user');
-
-      return '$user';
-    }
-
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       resizeToAvoidBottomInset: false,
+
       body: Center(
         child: SafeArea(
           child: Padding(
@@ -127,9 +65,9 @@ class _SearchState extends State<VerifyLogin>
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: AssetImage("asset/images/background.png"),
-                    fit: BoxFit.cover,
-                  )),
+                        image: AssetImage("asset/images/background.png"),
+                        fit: BoxFit.cover,
+                      )),
                   child: Wrap(
                     spacing: 100,
                     children: <Widget>[
@@ -149,14 +87,12 @@ class _SearchState extends State<VerifyLogin>
                       // ),
                       Text(
                         'LOGIN',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        style: TextStyle(color: Colors.white, fontSize: 14 , fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
+
                 ),
                 TabBar(
                   unselectedLabelColor: Colors.grey,
@@ -174,8 +110,8 @@ class _SearchState extends State<VerifyLogin>
                 ),
                 Expanded(
                   child: TabBarView(
-                    controller: _tabController,
                     children: [
+
                       Container(
                         height: 300,
                         //padding: const EdgeInsets.all(20.0),
@@ -198,8 +134,7 @@ class _SearchState extends State<VerifyLogin>
                                   color: Colors.white,
                                 ),
                                 margin: const EdgeInsets.only(
-                                  top: 15,
-                                ),
+                                  top: 15,),
                                 child: Row(
                                   children: <Widget>[
                                     SizedBox(
@@ -208,8 +143,8 @@ class _SearchState extends State<VerifyLogin>
                                       child: Theme(
                                         data: ThemeData.light().copyWith(
                                             colorScheme: ColorScheme.light(
-                                          primary: Colors.black,
-                                        )),
+                                              primary: Colors.black,
+                                            )),
                                         child: CountryListPick(
                                             theme: CountryTheme(
                                               isShowFlag: true,
@@ -219,10 +154,10 @@ class _SearchState extends State<VerifyLogin>
                                               showEnglishName: true,
                                               alphabetTextColor: Colors.black,
                                               alphabetSelectedTextColor:
-                                                  Colors.black,
+                                              Colors.black,
                                               labelColor: Colors.black,
                                               alphabetSelectedBackgroundColor:
-                                                  Colors.black,
+                                              Colors.black,
                                             ),
                                             useUiOverlay: false,
                                             useSafeArea: false,
@@ -232,6 +167,7 @@ class _SearchState extends State<VerifyLogin>
                                               //  print('-----+++++__QQQQQQQQQQQQ)');
                                               //  print(countryCode);
                                             }),
+
                                       ),
                                     ),
                                     SizedBox(
@@ -240,8 +176,11 @@ class _SearchState extends State<VerifyLogin>
                                         child: TextField(
                                           controller: phoneController,
                                           autocorrect: true,
-                                          decoration: InputDecoration(),
-                                        )),
+                                          decoration: InputDecoration(
+
+                                          ),
+                                        )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -249,67 +188,49 @@ class _SearchState extends State<VerifyLogin>
                             Container(
                                 width: double.infinity,
                                 margin: const EdgeInsets.only(
-                                    top: 15, bottom: 5.0, left: 15, right: 15),
-                                // Will take 50% of screen space
+                                    top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                                 child: TextButton(
                                   onPressed: () {
-                                    phoneNumber =
-                                        phoneController.value.text.toString();
-                                    login(countryCode, phoneNumber)
-                                        .onError((error, stackTrace) =>
-                                            Future.error(error.toString(),
-                                                StackTrace.current))
-                                        .then((value) => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) => PhoneSignup(
-                                                      phoneNumber,
-                                                      countryCode)),
-                                            ));
+                                    phoneNumber = phoneController.value.text.toString();
+                                    login(countryCode,phoneNumber)
+                                        .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
+                                        .then((value) => Navigator.push(context, MaterialPageRoute(
+                                        builder: (_) => PhoneSignup(phoneNumber, countryCode)),));
                                   },
-                                  style: TextButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(80.0)),
-                                    padding: const EdgeInsets.all(0.0),
-                                  ),
+                                  style: TextButton.styleFrom(  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: const EdgeInsets.all(0.0),),
+
                                   child: Ink(
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
-                                          colors: [
-                                            Color(0xdeb46fea),
-                                            Color(0xb59e3d57),
-                                            Color(0xff9f60d0)
-                                          ]),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
+                                          colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
+                                              0xff9f60d0)]),
+                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                     ),
                                     child: Container(
-                                      constraints: const BoxConstraints(
-                                          minWidth: 88.0, minHeight: 36.0),
-                                      // min sizes for Material buttons
+                                      constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0), // min sizes for Material buttons
                                       alignment: Alignment.center,
                                       child: const Text(
-                                        'Verify',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        ),
+                                        'Verify',style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
-                                )),
+                                )
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  top: 5, bottom: 15.0, left: 15, right: 15),
+                                  top: 5,  bottom: 15.0, left: 15, right: 15),
                               child: Text(
                                 'We will send you a text with a verification code. Message and data'
-                                ' rates may apply.'
-                                ' By continuing, you agree to our Terms of Service & Provicy Policy',
+                                    ' rates may apply.'
+                                    ' By continuing, you agree to our Terms of Service & Provicy Policy',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 11,
@@ -329,41 +250,53 @@ class _SearchState extends State<VerifyLogin>
                               //        fontWeight: FontWeight.w500),),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    top: 15.0, left: 15, right: 15),
-                              ),
-                              onPressed: () {},
+                              style: TextButton.styleFrom(   padding: const EdgeInsets.only(
+                                  top: 15.0, left: 15, right: 15),),
+
+                              onPressed: () {
+
+                              },
                               child: Image(
                                 image: AssetImage("asset/images/apple.png"),
                               ),
                             ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    top: 10.0,
-                                    bottom: 10.0,
-                                    left: 15,
-                                    right: 15),
-                              ),
-                              onPressed: () {},
+                            //gmail
+                            TextButton(style: TextButton.styleFrom( padding: const EdgeInsets.only(
+                                top: 10.0, bottom: 10.0, left: 15, right: 15),),
+                              onPressed: () async{
+                                Loader.show(context,
+                                    isSafeAreaOverlay: false,
+                                    progressIndicator: CircularProgressIndicator(),
+                                    isBottomBarOverlay: false,
+                                    overlayFromBottom: 80,
+                                    themeData:
+                                    Theme.of(context).copyWith(accentColor: Colors.black),
+                                    overlayColor: Color(0x0000ffff));
+                                Future.delayed(Duration(seconds: 4), () {
+                                  Loader.hide();
+                                });
+                                signInWithGoogle();
+                              }
+                              ,
                               child: Image(
                                 image: AssetImage("asset/images/google.png"),
                               ),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    bottom: 10.0, left: 15, right: 15),
-                              ),
+                              style: TextButton.styleFrom(padding: const EdgeInsets.only(
+                                  bottom: 10.0, left: 15, right: 15),),
+
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/fb.png"),
                               ),
                             ),
+
+
                           ],
                         ),
                       ),
+
 
                       //tab 2-----------
                       Container(
@@ -376,79 +309,73 @@ class _SearchState extends State<VerifyLogin>
                         ),
                         child: new Column(
                           children: [
+
                             Padding(
-                              padding: EdgeInsets.only(
-                                  top: 20, left: 15, right: 15, bottom: 5),
+                              padding: EdgeInsets.only(top: 20 , left: 15 , right: 15 , bottom: 5),
                               child: TextField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'User Name',
-                                    hintText: 'Enter valid mail '),
+                                    hintText: 'Enter valid mail '
+                                ),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 15, right: 15),
+                              padding: EdgeInsets.only( left: 15 , right: 15),
                               child: TextField(
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Password',
-                                    hintText: 'Enter your secure password'),
+                                    hintText: 'Enter your secure password'
+                                ),
                               ),
                             ),
                             Container(
                                 width: double.infinity,
+
                                 margin: const EdgeInsets.only(
-                                    top: 15, bottom: 5.0, left: 15, right: 15),
-                                // Will take 50% of screen space
+                                    top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                                 child: TextButton(
                                   onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => EmailSignup()),
-                                    );
+                                          builder: (_) => EmailSignup()), );
+
                                   },
-                                  style: TextButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(80.0)),
-                                    padding: const EdgeInsets.all(0.0),
-                                  ),
+                                  style: TextButton.styleFrom( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                                    padding: const EdgeInsets.all(0.0),),
+
                                   child: Ink(
                                     decoration: const BoxDecoration(
                                       gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
-                                          colors: [
-                                            Color(0xdeb46fea),
-                                            Color(0xb59e3d57),
-                                            Color(0xff9f60d0)
-                                          ]),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
+                                          colors: [Color(0xdeb46fea), Color(0xb59e3d57) ,Color(
+                                              0xff9f60d0)]),
+                                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                     ),
                                     child: Container(
-                                      constraints: const BoxConstraints(
-                                          minWidth: 88.0, minHeight: 36.0),
-                                      // min sizes for Material buttons
+                                      constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0), // min sizes for Material buttons
                                       alignment: Alignment.center,
                                       child: const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        ),
+                                        'Login',style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      ),
                                         textAlign: TextAlign.center,
+
                                       ),
                                     ),
                                   ),
-                                )),
+                                )
+                            ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 20.0, left: 15),
-                              child: InkWell(
+                              padding: const EdgeInsets.only(
+                                  bottom: 20.0, left: 15),
+                              child:  InkWell(
                                 onTap: () {
                                   Navigator.push(
                                       context,
@@ -465,6 +392,8 @@ class _SearchState extends State<VerifyLogin>
                                   textAlign: TextAlign.left,
                                 ),
                               ),
+
+
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -477,122 +406,103 @@ class _SearchState extends State<VerifyLogin>
                               //        fontWeight: FontWeight.w500),),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    top: 15.0, left: 15, right: 15),
-                              ),
-                              onPressed: () {},
+                              style: TextButton.styleFrom(padding: const EdgeInsets.only(  top: 15.0, left: 15, right: 15),),
+                              onPressed: () {
+
+                              },
                               child: Image(
                                 image: AssetImage("asset/images/apple.png"),
                               ),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    top: 10.0,
-                                    bottom: 10.0,
-                                    left: 15,
-                                    right: 15),
-                              ),
-                              onPressed: () {},
+                              style: TextButton.styleFrom(padding: const EdgeInsets.only(
+                                  top: 10.0, bottom: 10.0, left: 15, right: 15),),
+
+                              onPressed: () {
+                                signInWithGoogle();
+                              },
                               child: Image(
                                 image: AssetImage("asset/images/google.png"),
                               ),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(
-                                    bottom: 10.0, left: 15, right: 15),
-                              ),
+                              style: TextButton.styleFrom( padding: const EdgeInsets.only(
+                                  bottom: 10.0, left: 15, right: 15),),
+
                               onPressed: () {},
                               child: Image(
                                 image: AssetImage("asset/images/fb.png"),
                               ),
                             ),
-                            //>>>>>>>>this is gmail button widget>>>>>> //
-                            googlebutton(),
+
+
                           ],
                         ),
                       ),
+
+
                     ],
+                    controller: _tabController,
                   ),
                 ),
               ],
             ),
           ),
         ),
+
       ),
+
+
     );
   }
-
-  googlebutton() {
-    Column(
-      children: [
-        Container(
-          height: 30.0,
-          width: 30.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('asset/images/google.png'),
-                fit: BoxFit.cover),
-            shape: BoxShape.circle,
-          ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text("Sign In with Google")
-      ],
-    );
-
-    // by onpressed we call the function signup function
-    onPressed:
-    () {
-      //signup(context);
-      // GoogleSignInButton(
-      //     onPressed: () {
-      signInWithGoogle().whenComplete(() {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return Dashboard();
-            },
-          ),
-        );
-      });
-      // },
-      // darkMode: true);
-    };
-  }
-//
 }
+//Future<LoginResponse> login(String email, String password) async {
+Future<String> signInWithGoogle() async {
+  await Firebase.initializeApp();
 
-//--
-final FirebaseAuth auth = FirebaseAuth.instance;
-
-Future<void> signup(BuildContext context) async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-  if (googleSignInAccount != null) {
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-    final AuthCredential authCredential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication.idToken,
-        accessToken: googleSignInAuthentication.accessToken);
 
-    // Getting users credential
-    UserCredential result = await auth.signInWithCredential(authCredential);
-    User? user = result.user;
+  var googleSignInAccount = await googleSignIn.signIn();
+  // final GoogleSignInAuthentication googleSignInAuthentication =
+  // await googleSignInAccount.authentication;
+  //
+  // final AuthCredential credential = GoogleAuthProvider.credential(
+  //   accessToken: googleSignInAuthentication.accessToken,
+  //   idToken: googleSignInAuthentication.idToken,
+  // );
+  //
+  // final UserCredential authResult =
+  // await _auth.signInWithCredential(credential);
+  // final User user = authResult.user;
+  //
+  // if (user != null) {
+  //   // Checking if email and name is null
+  //   assert(user.email != null);
+  //   assert(user.displayName != null);
+  //   assert(user.photoURL != null);
+  //
+  //   name = user.displayName;
+  //   email = user.email;
+  //   imageUrl = user.photoURL;
+  //
+  //   // Only taking the first part of the name, i.e., First Name
+  //   if (name.contains(" ")) {
+  //     name = name.substring(0, name.indexOf(" "));
+  //   }
+  //
+  //   assert(!user.isAnonymous);
+  //   assert(await user.getIdToken() != null);
+  //
+  //   final User currentUser = _auth.currentUser;
+  //   assert(user.uid == currentUser.uid);
 
-    if (result != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
-    } // if result not null we simply call the MaterialpageRoute,
-    // for go to the HomePage screen
-  }
+  print('signInWithGoogle succeeded: helle');
+
+  return 'helle';
+
 }
-
-Future<LoginResponse> login(String countrycode, String mobilenumber) async {
+Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   LoginRequest loginRequest = LoginRequest();
   loginRequest.countryCode = countrycode;
   loginRequest.mobileNumber = mobilenumber;
@@ -603,13 +513,9 @@ Future<LoginResponse> login(String countrycode, String mobilenumber) async {
   // loginRequest.deviceName = Constants.read(Constants.DevicName);
   // loginRequest.deviceToken = Constants.read(Constants.DeviceToken);
 
-  final response5 =
-      await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(loginRequest));
+  final response5 = await http.post(Uri.parse(Constants.baseUrl2 + '/User/MobileLogin'),
+      headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json',},
+      body: jsonEncode(loginRequest));
   // print(jsonEncode(loginRequest));
   // print('objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject');
   // print(response5.body);
@@ -618,7 +524,6 @@ Future<LoginResponse> login(String countrycode, String mobilenumber) async {
     Constants.save(Constants.DevicName, loginRequest.deviceName!);
     Constants.save(Constants.DeviceToken, loginRequest.deviceToken!);
     Constants.save(Constants.CountryCode, loginRequest.countryCode!);
-
     deviceName = loginRequest.deviceName!;
     deviceToken = loginRequest.deviceToken!;
 

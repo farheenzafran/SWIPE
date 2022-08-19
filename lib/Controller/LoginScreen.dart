@@ -2,20 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 //import 'package:country_list_pick/country_list_pick.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
 import 'VerifyLogin.dart';
-void main() async {
-  //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // calling of runApp
-  runApp(LoginScreen());
-}
 
 class LoginScreen extends StatefulWidget {
   LoginScreen() : super();
@@ -203,13 +195,11 @@ class CarouselDemoState extends State<LoginScreen> {
               padding: const EdgeInsets.all(0.0),
     ),
               child: Ink(
-                decoration: const BoxDecoration(
-                 gradient: LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-    colors: [Color(0xffb46fea), Color(0xb59e3d57) ,Color(0xff9f60d0)]),
-                  borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                ),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("asset/images/background.png"),
+                      fit: BoxFit.cover,
+                    )),
                 child: Container(
                   constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0), // min sizes for Material buttons
                   alignment: Alignment.center,

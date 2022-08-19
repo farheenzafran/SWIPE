@@ -6,7 +6,6 @@ import 'Controller/LoginScreen.dart';
 import 'Model Helper.dart';
 import 'dart:async';
 import 'Controller/Test.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() async{
   // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -34,6 +33,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   String LoginKey = "LoginKey";
+  String LoginKey2 = "LoginKey2";
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -63,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       authenticated = (prefs.getString(Constants.LoginKey) ?? "");
+      authenticated = (prefs.getString(Constants.LoginKey2) ?? "");
       deviceName = (prefs.getString(Constants.DevicName) ?? "");
       deviceToken = (prefs.getString(Constants.DeviceToken) ?? "");
       countryCode = (prefs.getString(Constants.CountryCode) ?? "");

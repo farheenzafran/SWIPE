@@ -17,7 +17,13 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/EmailSignup.dart';
+import 'package:swipeapp/Controller/ManageAccount.dart';
+import 'package:swipeapp/Controller/PlanAccount.dart';
+import 'package:swipeapp/Controller/Request/RefreshTokenRequest.dart';
+import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
 import '../Model Helper.dart';
+import 'AddAccount.dart';
 import 'BankData.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
@@ -31,16 +37,47 @@ import 'Response/LinkTokenResponse.dart';
 import 'Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'Spend.dart';
+import 'Test.dart';
 import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      // Hide the debug banner
+      debugShowCheckedModeBanner: false,
+     // title: 'Kindacode.com',
+      home: Dashboard(),
+    );
+  }
+}
 class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   @override
   tdashboardState createState() => tdashboardState();
 }
 
 class tdashboardState extends State<Dashboard> {
+
+  int _selectedScreenIndex = 0;
+
+  void _selectScreen(int index) {
+    setState(() {
+      _selectedScreenIndex = index;
+    });
+  }
+
+
   BankData bankDataobj = BankData();
 
   //creditBankData creditbankDataobj = creditBankData();
@@ -62,6 +99,9 @@ class tdashboardState extends State<Dashboard> {
   String bname = "";
   String acname = "";
   int selectedIndex = -1;
+  late double tDebitValue = 0;
+  late double tCreditValue = 0;
+
 
 //<<<<<<<<<<<<<<<<Debit>>>>>>>>>>>>>>>>>>>>
 
@@ -145,6 +185,7 @@ class tdashboardState extends State<Dashboard> {
             List<BankData>.from(dicData.map((i) => BankData.fromJson(i)))
                 .toList();
       }
+      creditTotalValue(creditbankdatalist);
       // print('&&&&&&&&');
       // print(bankdatalist.length);
       // print(bdata);
@@ -158,21 +199,21 @@ class tdashboardState extends State<Dashboard> {
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   void _onSuccessCallback(String publicToken, LinkSuccessMetadata metadata) {
-    print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
+   // print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
     bankDataobj.publictoken = publicToken;
     bankDataobj.accesstoken = accesstoken;
     saveBankData(metadata);
   }
 
   void _onEventCallback(String event, LinkEventMetadata metadata) {
-    print("onEvent123: $event, metadata: ${metadata.description()}");
+   // print("onEvent123: $event, metadata: ${metadata.description()}");
   }
 
   void _onExitCallback(LinkError? error, LinkExitMetadata metadata) {
-    print("onExit metadata: ${metadata.description()}");
+   // print("onExit metadata: ${metadata.description()}");
 
     if (error != null) {
-      print("onExit error: ${error.description()}");
+     // print("onExit error: ${error.description()}");
     }
   }
 
@@ -222,8 +263,9 @@ class tdashboardState extends State<Dashboard> {
         bankdatalist =
             List<BankData>.from(dicData.map((i) => BankData.fromJson(i)));
       }
-      print('&&&&&&&&');
-      print(bankdatalist.length);
+      // print('&&&&&&&&');
+      // print(bankdatalist.length);
+      debitTotalValue(bankdatalist);
     } catch (Excepetion) {
       throw Exception('Failed to load debitbankdata');
     }
@@ -245,27 +287,43 @@ class tdashboardState extends State<Dashboard> {
           children: [
         Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+             // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 dashboardHeader(),
                 debitTransaction(),
                 creditLiability(),
                 paymentButton(),
                 bottomNavBar(),
+
               ],
             ),
+           // _screens[_selectedScreenIndex]["screen"],
+
           ],
+        //  _screens[_selectedScreenIndex]["screen"],
+
 
         )
 
       ),
+      //
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _selectedScreenIndex,
+      //   onTap: _selectScreen,
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Screen A'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Screen B")
+      //   ],
+      // ),
+      //
     );
   }
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+
   dashboardHeader() {
     return Container(
-      height: 70,
+      height: 90,
       width: double.infinity,
       padding: EdgeInsets.all(15),
       //color: const Color(0xDEB46FEA),
@@ -314,20 +372,52 @@ class tdashboardState extends State<Dashboard> {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Container(
-            height: 30,
-            width: 100,
-            margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
-            alignment: Alignment.topLeft,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: const Color(0xffECDCFF)),
-            child: Text(
-              'Debit: 0',
-              textAlign: TextAlign.center,
+          // child: Container(
+          //   height: 30,
+          //   width: 100,
+          //   margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
+          //   alignment: Alignment.topLeft,
+          //   padding: EdgeInsets.all(8),
+          //   decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(12),
+          //       color: const Color(0xffECDCFF)),
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children:[
+                  Container(
+                      margin: EdgeInsets.all(8),
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0xffECDCFF)),
+                      child:
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      Text(
+                        'Debit:'+dollar+ tDebitValue.toStringAsFixed(2),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.black, //font color
+                            fontStyle: FontStyle.italic
+                        ),
+
+
+                      )
+                    //   ],
+                    // )
+
+
+
+
+                  ),
+
+                ]
+
             ),
-          ),
+         // ),
         ),
         Container(
             // height: 250.0,
@@ -342,7 +432,7 @@ class tdashboardState extends State<Dashboard> {
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: const Color(0xffF7F6FA)),
+                    color: const Color(0xffEDECEE)),
                 child: Row(
                   children: [
                     TextButton(
@@ -441,7 +531,7 @@ class tdashboardState extends State<Dashboard> {
                              //        item.accountid.toString(),
                              //        cmonth),
 
-                               debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
+                            debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
                             isExpanded: item.isExpaneded,
                           );
                         }).toList(),
@@ -470,20 +560,42 @@ class tdashboardState extends State<Dashboard> {
     Column(children: [
       Align(
         alignment: Alignment.topLeft,
-        child: Container(
-          height: 30,
-          width: 100,
-          margin: EdgeInsets.only(top: 10, left: 15, bottom: 5),
-          alignment: Alignment.topLeft,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: const Color(0xffECDCFF)),
-          child: Text(
-            'Credit: 0',
-            textAlign: TextAlign.center,
+        child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children:[
+          Container(
+              margin: EdgeInsets.all(8),
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xffECDCFF)),
+                  child:
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: [
+                      Text(
+                        'Credit: '+ dollar+tCreditValue.toStringAsFixed(2),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.black, //font color
+                            fontStyle: FontStyle.italic
+                        ),
+
+
+                      )
+                  //   ],
+                  // )
+
+
+
+
           ),
-        ),
+
+  ]
+
+      ),
       ),
       Container(
           height: 35,
@@ -492,7 +604,7 @@ class tdashboardState extends State<Dashboard> {
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: const Color(0xffF7F6FA)),
+              color: const Color(0xffEDECEE)),
           child: Row(
             children: [
               TextButton(
@@ -596,10 +708,10 @@ class tdashboardState extends State<Dashboard> {
                     setState(() {
                       snapshot.data![index].isExpaneded = !isExpanded;
                     });
-                    print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                    print(index);
-                    print(isExpanded);
-                    print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                    // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                    // print(index);
+                    // print(isExpanded);
+                    // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
                     TransactionResponse tempresponse2 =
                         await transactionResponse(
                             snapshot.data![index].accesstoken.toString(),
@@ -661,7 +773,12 @@ class tdashboardState extends State<Dashboard> {
            padding: const EdgeInsets.all(5),
         ),
 
-        onPressed: () {},
+        onPressed: () {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => AddAccount()),
+          // );
+        },
         child: Text(
           'Make a Payment',
           style: TextStyle(
@@ -685,12 +802,12 @@ class tdashboardState extends State<Dashboard> {
         borderRadius: BorderRadius.circular(2),
         color: const Color(0xF5F7F6FA),
       ),
-      alignment: Alignment.bottomCenter,
+      //alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          IconButton(
+         IconButton(
             // icon: Image.asset('assets/images/dashboard.png'),
             icon: ImageIcon(
               AssetImage("asset/images/home2.png"),
@@ -707,6 +824,7 @@ class tdashboardState extends State<Dashboard> {
               });
             },
           ),
+
           IconButton(
             icon: ImageIcon(
               AssetImage("asset/images/pbox.png"),
@@ -714,6 +832,10 @@ class tdashboardState extends State<Dashboard> {
               color: isFavourite1 ? const Color(0xFFA781D3) : Colors.grey,
             ),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Spend()),
+              );
               setState(() {
                 isFavourite = true;
                 isFavourite1 = false;
@@ -727,8 +849,13 @@ class tdashboardState extends State<Dashboard> {
               AssetImage("asset/images/pmoney.png"),
               size: 140,
               color: isFavourite2 ? const Color(0xFFA781D3) : Colors.grey,
+              
             ),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlanAccount()),
+              );
               setState(() {
                 isFavourite = true;
                 isFavourite1 = true;
@@ -744,6 +871,10 @@ class tdashboardState extends State<Dashboard> {
               color: isFavourite3 ? const Color(0xFFA781D3) : Colors.grey,
             ),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddAccount()),
+              );
               setState(() {
                 isFavourite = true;
                 isFavourite1 = true;
@@ -760,12 +891,67 @@ class tdashboardState extends State<Dashboard> {
   //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  debitTotalValue(List<BankData> debitlistbankdata) async
+  {
+    double totalTransactionValue = 0;
+  for(var debitdata in debitlistbankdata)
+    {
+      var response = await transactionResponse(debitdata.accesstoken.toString(), debitdata.accountid.toString(), cmonth);
+      for(var t_transaction in response.transactions!)
+        {
+          totalTransactionValue += t_transaction.amount;
+
+
+        }
+//print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt"+ totalTransactionValue.toString());
+    }
+  tDebitValue =  totalTransactionValue;
+
+  }
+
+  creditTotalValue(List<BankData> creditlistbankdata) async
+  {
+    double totalLiabilityValue = 0;
+    for(var cdata in creditlistbankdata)
+    {
+      var libilityresponse = await liabilityResponse(cdata.accesstoken.toString(), cdata.accountid.toString());
+      liabilitylist = libilityresponse.liabilities as Liabilities;
+      if (liabilitylist.student != null) {
+        for(var t_liability in liabilitylist.student!)
+        {
+          totalLiabilityValue += t_liability.lastPaymentAmount!;
+        }
+      }
+      if (liabilitylist.mortgage != null) {
+        for(var s_liability in liabilitylist.mortgage!)
+        {
+          totalLiabilityValue += s_liability.lastPaymentAmount!;
+        }
+      }
+      if (liabilitylist.credit != null) {
+        for(var s_liability in liabilitylist.credit!)
+        {
+          totalLiabilityValue += s_liability.lastPaymentAmount!;
+        }
+      }
+     // print("||||||||||total creditttttttt"+ totalLiabilityValue.toString());
+
+    }
+   // print("||||||||||total creditttttttt value"+ totalLiabilityValue.toString());
+
+    setState(() {
+      tCreditValue =  totalLiabilityValue;
+   // print("||||||||||total creditttttttt ttvalue"+ tCreditValue.toString());
+
+    });
+  }
 
   debitBuildExpandableContent(
       String accessToken, String accountID, int cmonth) {
-    print('+++++++++++++++++}');
+   // print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
-    print(response);
+   //
+    // print(response);
     if (response == null) {
       return Text(
         'error ',
@@ -777,13 +963,14 @@ class tdashboardState extends State<Dashboard> {
           FutureBuilder<TransactionResponse>(
               future: response,
               builder: (context, snapshot) {
-                print('snnnnnnnnapshot');
-                print(snapshot.data!.transactions.toString());
+             //   print('snnnnnnnnapshot');
+              //  print(snapshot.data!.transactions.toString());
                 return debitBuildTransactionListView(snapshot.data!);
               });
     }
     ;
   }
+
 
   debitBuildTransactionListView(TransactionResponse tdata) {
     //Text("jhbvkjndfkjvnfdv");
@@ -933,7 +1120,7 @@ class tdashboardState extends State<Dashboard> {
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 10, top: 5),
                                     child: Text(
-                                      dollar + t.amount.toString(),
+                                      dollar + t.amount.toStringAsFixed(2),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 13,
@@ -981,9 +1168,9 @@ class tdashboardState extends State<Dashboard> {
 
   //-------
   _buildExpandableContent(String accessToken, String accountID, int cmonth) {
-    print('+++++++++++++++++}');
+ //   print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
-    print(response);
+  //  print(response);
     if (response == null) {
       return ListTile(
         title: Text(
@@ -995,8 +1182,8 @@ class tdashboardState extends State<Dashboard> {
       return FutureBuilder<TransactionResponse>(
           future: response,
           builder: (context, snapshot) {
-            print('snnnnnnnnapshot');
-            print(snapshot.data!.transactions.toString());
+          //  print('snnnnnnnnapshot');
+          //  print(snapshot.data!.transactions.toString());
             // return ExpansionTile(
             //   title: Text(
             //     'test',),
@@ -1048,7 +1235,7 @@ class tdashboardState extends State<Dashboard> {
               Padding(
                 padding: EdgeInsets.only(bottom: 10, top: 5),
                 child: Text(
-                  dollar + t.amount.toString(),
+                  dollar + t.amount.toStringAsFixed(2),
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,
@@ -1098,9 +1285,9 @@ class tdashboardState extends State<Dashboard> {
 
 //------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
-    print('+++++++++++++++++}');
+ //   print('+++++++++++++++++}');
     var libilityresponse = liabilityResponse(accessToken, accountID);
-    print(libilityresponse);
+   // print(libilityresponse);
     // return Text("abcd55555555");
     if (libilityresponse == null) {
       //return ListTile(
@@ -1114,8 +1301,8 @@ class tdashboardState extends State<Dashboard> {
       return FutureBuilder<LiabilityResponse>(
           future: libilityresponse,
           builder: (context, snapshot) {
-            print('snnnnnnnnapshot');
-            print(snapshot.data!.liabilities.toString());
+         //   print('snnnnnnnnapshot');
+          //  print(snapshot.data!.liabilities.toString());
             // return Text("233222222222");
             return creditBuildLiabilityListView(snapshot.data!);
           });
@@ -2066,8 +2253,8 @@ Future<LinkTokenResponse> linktokenResponse() async {
           },
           body: jsonEncode(tokenRequest));
   // prfint(Uri.parse(Constants.URL + '/link/token/create'));
-  print('>>>>>>>>>>>>>>>>>>>>>>>> Link Token <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-  print(response.body);
+//  print('>>>>>>>>>>>>>>>>>>>>>>>> Link Token <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+ // print(response.body);
   if (response.statusCode == 200) {
     // If the server did return a 201 CREATED response,
     // then parse the JSON.
@@ -2112,7 +2299,7 @@ Future<InstitutionResponse> institutionResponse(String InstituteId) async {
   // print('###########################################################################################################');
   print(
       '>>>>>>>>>>>>>>>>>>>>>>>> institutionResponse <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-  print(response2.body);
+  //print(response2.body);
   if (response2.statusCode == 200) {
     // If the server did return a 201 CREATED response,
     // then parse the JSON
@@ -2208,11 +2395,11 @@ Future<TransactionResponse> transactionResponse(
           },
           body: jsonEncode(transactionRequest));
   // print('###########################################################################################################');
-  print('respose44 body-----: ${jsonEncode(response4.body)}');
-  print(accesstoken);
-  print('##########################################'
-      '###################################################'
-      '##############');
+  // print('respose44 body-----: ${jsonEncode(response4.body)}');
+  // print(accesstoken);
+  // print('##########################################'
+  //     '###################################################'
+  //     '##############');
   if (response4.statusCode == 200) {
     void dispose() {
       Loader.hide();
@@ -2377,16 +2564,16 @@ Future<LiabilityResponse> liabilityResponse(
           },
           body: jsonEncode(liabilityRequest));
 
-  print('##########################################'
-      '###################################################'
-      '##############');
-  print('respose44 body44-----: ${jsonEncode(response4.body)}');
-  print(
-      '#################################credit##################################################');
-
-  print(response4.body);
-  print(
-      '#################################credit##################################################');
+  // print('##########################################'
+  //     '###################################################'
+  //     '##############');
+  // print('respose44 body44-----: ${jsonEncode(response4.body)}');
+  // print(
+  //     '#################################credit##################################################');
+  //
+  // print(response4.body);
+  // print(
+  //     '#################################credit##################################################');
 
   if (response4.statusCode == 200) {
     bool _isLoading = false;
@@ -2397,7 +2584,49 @@ Future<LiabilityResponse> liabilityResponse(
     throw Exception('Failed to call  .');
   }
 }
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>liability>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//------
+Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
+//  bool _isLoading = true;
+  RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest();
+  refreshTokenRequest.refreshToken = refreshtoken;
+  // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
+  final responsetoken = await http.post(Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(refreshTokenRequest));
+  //
+  // print('##########################################'
+  //     '###################################################'
+  //     '##############');
+  // print('respose44 body44-----: ${jsonEncode(responsetoken.body)}');
+  // print(
+  //     '#################################credit##################################################');
+  //
+  // print(responsetoken.body);
+  // print(
+  //     '#################################credit##################################################');
+
+  if (responsetoken.statusCode == 200) {
+    bool _isLoading = false;
+
+    return RefreshTokenResponse.fromJson(jsonDecode(responsetoken.body));
+  }
+  // else if(responsetoken.statusCode == 401){
+  //
+  //
+  // }
+  else
+    {
+      bool _isLoading = false;
+      throw Exception('Failed to call  .');
+    }
+}
+
+//-------
 // _buildTransactionListView(TransactionResponse tdata) {
 //   List<Widget> listTiles = [];
 //   for (var t in tdata.transactions!) {

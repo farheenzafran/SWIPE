@@ -41,13 +41,13 @@ dependencies:
   intl: ^0.17.0
   flutter_range_slider: ^1.5.0
   carousel_slider: ^4.0.0
-#  firebase_core: ^1.20.1
+  firebase_core: ^1.20.1
+  firebase_auth: ^1.0.3
+  google_sign_in: ^5.4.1
+#  firebase_core: ^1.10.0
+##  firebase_auth: ^0.20.0+1
 #  firebase_auth: ^3.6.3
-#  google_sign_in: ^5.4.1
-#  firebase_core: ^0.5.0
-#  firebase_core: ^0.5.0
-  firebase_auth: 0.18.4+1
-  google_sign_in: ^4.5.3
+#  google_sign_in: ^4.5.3
 #  firebase_auth: ^1.0.3
 #  google_sign_in: ^5.0.1
 #  firebase_core: ^1.0.1
@@ -55,6 +55,10 @@ dependencies:
 #  google_sign_in: ^5.0.1
 #  firebase_auth: ^0.16.0
 #  google_sign_in: ^4.4.4
+   #  firebase_core: ^1.20.1
+   #  firebase_auth: ^3.6.3
+   #  google_sign_in: ^5.4.1
+   #  firebase_core: ^0.5.0
 
 
 
@@ -122,6 +126,9 @@ flutter:
     - asset/images/home2.png
     - asset/images/cart.png
     - asset/images/background.png
+    - asset/images/btnsetting.png
+    - asset/images/addaccount.png
+    - asset/images/setting.jpeg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

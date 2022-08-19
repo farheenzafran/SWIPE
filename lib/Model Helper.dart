@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:core';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,16 +13,19 @@ class Constants{
   static String baseUrl = "https://breakbulkdevservices.azurewebsites.net/api";
   static  String baseUrl2 = "http://swipe-test.us-east-1.elasticbeanstalk.com/api";
   static String LoginKey = "LoginSession";
+  static String LoginKey2 = "userLoginSession";
   static String SignUpKey = "LoginSession2";
   static String DevicName = "DeviceName";
   static String DeviceToken = "DeviceToken";
   static String UserObject = "UserObject";
   static String CountryCode = "CountryCode";
+  static String existinguserid = "existinguserid";
   static String firstname = "firstname";
   static String lastname = "lastname";
   static String authenticationType = "authenticationType";
-
-
+  static int Mobile = 1;
+  static int GmailSignIn = 2;
+  static int  EmailPassword = 3;
 
   static read( String key) async {
     final prefs = await SharedPreferences.getInstance();
@@ -78,4 +82,5 @@ class Logic {
     print("doing something");
   }
 }
+
 
