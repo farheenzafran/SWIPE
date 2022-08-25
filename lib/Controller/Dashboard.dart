@@ -20,8 +20,11 @@ import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
 import 'package:swipeapp/Controller/ManageAccount.dart';
 import 'package:swipeapp/Controller/PlanAccount.dart';
+import 'package:swipeapp/Controller/Request/SaveBankDataRequest.dart';
 import 'package:swipeapp/Controller/Request/RefreshTokenRequest.dart';
+import 'package:swipeapp/Controller/Response/GetBankDataResponse.dart';
 import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
+import 'package:swipeapp/Controller/Response/SaveBankDataResponse.dart';
 import '../Model Helper.dart';
 import 'AddAccount.dart';
 import 'BankData.dart';
@@ -37,6 +40,7 @@ import 'Response/LinkTokenResponse.dart';
 import 'Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'Response/UserDeatail.dart';
 import 'Spend.dart';
 import 'Test.dart';
 import 'creditBankdata.dart';
@@ -84,6 +88,8 @@ class tdashboardState extends State<Dashboard> {
 
 //<<<<<<<<<<<<<<<<Debit>>>>>>>>>>>>>>>>>>>>
   late Future<List<BankData>> bankdatalist = [] as Future<List<BankData>>;
+  late Future<List<BankData>> creditbankdatalist = [] as Future<List<BankData>>;
+
   List<Transactions> transactionlist = [];
   Future<TransactionResponse>? transactionResponseList;
   late LegacyLinkConfiguration _publicKeyConfiguration;
@@ -121,7 +127,6 @@ class tdashboardState extends State<Dashboard> {
   }
 
 //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
-  late Future<List<BankData>> creditbankdatalist = [] as Future<List<BankData>>;
   late LinkTokenConfiguration creditlinkTokenConfiguration;
   Liabilities liabilitylist = new Liabilities();
   List<Student> stdlist = [];
@@ -160,40 +165,42 @@ class tdashboardState extends State<Dashboard> {
     PlaidLink.onSuccess(_onSuccessCallback);
     PlaidLink.onEvent(_onEventCallback);
     PlaidLink.onExit(_onExitCallback);
-    bankdatalist = getBankData();
+    bankdatalist = fetchBankData(Constants.debitcardValue) ;
     var linktoken = linktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
     // PlaidLink.onSuccess(creditonSuccessCallback);
     // PlaidLink.onEvent(creditonEventCallback);
     // PlaidLink.onExit(creditonExitCallback);
-    creditbankdatalist =
-        creditgetBankData(); // as Future<List<creditBankData>>;// as List<BankData>;
+    creditbankdatalist = creditfetchBankData(Constants.creditcardValue); // as Future<List<creditBankData>>;// as List<BankData>;
     var creditlinktoken = creditlinktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
+    setState(() {
+
+    });
   }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>start>>>>>>>>>>>>>>>>>>>>>>>>
   String libKey = "data";
 
-  Future<List<BankData>> creditgetBankData() async {
+  Future<List<BankData>> creditgetBankData(List<BankData> creditbankresultList) async {
     List<BankData> creditbankdatalist = [];
     try {
-      String cdata = await Constants.read(libKey);
-      if (cdata != "") {
-        List<dynamic> dicData = jsonDecode(cdata);
-        creditbankdatalist =
-            List<BankData>.from(dicData.map((i) => BankData.fromJson(i)))
-                .toList();
-      }
+      creditbankdatalist = creditbankresultList;
+
+      // String cdata = await Constants.read(libKey);
+      // if (cdata != "") {
+      //   List<dynamic> dicData = jsonDecode(cdata);
+      //   creditbankdatalist =
+      //       List<BankData>.from(dicData.map((i) => BankData.fromJson(i)))
+      //           .toList();
+      // }
       creditTotalValue(creditbankdatalist);
-      // print('&&&&&&&&');
-      // print(bankdatalist.length);
-      // print(bdata);
-      return creditbankdatalist;
+     //return creditbankdatalist;
     } catch (Excepetion) {
       throw Exception('Failed to load credit ');
-      return creditbankdatalist;
     }
+    return creditbankdatalist;
+
   }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -202,7 +209,7 @@ class tdashboardState extends State<Dashboard> {
    // print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
     bankDataobj.publictoken = publicToken;
     bankDataobj.accesstoken = accesstoken;
-    saveBankData(metadata);
+    savingBankData(metadata);
   }
 
   void _onEventCallback(String event, LinkEventMetadata metadata) {
@@ -217,7 +224,7 @@ class tdashboardState extends State<Dashboard> {
     }
   }
 
-  void saveBankData(LinkSuccessMetadata metadata) async {
+  void savingBankData(LinkSuccessMetadata metadata) async {
     for (int i = 0; i < metadata.accounts.length; i++) {
       bankDataobj.accountid = metadata.accounts[i].id;
       bankDataobj.accountname = metadata.accounts[i].name;
@@ -226,56 +233,207 @@ class tdashboardState extends State<Dashboard> {
     if (metadata.institution.id != "") {
       var insres = await institutionResponse(metadata.institution.id);
       bankDataobj.banklogo = insres.institution?.logo;
+      print("logooooooooo");
+      print(bankDataobj.banklogo);
+      print("logooooooooo");
       bankDataobj.bankthemecolor = insres.institution?.primaryColor;
       bankDataobj.bankname = insres.institution?.name;
       var accesstokenres =
           await accessTokenResponse(bankDataobj.publictoken.toString());
       bankDataobj.accesstoken = accesstokenres.accessToken;
 
-      if (isexpanse) {
-        List<BankData> templstbankdata = await bankdatalist;
-        templstbankdata.add(bankDataobj);
-        await Constants.save(ExpenseKey, jsonEncode(templstbankdata));
-      } else {
-        List<BankData> templstbankdata = await creditbankdatalist;
-        templstbankdata.add(bankDataobj);
-        await Constants.save(libKey, jsonEncode(templstbankdata));
-      }
+    //  if (isexpanse) {
+       // saveBankdataResponse();
+       // List<BankData> templstbankdata = await bankdatalist;
+        //templstbankdata.add(bankDataobj);
+        //await Constants.save(ExpenseKey, jsonEncode(templstbankdata));
+    //  } else {
+        // List<BankData> templstbankdata = await creditbankdatalist;
+        // templstbankdata.add(bankDataobj);
+        // await Constants.save(libKey, jsonEncode(templstbankdata));
+     // }
 
-      setState(() {
-        if (isexpanse) {
-          bankdatalist = getBankData();
-        } else {
-          creditbankdatalist = creditgetBankData();
-        }
-      });
+
+   //   setState(() {
+        saveBankdataResponse();
+    //  });
 
       // print('---calling end accessTokenResponse---');
     }
   }
 
-  Future<List<BankData>> getBankData() async {
+  Future<List<BankData>> getBankData(List<BankData> bankresultList) async {
+
     List<BankData> bankdatalist = [];
     try {
-      String bdata = await Constants.read(ExpenseKey);
-      if (bdata != "") {
-        List<dynamic> dicData = jsonDecode(bdata);
-        bankdatalist =
-            List<BankData>.from(dicData.map((i) => BankData.fromJson(i)));
-      }
-      // print('&&&&&&&&');
+      bankdatalist = bankresultList;
+      //String bdata = await Constants.read(ExpenseKey);
+    //  if (bdata != "") {
+        //List<dynamic> dicData = jsonDecode(bdata);
+        //bankdatalist = List<BankData>.from(bankresultList.map((i) => BankData.fromJson(i)));
+     // }
+     //   print('&&&&&&&&12345');
+     //   print(jsonEncode(bankdatalist));
       // print(bankdatalist.length);
       debitTotalValue(bankdatalist);
+
     } catch (Excepetion) {
       throw Exception('Failed to load debitbankdata');
     }
     return bankdatalist;
   }
 
+
+
+
+  Future<List<BankData>> fetchBankData(int type) async {
+
+    UserDetail tempuserdetail = await Constants.getUserDetail();
+    String banktoken = tempuserdetail.accessToken.toString();
+    final response = await http.get(Uri.parse(Constants.baseUrl2 + '/Bank/GetBankData?type='+type.toString()),
+        headers: <String, String>{
+          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Authorization': 'Bearer $banktoken',
+
+        });
+
+    List<BankData> tempbankdatalist =  <BankData>[];
+    if (response.statusCode == 200) {
+      GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
+      for(var i in bankdataResponse.result!)
+        {
+          BankData bd = new BankData();
+          bd.publictoken = i.publictoken;
+          bd.bankthemecolor = i.bankthemecolor;
+          bd.banklogo = i.banklogo;
+          bd.mask = i.mask;
+          bd.accountname = i.accountname;
+          bd.accesstoken = i.accesstoken;
+          bd.bankname = i.bankname;
+          bd.accountid = i.accountid;
+          tempbankdatalist.add(bd);
+        }
+      getBankData(tempbankdatalist);
+      return tempbankdatalist ;
+     // return GetBankDataResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to call user childuserid .');
+    }
+  }
+
+  Future<SaveBankDataResponse> saveBankdataResponse() async {
+    SaveBankDataRequest saveBankDataRequest = SaveBankDataRequest();
+    UserDetail tempuserdetail = await Constants.getUserDetail();
+    String accounttoken = tempuserdetail.accessToken.toString();
+    saveBankDataRequest.id = 0;
+    saveBankDataRequest.accountid = bankDataobj.accountid;
+    saveBankDataRequest.accesstoken = bankDataobj.accesstoken;
+    saveBankDataRequest.accountname = bankDataobj.accountname;
+    saveBankDataRequest.mask = bankDataobj.mask;
+    saveBankDataRequest.bankname = bankDataobj.bankname;
+    saveBankDataRequest.banklogo = bankDataobj.banklogo;
+    print("banklogooooooooo>>>>>>>>");
+    print(bankDataobj.banklogo?.length.toString());
+    print(bankDataobj.banklogo);
+    print("banklogooooooooo>>>>>>>>");
+    saveBankDataRequest.bankthemecolor = bankDataobj.bankthemecolor;
+    saveBankDataRequest.publictoken = bankDataobj.publictoken;
+    setState(() {
+      if (isexpanse) {
+
+        saveBankDataRequest.type = Constants.debitcardValue;
+
+      } else {
+
+        saveBankDataRequest.type = Constants.creditcardValue;
+
+      }
+    });
+
+    print('/////////request <<<<<<<<<<<<<<<<<<<<<<<<<');
+    print(jsonEncode(saveBankDataRequest));
+    print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
+
+    final savebankresponse =
+    await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accounttoken',
+        },
+        body: jsonEncode(saveBankDataRequest));
+    print('/////////.svaebankdata <<<<<<<<<<<<<<<<<<<<<<<<<');
+    print(accounttoken);
+    print(saveBankDataRequest);
+    print(savebankresponse);
+    print(savebankresponse.body);
+    print(savebankresponse.statusCode);
+    print('/////////<<<<svaebankdata<<<<<<<<<<<<<<<<<<<<<');
+
+    if (savebankresponse.statusCode == 200) {
+
+      @override
+      void dispose() {
+        Loader.hide();
+        // super.dispose();
+      }
+
+      return SaveBankDataResponse.fromJson(jsonDecode(savebankresponse.body));
+    } else {
+
+
+      throw Exception('Failed to call plaid save bank data.');
+    }
+  }
+
+  Future<List<BankData>> creditfetchBankData(int type) async {
+    UserDetail tempuserdetail = await Constants.getUserDetail();
+    String banktoken = tempuserdetail.accessToken.toString();
+    final response = await http.get(Uri.parse(Constants.baseUrl2 + '/Bank/GetBankData?type='+type.toString()),
+        headers: <String, String>{
+          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Authorization': 'Bearer $banktoken',
+
+        });
+   print(response.statusCode);
+    print(response.body);
+    print(response);
+    print("&&&&&&&&&&&&&check value");
+    List<BankData> tempbankdatalist =  <BankData>[];
+    if (response.statusCode == 200) {
+    print("templist %%%%%%%%%%%333");
+    GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
+    print("templist22 %%%%%%%%%%%");
+    for(var i in bankdataResponse.result!)
+    {
+    BankData bd = new BankData();
+    bd.publictoken = i.publictoken;
+    bd.bankthemecolor = i.bankthemecolor;
+    bd.banklogo = i.banklogo;
+    bd.mask = i.mask;
+    bd.accountname = i.accountname;
+    bd.accesstoken = i.accesstoken;
+    bd.bankname = i.bankname;
+    bd.accountid = i.accountid;
+    tempbankdatalist.add(bd);
+    }
+    print("templist %%%%%%%%%%%");
+    print(tempbankdatalist);
+    print("templist 9999%%%%%%%%%%%");
+    getBankData(tempbankdatalist);
+    return tempbankdatalist ;
+    // return GetBankDataResponse.fromJson(jsonDecode(response.body));
+    } else {
+    throw Exception('Failed to call user debit childuserid .');
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width * 0.8;
-
     var screenSize = MediaQuery.of(context).size;
     final mq = MediaQueryData.fromWindow(window);
     var _val;
@@ -283,9 +441,9 @@ class tdashboardState extends State<Dashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: ListView(
-          children: [
-        Column(
+        child: SingleChildScrollView(
+         // children: [
+       child: Column(
               mainAxisSize: MainAxisSize.min,
              // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -299,23 +457,14 @@ class tdashboardState extends State<Dashboard> {
             ),
            // _screens[_selectedScreenIndex]["screen"],
 
-          ],
+          //],
         //  _screens[_selectedScreenIndex]["screen"],
 
 
         )
 
       ),
-      //
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: _selectedScreenIndex,
-      //   onTap: _selectScreen,
-      //   items: const [
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Screen A'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Screen B")
-      //   ],
-      // ),
-      //
+
     );
   }
 
@@ -372,15 +521,6 @@ class tdashboardState extends State<Dashboard> {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          // child: Container(
-          //   height: 30,
-          //   width: 100,
-          //   margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
-          //   alignment: Alignment.topLeft,
-          //   padding: EdgeInsets.all(8),
-          //   decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(12),
-          //       color: const Color(0xffECDCFF)),
             child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children:[
@@ -403,7 +543,6 @@ class tdashboardState extends State<Dashboard> {
                             color: Colors.black, //font color
                             fontStyle: FontStyle.italic
                         ),
-
 
                       )
                     //   ],
@@ -492,14 +631,9 @@ class tdashboardState extends State<Dashboard> {
                                 iconColor: Colors.red,
                                 leading: CircleAvatar(
                                   radius: 30,
-                                  child: Image.memory(
-                                    Base64Codec()
-                                        .decode(item.banklogo.toString()),
-                                    // height: 30,
-                                    // width: 30,
-                                    // backgroundImage: new AssetImage(
-                                    // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                                  ),
+                                  child:
+                                 // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
+                                  Image.network(item.banklogo.toString()),
                                 ),
                                 title: Text(
                                   item.bankname.toString(),
@@ -525,12 +659,7 @@ class tdashboardState extends State<Dashboard> {
                                 selected: false,
                               );
                             },
-                            body: //SingleChildScrollView(
-                             //   _buildExpandableContent(
-                             //        item.accesstoken.toString(),
-                             //        item.accountid.toString(),
-                             //        cmonth),
-
+                            body:
                             debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
                             isExpanded: item.isExpaneded,
                           );
@@ -661,15 +790,14 @@ class tdashboardState extends State<Dashboard> {
                       headerBuilder: (BuildContext context, bool isExpanded) {
                         return ListTile(
                           iconColor: Colors.red,
-                          leading: CircleAvatar(
+                          leading: 
+                          
+                          CircleAvatar(
                             radius: 30,
-                            child: Image.memory(
-                              Base64Codec().decode(item.banklogo.toString()),
-                              // height: 30,
-                              // width: 30,
-                              // backgroundImage: new AssetImage(
-                              // Base64Codec().decode(snapshot.data![i].banklogo.toString()),
-                            ),
+                            child: 
+                            //Image.memory(Base64Codec().decode(item.banklogo.toString())),
+                            
+                            Image.network(item.banklogo.toString())
                           ),
                           title: Text(
                             item.bankname.toString(),
@@ -723,7 +851,7 @@ class tdashboardState extends State<Dashboard> {
                     // viewVisible = true;
                     viewVisibleTransaction = true;
                     showWidget();
-                    LiabilityResponse tempresponse = await liabilityResponse(
+                    LiabilityResponse tempresponse = await liabilityData(
                         snapshot.data![index].accesstoken.toString(),
                         snapshot.data![index].accountid.toString());
                     liabilitylist = tempresponse.liabilities as Liabilities;
@@ -905,8 +1033,10 @@ class tdashboardState extends State<Dashboard> {
         }
 //print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt"+ totalTransactionValue.toString());
     }
-  tDebitValue =  totalTransactionValue;
+    setState(() {
+      tDebitValue =  totalTransactionValue;
 
+    });
   }
 
   creditTotalValue(List<BankData> creditlistbankdata) async
@@ -914,7 +1044,7 @@ class tdashboardState extends State<Dashboard> {
     double totalLiabilityValue = 0;
     for(var cdata in creditlistbankdata)
     {
-      var libilityresponse = await liabilityResponse(cdata.accesstoken.toString(), cdata.accountid.toString());
+      var libilityresponse = await liabilityData(cdata.accesstoken.toString(), cdata.accountid.toString());
       liabilitylist = libilityresponse.liabilities as Liabilities;
       if (liabilitylist.student != null) {
         for(var t_liability in liabilitylist.student!)
@@ -941,7 +1071,6 @@ class tdashboardState extends State<Dashboard> {
 
     setState(() {
       tCreditValue =  totalLiabilityValue;
-   // print("||||||||||total creditttttttt ttvalue"+ tCreditValue.toString());
 
     });
   }
@@ -986,111 +1115,7 @@ class tdashboardState extends State<Dashboard> {
                 children: [
                   for (var t in tdata.transactions!)
                     Column(children: <Widget>[
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   height: 75,
-                      //   margin: EdgeInsets.only(
-                      //       left: 15, right: 15, top: 5, bottom: 5),
-                      //   padding: EdgeInsets.all(5),
-                      //   //color: const Color(0xffF5F5F5),
-                      //   color: const Color(0xffEFF4F8),
-                      //
-                      //   child: Row(
-                      //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     //  crossAxisAlignment : CrossAxisAlignment.end,
-                      //     children: [
-                      //       Row(
-                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //         children: [
-                      //           Container(
-                      //             alignment: Alignment.topLeft,
-                      //             margin: EdgeInsets.only(
-                      //                 left: 8, right: 5, top: 5, bottom: 5),
-                      //             //padding: EdgeInsets.only(left: 5, top: 6, ),
-                      //             child: CircleAvatar(
-                      //               radius: 20,
-                      //               child: Image(
-                      //                 image:
-                      //                     AssetImage("asset/images/cart.png"),
-                      //
-                      //                 //width: 40,
-                      //                 //color: const Color(0xffECDCFF)
-                      //               ),
-                      //             ),
-                      //           ),
-                      //           Column(
-                      //             children: [
-                      //               Container(
-                      //                 width: 20,
-                      //                 //alignment: Alignment.center,
-                      //                 margin: EdgeInsets.only(
-                      //                     left: 3, right: 3, top: 4, bottom: 4),
-                      //                 // padding: EdgeInsets.only( top: 3, ),
-                      //                 child: Flexible(
-                      //                   child: Text(
-                      //                     t.category.toString(),
-                      //                     //maxLines: 2,
-                      //                     overflow: TextOverflow.ellipsis,
-                      //                     style: TextStyle(
-                      //                         color: Colors.black,
-                      //                         fontSize: 12,
-                      //                         fontWeight: FontWeight.w700),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               Container(
-                      //                 width: 20,
-                      //                 alignment: Alignment.center,
-                      //                 //padding: const EdgeInsets.all(3),
-                      //                 margin: const EdgeInsets.all(4),
-                      //                 child: Text(
-                      //                   t.name.toString(),
-                      //                   // overflow: TextOverflow.ellipsis,
-                      //                   overflow: TextOverflow.ellipsis,
-                      //
-                      //                   style: TextStyle(
-                      //                       color: Colors.grey,
-                      //                       fontSize: 8,
-                      //                       fontWeight: FontWeight.w500),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //           Column(
-                      //             children: [
-                      //               Container(
-                      //                 alignment: Alignment.topRight,
-                      //                 //padding: const EdgeInsets.all(3),
-                      //                 margin: const EdgeInsets.all(3),
-                      //                 child: Text(
-                      //                   dollar + t.amount.toString(),
-                      //                   textAlign: TextAlign.right,
-                      //                   style: TextStyle(
-                      //                       color: Colors.black,
-                      //                       fontSize: 13,
-                      //                       fontWeight: FontWeight.w700),
-                      //                 ),
-                      //               ),
-                      //               Container(
-                      //                 alignment: Alignment.bottomRight,
-                      //                 // padding: const EdgeInsets.all(3),
-                      //                 margin: const EdgeInsets.all(3),
-                      //                 child: Text(
-                      //                   dollar + t.date.toString(),
-                      //                   textAlign: TextAlign.right,
-                      //                   style: TextStyle(
-                      //                       color: Colors.grey,
-                      //                       fontSize: 13,
-                      //                       fontWeight: FontWeight.w700),
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           )
-                      //         ],
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+
 
                           Container(
                             margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
@@ -1166,130 +1191,17 @@ class tdashboardState extends State<Dashboard> {
     //selected: true;
   }
 
-  //-------
-  _buildExpandableContent(String accessToken, String accountID, int cmonth) {
- //   print('+++++++++++++++++}');
-    var response = transactionResponse(accessToken, accountID, cmonth);
-  //  print(response);
-    if (response == null) {
-      return ListTile(
-        title: Text(
-          'sssee',
-          style: TextStyle(color: Colors.black),
-        ),
-      );
-    } else {
-      return FutureBuilder<TransactionResponse>(
-          future: response,
-          builder: (context, snapshot) {
-          //  print('snnnnnnnnapshot');
-          //  print(snapshot.data!.transactions.toString());
-            // return ExpansionTile(
-            //   title: Text(
-            //     'test',),
-            //   children: _buildTransactionListView(snapshot.data!),
-            // );
-
-            return
-              ListView(
-              children:
-              _buildTransactionListView(snapshot.data!),
-                shrinkWrap: true,
-
-              );
-          });
-    };
-  }
-
-  _buildTransactionListView(TransactionResponse tdata) {
-    List<Widget> listTiles = [];
-    for (var t in tdata.transactions!) {
-      var card =
-      Container(
-        margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
-        color: const Color(0xffF5F5F5),
-        child:
-            //ListTile(title:Text(t.name.toString()) ,)
-            ListTile(
-          contentPadding: EdgeInsets.all(8),
-          leading: CircleAvatar(
-            radius: 20,
-            child: Image(
-              image: AssetImage("asset/images/cart.png"),
-              //width: 40,
-              //color: const Color(0xffECDCFF)
-            ),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 5, bottom: 8),
-            child: Text(
-              t.category.toString(),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-          trailing: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 10, top: 5),
-                child: Text(
-                  dollar + t.amount.toStringAsFixed(2),
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 2),
-                child: Text(
-                  t.date.toString(),
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: EdgeInsets.only(bottom: 2),
-            child: Text(
-              t.name.toString(),
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400),
-            ),
-          ),
-          selected: true,
-        ),
-      );
-
-      // var tile = ListTile(
-      //        title: Text(
-      //          t.name.toString(),
-      //          style: TextStyle(fontWeight: FontWeight.w700),
-      //        ),
-      //      );
-      //      listTiles.add(tile);
-
-      listTiles.add(card);
-    }
-    return listTiles;
-  }
-
 //------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
- //   print('+++++++++++++++++}');
-    var libilityresponse = liabilityResponse(accessToken, accountID);
-   // print(libilityresponse);
+ print('+++++++++++++++++}');
+    var libilityresponse = liabilityData(accessToken, accountID);
+    print(libilityresponse);
     // return Text("abcd55555555");
     if (libilityresponse == null) {
+      print('2+++++++++++++++++');
+
       //return ListTile(
       return Text(
         'error',
@@ -1306,8 +1218,7 @@ class tdashboardState extends State<Dashboard> {
             // return Text("233222222222");
             return creditBuildLiabilityListView(snapshot.data!);
           });
-    }
-    ;
+    };
   }
 
   creditBuildLiabilityListView(LiabilityResponse ldata) {
@@ -2233,6 +2144,48 @@ class tdashboardState extends State<Dashboard> {
 }
 
 //>>>>>>>>>>>>>>-------------------------API's--------------------------------->>>>>>>>>>>>>>>
+
+//----3
+Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
+//  bool _isLoading = true;
+  RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest();
+  refreshTokenRequest.refreshToken = refreshtoken;
+  // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
+  final responsetoken = await http.post(Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(refreshTokenRequest));
+  //
+  // print('##########################################'
+  //     '###################################################'
+  //     '##############');
+  // print('respose44 body44-----: ${jsonEncode(responsetoken.body)}');
+  // print(
+  //     '#################################credit##################################################');
+  //
+  // print(responsetoken.body);
+  // print(
+  //     '#################################credit##################################################');
+
+  if (responsetoken.statusCode == 200) {
+    bool _isLoading = false;
+
+    return RefreshTokenResponse.fromJson(jsonDecode(responsetoken.body));
+  }
+  // else if(responsetoken.statusCode == 401){
+  //
+  //
+  // }
+  else
+  {
+    bool _isLoading = false;
+    throw Exception('Failed to call redfresh token  .');
+  }
+}
+
+//>>>>>>>>>>>>>>-------------------------tokenAPI's--------------------------------->>>>>>>>>>>>>>>
 Future<LinkTokenResponse> linktokenResponse() async {
   User user = User();
   user.clientUserId = "115";
@@ -2545,8 +2498,7 @@ Future<AccessTokenResponse> creditaccessTokenResponse2(
   }
 }
 
-Future<LiabilityResponse> liabilityResponse(
-    String accesstoken, String accountid) async {
+Future<LiabilityResponse> liabilityData(String accesstoken, String accountid) async {
   bool _isLoading = true;
   LiabilityOptions liabilityOptions = LiabilityOptions();
   liabilityOptions.accountIds = [accountid];
@@ -2568,10 +2520,12 @@ Future<LiabilityResponse> liabilityResponse(
   //     '###################################################'
   //     '##############');
   // print('respose44 body44-----: ${jsonEncode(response4.body)}');
-  // print(
-  //     '#################################credit##################################################');
-  //
-  // print(response4.body);
+   print('credit bpdyyyyy');
+   print(response4.body);
+   print(response4.statusCode);
+   print(jsonEncode(liabilityRequest));
+  print('credit bpdyyyyy');
+
   // print(
   //     '#################################credit##################################################');
 
@@ -2587,7 +2541,7 @@ Future<LiabilityResponse> liabilityResponse(
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>liability>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //------
-Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
+Future<RefreshTokenResponse> refreshValueToken(String refreshtoken) async {
 //  bool _isLoading = true;
   RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest();
   refreshTokenRequest.refreshToken = refreshtoken;
@@ -2626,188 +2580,4 @@ Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
     }
 }
 
-//-------
-// _buildTransactionListView(TransactionResponse tdata) {
-//   List<Widget> listTiles = [];
-//   for (var t in tdata.transactions!) {
-//     var card = Container(
-//       alignment: Alignment.center,
-//       height: 60,
-//       margin: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
-//       padding: EdgeInsets.all(10),
-//       //color: const Color(0xffF5F5F5),
-//       color: const Color(0xffEFF4F8),
-//       child: Center(
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           //  crossAxisAlignment : CrossAxisAlignment.end,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 Align(
-//                   alignment: Alignment.topLeft,
-//                   child: CircleAvatar(
-//                     radius: 20,
-//                     child: Image(
-//                       image: AssetImage("asset/images/cart.png"),
-//
-//                       //width: 40,
-//                       //color: const Color(0xffECDCFF)
-//                     ),
-//                   ),
-//                 ),
-//                 Column(
-//                   children: [
-//                     Padding(
-//                       padding: const EdgeInsets.only(left: 4, bottom: 4),
-//                       child: Flexible(
-//                         child: Text(
-//                           t.category.toString(),
-//                           maxLines: 2,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: TextStyle(
-//                               color: Colors.black,
-//                               fontSize: 13,
-//                               fontWeight: FontWeight.w700),
-//                         ),
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding:
-//                           const EdgeInsets.only(left: 4, top: 4, right: 8),
-//                       child: Text(
-//                         t.name.toString(),
-//                         overflow: TextOverflow.ellipsis,
-//                         style: TextStyle(
-//                             color: Colors.grey,
-//                             fontSize: 11,
-//                             fontWeight: FontWeight.w500),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//                 Column(
-//                   children: [
-//                     Align(
-//                       alignment: Alignment.topRight,
-//                       child: Text(
-//                         dollar + t.amount.toString(),
-//                         textAlign: TextAlign.right,
-//                         style: TextStyle(
-//                             color: Colors.black,
-//                             fontSize: 13,
-//                             fontWeight: FontWeight.w700),
-//                       ),
-//                     ),
-//                     Align(
-//                       alignment: Alignment.bottomRight,
-//                       child: Text(
-//                         dollar + t.date.toString(),
-//                         textAlign: TextAlign.right,
-//                         style: TextStyle(
-//                             color: Colors.grey,
-//                             fontSize: 13,
-//                             fontWeight: FontWeight.w700),
-//                       ),
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//
-//     listTiles.add(card);
-//   }
-//   return listTiles;
-// }
 
-// Container(
-// height: 45,
-// padding: const EdgeInsets.all(
-// 8,
-// ),
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(2),
-// color: const Color(0xF5F7F6FA),
-// ),
-// alignment: Alignment.bottomCenter,
-// child: Row(
-// mainAxisSize: MainAxisSize.max,
-// mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-// children: [
-// IconButton(
-// // icon: Image.asset('assets/images/dashboard.png'),
-// icon: ImageIcon(
-// AssetImage("asset/images/home2.png"),
-// size: 140,
-// color:
-// isFavourite ? const Color(0xFFA781D3) : Colors.grey,
-// ),
-//
-// onPressed: () {
-// setState(() {
-// isFavourite = false;
-// isFavourite1 = true;
-// isFavourite2 = true;
-// isFavourite3 = true;
-// });
-// },
-// ),
-// IconButton(
-// icon: ImageIcon(
-// AssetImage("asset/images/pbox.png"),
-// size: 140,
-// color: isFavourite1
-// ? const Color(0xFFA781D3)
-// : Colors.grey,
-// ),
-// onPressed: () {
-// setState(() {
-// isFavourite = true;
-// isFavourite1 = false;
-// isFavourite2 = true;
-// isFavourite3 = true;
-// });
-// },
-// ),
-// IconButton(
-// icon: ImageIcon(
-// AssetImage("asset/images/pmoney.png"),
-// size: 140,
-// color: isFavourite2
-// ? const Color(0xFFA781D3)
-// : Colors.grey,
-// ),
-// onPressed: () {
-// setState(() {
-// isFavourite = true;
-// isFavourite1 = true;
-// isFavourite2 = false;
-// isFavourite3 = true;
-// });
-// },
-// ),
-// IconButton(
-// icon: ImageIcon(
-// AssetImage("asset/images/paccount.png"),
-// size: 140,
-// color: isFavourite3
-// ? const Color(0xFFA781D3)
-// : Colors.grey,
-// ),
-// onPressed: () {
-// setState(() {
-// isFavourite = true;
-// isFavourite1 = true;
-// isFavourite2 = true;
-// isFavourite3 = false;
-// });
-// },
-// ),
-// ],
-// ),
-// ),

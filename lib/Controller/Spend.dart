@@ -51,8 +51,8 @@ class spendacountState extends State<Spend> {
       body: SafeArea(
           child: Container(
               color: Colors.white,
-              child: ListView(
-                children: [
+              child: SingleChildScrollView(
+                child:
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,7 +63,7 @@ class spendacountState extends State<Spend> {
 
                     ],
                   ),
-                ],
+
 
               )
           )

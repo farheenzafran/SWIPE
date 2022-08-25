@@ -17,6 +17,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/AddAccount.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import '../Model Helper.dart';
 import 'BankData.dart';
@@ -38,13 +39,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class AddMember extends StatefulWidget {
 
-
   @override
  newmemberState createState() => newmemberState();
 }
 
 class newmemberState extends State<AddMember> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +87,7 @@ class newmemberState extends State<AddMember> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
+            MaterialPageRoute(builder: (context) => AddAccount()),
           );
         },
         child: Text(

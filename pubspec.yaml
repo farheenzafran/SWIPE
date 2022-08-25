@@ -128,7 +128,9 @@ flutter:
     - asset/images/background.png
     - asset/images/btnsetting.png
     - asset/images/addaccount.png
+    - asset/images/pic.png
     - asset/images/setting.jpeg
+    - asset/images/accadd.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

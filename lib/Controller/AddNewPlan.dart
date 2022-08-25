@@ -43,14 +43,16 @@ class AddNewplan extends StatefulWidget {
 }
 
 class newplanState extends State<AddNewplan> {
+  final phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: ListView(
-            children: [
-              Column(
+          child: SingleChildScrollView(
+           // children: [
+           child:   Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -58,11 +60,12 @@ class newplanState extends State<AddNewplan> {
                   emailVerify(),
                addButton(),
 
-                ],
-              ),
+              //  ],
+             // ),
             ],
 
           )
+          ),
       ),
     );
   }
@@ -79,7 +82,7 @@ class newplanState extends State<AddNewplan> {
               fit: BoxFit.cover,
             )),
 
-        padding: EdgeInsets.only(top: 20, left: 15,),
+        padding: EdgeInsets.only(top: 20, left: 15, bottom: 10),
         child: Wrap(
           spacing: 100,
           children: <Widget>[
@@ -117,7 +120,7 @@ class newplanState extends State<AddNewplan> {
       Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 20.0,left: 8 , bottom: 20),
+            padding: const EdgeInsets.only(top: 20.0,left: 8 ),
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(left: 15),
 
@@ -126,10 +129,10 @@ class newplanState extends State<AddNewplan> {
                 'I want to save for',
                 maxLines: 2,
                 style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                     overflow: TextOverflow.ellipsis,
-                    color: Colors.black
+                    color: Colors.grey
 
                 ),
               ),
@@ -137,16 +140,14 @@ class newplanState extends State<AddNewplan> {
           ),
 
           Container(
-            padding: EdgeInsets.only(top: 5,left: 8 , right: 15),
+            padding: EdgeInsets.only(left: 15 , right: 15),
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
-
+            margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
             child: TextField(
-              obscureText: true,
+              style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.bold),
+              controller: phoneController,
               decoration: InputDecoration(
                // border: OutlineInputBorder(),
-               // labelText: plan,
-                //hintText: 'Enter Code',
               ),
             ) ,
           ),
@@ -158,10 +159,13 @@ class newplanState extends State<AddNewplan> {
   }
 
   addButton() {
-    return Container(
+    return
+      Align(
+        heightFactor: 8,
+    child:  Container(
       height: 38,
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
+      margin: const EdgeInsets.only(top: 20, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
@@ -188,6 +192,7 @@ class newplanState extends State<AddNewplan> {
           ),
           textAlign: TextAlign.center,
         ),
+      ),
       ),
     );
   }

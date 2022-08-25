@@ -6,7 +6,9 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/Response/UserDeatail.dart';
 import 'package:swipeapp/main.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
@@ -14,49 +16,72 @@ import 'Request/AddUserRequest.dart';
 import 'Response/AddUserResponse.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+
+import 'Response/ChildUserResponse.dart';
 String? select;
 class ManageAccount extends StatefulWidget {
-  //const ManageAccount({Key? key}) : super(key: key);
-
   @override
   _manageacountState createState() => _manageacountState();
 }
-
 class _manageacountState extends State<ManageAccount> {
 
- //  late String phoneNumber;
- //  late String countryCode;
- //  late String email;
- //  late String fname;
- //  late String lname;
- // // ManageAccount(this.phoneNumber, this.countryCode);
- //
- //  TextEditingController phoneController = TextEditingController();
- //  TextEditingController fnameController = TextEditingController();
- //  TextEditingController lnameController = TextEditingController();
- //  TextEditingController emailController = TextEditingController();
-
-  void initState() {
+  void initState()  {
     super.initState();
+    datalist = getChildUser();
+  }
+  late String phoneNumber;
+  late String email;
+  late String fname;
+  late String lname;
+  late String countrycode;
+
+  late Future<List<ChildDataResult>> datalist ;
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController fnameController = TextEditingController();
+  TextEditingController lnameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  bool _validate = false;
+  checkTextFieldEmptyOrNot(){
+
+    // Creating 3 String Variables.
+    String text1;
+
+    // Getting Value From Text Field and Store into String Variable
+    text1 = phoneController.text ;
+
+
+    // Checking all TextFields.
+    if(text1 == '' )
+    {
+      // Put your code here which you want to execute when Text Field is Empty.
+      print('Text Field is empty, Please Fill All Data');
+
+    }else{
+
+      // Put your code here, which you want to execute when Text Field is NOT Empty.
+      print('Not Empty, All Text Input is Filled.');
+    }
+
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: ListView(
-            children: [
+          child: SingleChildScrollView(
+            child:
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   addAccountHeader(),
                   emailVerify(),
-                  paymentButton(),
+                 // historyUser(),
+                  addaccountButton(),
 
                 ],
               ),
-            ],
+
 
           )
       ),
@@ -77,7 +102,7 @@ class _manageacountState extends State<ManageAccount> {
 
         padding: EdgeInsets.only(top: 20, left: 15, bottom: 25),
         child: Wrap(
-          spacing: 100,
+          spacing: 70,
           children: <Widget>[
             // Container(
             // alignment: Alignment.center,
@@ -180,9 +205,13 @@ class _manageacountState extends State<ManageAccount> {
                       height: 30,
                       width: 170,
                       child: TextField(
-                      //  controller: phoneController,
+                        controller: phoneController,
                         autocorrect: true,
                         decoration: InputDecoration(
+
+                            errorText: _validate ? 'Value Can\'t Be Empty' : null,
+
+
 
                         ),
                       )
@@ -203,10 +232,7 @@ class _manageacountState extends State<ManageAccount> {
             onChanged: (value){
               setState(() {
             select = value.toString();
-                print('>>>>>>>>>>>>>>>>>>>>>>>> Response3 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-                print(select);
-                print(value.toString());
-                print('>>>>>>>>>>>>>>>>>>>>>>>> Response3 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+
               });
             },
           ),
@@ -216,6 +242,7 @@ class _manageacountState extends State<ManageAccount> {
             margin: const EdgeInsets.only(right: 20, left: 20),
 
             child: TextField(
+              controller: emailController,
               obscureText: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -247,9 +274,10 @@ class _manageacountState extends State<ManageAccount> {
             alignment: Alignment.center,
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
-             // controller: fnameController,
+              controller: fnameController,
               obscureText: true,
               decoration: InputDecoration(
+                errorText: _validate ? 'Value Can\'t Be Empty' : null,
                 border: OutlineInputBorder(),
                 labelText: 'First Name ',
                 //hintText: 'Enter Code',
@@ -261,10 +289,11 @@ class _manageacountState extends State<ManageAccount> {
             alignment: Alignment.center,
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
-             // controller: lnameController,
-
+             controller: lnameController,
               obscureText: true,
               decoration: InputDecoration(
+                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+
                 border: OutlineInputBorder(),
                 labelText: 'Last Name ',
                 //hintText: 'Enter Code',
@@ -277,7 +306,7 @@ class _manageacountState extends State<ManageAccount> {
 
   }
 
-  paymentButton() {
+ addaccountButton() {
     return Container(
       height: 38,
       width: double.infinity,
@@ -294,24 +323,20 @@ class _manageacountState extends State<ManageAccount> {
         ),
 
         onPressed: () {
-          print('>>>>>>>>>>>>>>>>>>>>>>>> Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-          print(select);
-          print('>>>>>>>>>>>>>>>>>>>>>>>> Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-          // phoneNumber = phoneController.value.text.toString();
-          // fname = fnameController.value.text.toString();
-          // lname = lnameController.value.text.toString();
-          // email = emailController.value.text.toString();
-          // addUser(phoneNumber, this.countryCode , email, fname, lname )
-          //     .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty))
-          //     .then((value) => Navigator.push(context,
-          //   MaterialPageRoute(builder: (context) => AddMember(phoneNumber, countryCode, email)),
-          // ));
-          Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard()),);
-          // addUser(countryCode,phoneNumber)
-          //     .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
-          //     .then((value) => Navigator.push(context, MaterialPageRoute(
-          //     builder: (_) => AddMember(countryCode,phoneNumber)),));
+          setState(() {
+            phoneController.text.isEmpty ? _validate = true : _validate = false;
+          });
+          phoneNumber = phoneController.value.text.toString();
+          fname = fnameController.value.text.toString();
+          lname = lnameController.value.text.toString();
+          email = emailController.value.text.toString();
+
+          checkTextFieldEmptyOrNot();
+          addUser(countryCode , phoneNumber, email, fname, lname );
+            //  .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty)).then((value) =>
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
+         // ));
+
         },
         child: Text(
           'Invite Now',
@@ -325,46 +350,176 @@ class _manageacountState extends State<ManageAccount> {
       ),
     );
   }
+  historyUser()
+  {
+    Column(
+      children: [
+        Text("History"),
+
+    Container(
+    height: 180,
+
+    child:
+    FutureBuilder<List<ChildDataResult>>(
+  future: datalist,
+    builder: (context, snapshot) {
+  if (snapshot.hasData) {
+  return ListView.builder(
+  itemCount: snapshot.data!.length,
+  itemBuilder: (context, i) {
+  var item = snapshot.data![i];
+  return
+
+  ListTile(
+  title: Row(
+  children: [
+  CircleAvatar(
+  radius: 30,
+  backgroundImage: AssetImage('asset/images/pic.png'),
+  ),
+  Text(snapshot.data![i].lastName.toString(),
+  style: TextStyle(
+  color: Colors.black,
+  fontSize: 16,
+  fontWeight: FontWeight.w600),),
+
+  ],
+  )
+
+
+
+  );
+  // ListView(
+  //   scrollDirection: Axis.horizontal,
+  //   children: [
+
+
+  // ]
+  //   );
+
+  // Text("first return>>>>>>"+ item.toString());
+  });
+  }
+  else
+  {
+  return Container();
+  }
+  // if (snapshot.data == null) {
+  //return Text("first return>>>>>>");
+  // }
+  // else {
+  //   return
+  //     ListView.builder(
+  //         shrinkWrap: true,
+  //         scrollDirection: Axis.vertical,
+  //         itemCount: snapshot.data!.length,
+  //         itemBuilder: (context, posxition) {
+  //           return
+  //             ListTile(
+  //               title: Text(
+  //                 snapshot.data![i].lastName.toString(),
+  //                 style: TextStyle(
+  //                     color: Colors.red,
+  //                     fontSize: 11,
+  //                     fontWeight:
+  //                     FontWeight.w500),
+  //               ),
+  //             );
+  //         });
+  // }
+  }
+    ),
+    ),
+
+      ],
+    );
+
+
+  }
 
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 
 //>>>>>>>>>>>>>>-------------------------API's--------------------------------->>>>>>>>>>>>>>>
-// Future<AddUserResponse> addUser(String countryCode , String mobilenumber  , String email , String fname , String lname) async {
-//   AddUserRequest addUserRequest = AddUserRequest();
-//
-//   if(select == "btnemail" )
-//     {
-//       addUserRequest.authenticationType = Constants.EmailPassword.toString();
-//       addUserRequest.email = email;
-//       addUserRequest.firstname = fname;
-//       addUserRequest.lastname = lname;
-//    }
-//   if(select == "PhoneNumber" )
-//   {
-//     addUserRequest.authenticationType = Constants.Mobile.toString();
-//     addUserRequest.countryCode = countryCode;
-//     addUserRequest.mobileNumber = mobilenumber;
-//   }
-//
-//
-//   addUserRequest.deviceName = "deviceName";
-//   addUserRequest.deviceToken = "deviceToken";
-//   addUserRequest.existinguserid = "existinguserid" as int? ;
-//   addUserRequest.authenticationType = "authenticated";
-//   print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(addUserRequest)}');
-//   final response = await http.post(Uri.parse(Constants.baseUrl2 + '/User/AddUser'),
-//       headers: <String, String>{
-//     'Content-Type': 'application/json', 'Accept': 'application/json',
-//       },
-//       body: jsonEncode(addUserRequest));
-//    print('###########################################################################################################');
-//   print('>>>>>>>>>>>>>>>>>>>>>>>> Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-//   print(response.body);
-//   if (response.statusCode == 200) {
-//     return AddUserResponse.fromJson(jsonDecode(response.body));
-//   } else {
-//     throw Exception('Failed to call user id .');
-//   }
-// }
+Future<AddUserResponse> addUser(  String countryCode ,String mobilenumber , String email , String fname , String lname) async {
+  AddUserRequest addUserRequest = AddUserRequest();
+  if(select == "btnemail" )
+    {
+      addUserRequest.authenticationType = Constants.EmailPassword.toString();
+      addUserRequest.email = email;
+
+   }
+  if(select == "PhoneNumber" )
+  {
+    addUserRequest.authenticationType = Constants.Mobile.toString();
+    addUserRequest.countryCode = countryCode;
+    addUserRequest.mobileNumber = mobilenumber;
+    print(countryCode);
+    print(mobilenumber);
+    print(">>>>>>>>>??????/");
+  }
+  addUserRequest.firstname = fname;
+  addUserRequest.lastname = lname;
+  print("____________??????????????<<<<<<<");
+  print(fname);
+  print(lname);
+  UserDetail tempuserdetail = await Constants.getUserDetail();
+
+  addUserRequest.existinguserid = tempuserdetail.id;
+  addUserRequest.deviceName = Constants.getdeviceType();
+  addUserRequest.password = "";
+  addUserRequest.deviceToken = "";
+  //------------->>>>>>>>>>.
+ String token = tempuserdetail.accessToken.toString();
+  print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(addUserRequest)}');
+  final response = await http.post(Uri.parse(Constants.baseUrl2 + '/User/AddUser'),
+      headers: <String, String>{
+    'Content-Type': 'application/json', 'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(addUserRequest));
+  print("&&&&&&&&&&??????????????<<<<<<<");
+  print(response);
+  print(response.body);
+  print(response.statusCode);
+  print("&&&&&&&&&&??????????????<<<<<<<");
+  if (response.statusCode == 200) {
+    print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(response)}');
+
+    return AddUserResponse.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to call user adduserid .');
+  }
+}
+Future<List<ChildDataResult>>  getChildUser( ) async {
+  UserDetail tempuserdetail = await Constants.getUserDetail();
+  String ctoken = tempuserdetail.accessToken.toString();
+  final response = await http.get(Uri.parse(Constants.baseUrl2 + '/User/GetChildUser'),
+      headers: <String, String>{
+        'Content-Type': 'application/json', 'Accept': 'application/json',
+        'Authorization': 'Bearer $ctoken',
+      });
+  print(ctoken);
+  print("responseprint>>>>>>>>>>>>>");
+  print(response);
+  print("bodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+  print(response.body);
+  print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+  print(response.statusCode);
+  print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+
+  if (response.statusCode == 200) {
+
+    ChildUserResponse userResponse = ChildUserResponse.fromJson(jsonDecode(response.body));
+    return userResponse.result! ;// usResult.fromJson(jsonDecode(response.body));
+
+  }
+
+  else
+
+  {
+    // return List<ChildDataResult>;
+    throw Exception('Failed to call user childuserid .');
+  }
+}

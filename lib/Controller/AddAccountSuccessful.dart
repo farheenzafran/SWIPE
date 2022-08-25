@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:async';
 import 'dart:async';
@@ -17,9 +18,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/CheckPlans.dart';
+import 'package:swipeapp/Controller/AddAccount.dart';
+import 'package:swipeapp/Controller/Dashboard.dart';
 import '../Model Helper.dart';
-import 'AddMember.dart';
 import 'BankData.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
@@ -37,34 +38,31 @@ import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class PlanGoal extends StatefulWidget {
-  int _groupValue = -1;
+class AddAccountSuccessful extends StatefulWidget {
+
   @override
-  goalsavingplanState createState() => goalsavingplanState();
+  addacountState createState() => addacountState();
 }
 
-class goalsavingplanState extends State<PlanGoal> {
-  int _groupValue = -1;
-  String dollar = " \$";
-
+class addacountState extends State<AddAccountSuccessful> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: SingleChildScrollView(
-          child:
-              Column(
+          //  children: [
+              child:Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   addAccountHeader(),
-                  Verify(),
-                  addButton(),
-
+                  buttonsuccesful(),
+                  textAccount(),
+                  paymentButton(),
                 ],
               ),
-
+            //],
 
           )
       ),
@@ -72,6 +70,56 @@ class goalsavingplanState extends State<PlanGoal> {
   }
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+  paymentButton() {
+    return
+      Container(
+        height: 38,
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 20, bottom: 20.0, left: 25, right: 25),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              //color: const Color(0xFFA781D3),
+            )),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: const Color(0xFFA781D3),
+            padding: const EdgeInsets.all(5),
+          ),
+
+          onPressed: () {
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+            // ));
+
+          },
+          child: Text(
+            'Back to profile',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+  }
+  buttonsuccesful()
+  {
+    return
+  Container(
+   child: Align(
+     // alignment: Alignment.center,
+     heightFactor: 2,
+
+      child: Image.asset('asset/images/accadd.png', width: 300.0, height: 150.0),
+    ),
+
+
+      );
+
+  }
   addAccountHeader() {
     return
       Container(
@@ -83,7 +131,7 @@ class goalsavingplanState extends State<PlanGoal> {
               fit: BoxFit.cover,
             )),
 
-        padding: EdgeInsets.only(top: 20, left: 15,),
+        padding: EdgeInsets.only(top: 20, left: 15, bottom: 25),
         child: Wrap(
           spacing: 100,
           children: <Widget>[
@@ -101,8 +149,11 @@ class goalsavingplanState extends State<PlanGoal> {
               ),
             ),
             // ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   child:
             Text(
-              'Add a new plan',
+              'Add New Member',
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
@@ -110,99 +161,54 @@ class goalsavingplanState extends State<PlanGoal> {
                 // fontFamily: 'Ubuntu',
               ),
             ),
+            //  )
+
           ],
         ),
         // color: Colors.purpleAccent,
       );
   }
- Verify()
+  textAccount()
   {
     return
+    Align(
+   //   heightFactor: 6,
+      child:
       Column(
         children: [
           Container(
-          height: 45,
-          width: double.infinity,
-          margin:
-          EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: const Color(0xffF7F6FA)),
-          child: Row(
-            children: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(5),
+            padding: EdgeInsets.all(5),
+            margin:  EdgeInsets.only(right: 15, left: 15),
+            child:
 
-                ),
-                onPressed: () async {
-                 // Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewplan()),);
-                },
-                child: Image(
-                  image: AssetImage("asset/images/Plus.png"),
-                  width: 130,
-                  height: 130,
-                ),
-              ),
-              Text('Connect to Debit account'),
+            Text("You have sent the invitation to the account",style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: const Color(0xFFA781D3),
+              // fontFamily: 'Ubuntu',
+            ),),
 
-
-            ],
-          )),
-         // Text('I want to add 400 in my account to plan'),
-          _myRadioButton(
-            title: "I want to add" + dollar + "in my account to plan",
-            value: 1,
-            onChanged: (newValue) => setState(() => _groupValue = newValue),
           ),
+          Container(
+            padding: EdgeInsets.all(5),
+            margin:  EdgeInsets.only(left: 16,right: 16, bottom: 20, top:12),
+            child:Text("Once the invited member accept your invitation, you can authorize the certain card for him."
+              ,style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 13,
+                color: Colors.grey,
+                // fontFamily: 'Ubuntu',
+              ),
+            ),
+          ),
+
 
         ],
-      );
-
-  }
-  Widget _myRadioButton({required String title, required int value,  onChanged}) {
-    return RadioListTile(
-      value: value,
-      groupValue: _groupValue,
-      onChanged: onChanged,
-      title: Text(title),
-    );
-  }
-  addButton() {
-    return Container(
-      height: 38,
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            //color: const Color(0xFFA781D3),
-          )),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFA781D3),
-          padding: const EdgeInsets.all(5),
-        ),
-
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CheckPlans()),
-          );
-        },
-        child: Text(
-          'Create Goal',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
       ),
     );
+
   }
+
 
 
 //<<<<<Last Btracket >>>>>>>>>>//

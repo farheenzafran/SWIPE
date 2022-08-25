@@ -50,8 +50,8 @@ class planacountState extends State<PlanAccount> {
       body: SafeArea(
         child: Container(
           color: Colors.white,
-            child: ListView(
-              children: [
+            child: SingleChildScrollView(
+           child:
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,9 +59,8 @@ class planacountState extends State<PlanAccount> {
                     addAccountHeader(),
                     addButton(),
 
-                  ],
+                  ]
                 ),
-              ],
 
             )
         )

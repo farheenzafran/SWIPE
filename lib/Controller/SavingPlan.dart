@@ -37,19 +37,32 @@ import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+
 class SavingPlan extends StatefulWidget {
   @override
   savingplanState createState() => savingplanState();
 }
 
 class savingplanState extends State<SavingPlan> {
+  final Controller1 = TextEditingController();
+  final Controller2 = TextEditingController();
+  final Controller3 = TextEditingController();
+  TextEditingController dateInput = TextEditingController();
+
+  void initState() {
+    dateInput.text = ""; //set the initial value of text field
+    super.initState();
+  }
+  String dollar = " \$";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: ListView(
-            children: [
+          child: SingleChildScrollView(
+          child:
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +73,7 @@ class savingplanState extends State<SavingPlan> {
 
                 ],
               ),
-            ],
+
 
           )
       ),
@@ -81,7 +94,7 @@ class savingplanState extends State<SavingPlan> {
 
         padding: EdgeInsets.only(top: 20, left: 15,),
         child: Wrap(
-          spacing: 100,
+          spacing: 80,
           children: <Widget>[
             // Container(
             // alignment: Alignment.center,
@@ -117,7 +130,7 @@ class savingplanState extends State<SavingPlan> {
       Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 20.0,left: 8 , bottom: 20),
+            padding: const EdgeInsets.only(top: 20.0,left: 8 ),
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(left: 15),
 
@@ -127,31 +140,41 @@ class savingplanState extends State<SavingPlan> {
                 maxLines: 2,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 13,
+                    fontSize: 16,
                     overflow: TextOverflow.ellipsis,
-                    color: Colors.black
+                    color: Colors.grey
 
                 ),
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 5,left: 8 , right: 15),
+          Align(
             alignment: Alignment.topRight,
-            margin: const EdgeInsets.only(right:12),
-
-            child: TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // border: OutlineInputBorder(),
-                // labelText: plan,
-                //hintText: 'Enter Code',
-              ),
-            ) ,
+            child:Container(
+          color: const Color(0xffF7F6FA ),
+  padding: EdgeInsets.all(0),
+  margin: const EdgeInsets.only( left:20,top: 15,right: 10),
+  alignment: Alignment.topRight,
+  height: 40,
+  width: 160,
+  child: TextField(
+  controller: Controller1,
+  style: TextStyle(fontSize: 16.0,  color: Colors.black , fontWeight: FontWeight.w600),
+  decoration: InputDecoration(
+  border: OutlineInputBorder(
+  borderRadius: BorderRadius.circular(13.0),
+  ),
+  // border: OutlineInputBorder(),
+   labelText: dollar,
+  //hintText: 'Enter Code',
+  ),
+  ) ,
+  ),
           ),
 
+
           Container(
-            padding: const EdgeInsets.only(top: 20.0,left: 8 , bottom: 20),
+            padding: const EdgeInsets.only(top: 18.0,left: 8 , ),
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(left: 15),
 
@@ -161,28 +184,58 @@ class savingplanState extends State<SavingPlan> {
                 maxLines: 2,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 13,
+                    fontSize: 16,
                     overflow: TextOverflow.ellipsis,
-                    color: Colors.black
+                    color: Colors.grey
 
                 ),
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 5,left: 8 , right: 15),
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
+          Align(
+            alignment: Alignment.topRight,
+            child:  Container(
+                padding: EdgeInsets.all(15),
+                height:  60,//MediaQuery.of(context).size.width / 3,
+                width: 200,
+                child: Center(
+                    child: TextField(
+                      controller: dateInput,
+                      //editing controller of this TextField
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          icon: Icon(Icons.calendar_today), //icon of text field
+                          labelText: "Enter Date" //label text of field
+                      ),
+                      readOnly: true,
+                      //set it true, so that user will not able to edit text
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1950),
+                            //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2100));
 
-            child: TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // border: OutlineInputBorder(),
-                // labelText: plan,
-                //hintText: 'Enter Code',
-              ),
-            ) ,
+                        if (pickedDate != null) {
+                          print(
+                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                          String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                          print(
+                              formattedDate); //formatted date output using intl package =>  2021-03-16
+                          setState(() {
+                            dateInput.text =
+                                formattedDate; //set output date to TextField value.
+                          });
+                        } else {}
+                      },
+                    ))),
           ),
+
+
 
           Container(
             padding: const EdgeInsets.only(top: 20.0,left: 8 , bottom: 20),
@@ -195,28 +248,44 @@ class savingplanState extends State<SavingPlan> {
                 maxLines: 2,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 13,
+                    fontSize: 16,
                     overflow: TextOverflow.ellipsis,
-                    color: Colors.black
+                    color: Colors.grey
 
                 ),
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 5,left: 8 , right: 15),
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
+Align(
+  alignment: Alignment.topRight,
+  child:
+  Container(
+    padding: EdgeInsets.all(0),
+    margin: const EdgeInsets.only( left:20, right: 10),
+    alignment: Alignment.topRight,
+    height: 40,
+    width: 160,
 
-            child: TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // border: OutlineInputBorder(),
-                // labelText: plan,
-                //hintText: 'Enter Code',
-              ),
-            ) ,
-          ),
+    child: TextField(
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          overflow: TextOverflow.ellipsis,
+          color: Colors.black
+
+
+      ),
+      controller: Controller3,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(13.0),
+        ),
+        labelText: dollar,
+      ),
+    ) ,
+  ),
+)
+
 
         ],
       );
@@ -224,7 +293,10 @@ class savingplanState extends State<SavingPlan> {
   }
 
   addButton() {
-    return Container(
+    return
+      Align(
+        heightFactor: 5,
+   child:   Container(
       height: 38,
       width: double.infinity,
       margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
@@ -255,7 +327,7 @@ class savingplanState extends State<SavingPlan> {
           textAlign: TextAlign.center,
         ),
       ),
-    );
+    ));
   }
 
 

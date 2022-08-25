@@ -1,7 +1,8 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
+import 'package:swipeapp/Controller/EmailScreen.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
-import 'package:swipeapp/Controller/PhoneSignup.dart';
+import 'package:swipeapp/Controller/OtpScreen.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -160,7 +161,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => PhoneSignup("", "")));
+                                            builder: (_) => OtpScreen("", "")));
                                   },
                                     style: TextButton.styleFrom(
 
@@ -299,7 +300,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => EmailSignup()), );
+                                          builder: (_) => EmailScreen()), );
 
                                   },
                                     style: TextButton.styleFrom(
@@ -340,7 +341,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => EmailSignup()));
+                                          builder: (_) => EmailScreen()));
                                 },
                                 child: Text(
                                   'Forget password？Get a login link',

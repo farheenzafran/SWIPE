@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
-import 'dart:core';
-import 'dart:ffi';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Controller/Response/UserDeatail.dart';
+import 'dart:io' as IO;
 
 class Constants{
   static  String ClientId = "5e79fae37ba2dd00148a46f9";
@@ -19,13 +18,16 @@ class Constants{
   static String DeviceToken = "DeviceToken";
   static String UserObject = "UserObject";
   static String CountryCode = "CountryCode";
-  static String existinguserid = "existinguserid";
   static String firstname = "firstname";
   static String lastname = "lastname";
   static String authenticationType = "authenticationType";
+
+  static String userDetailKey = "UserData";
   static int Mobile = 1;
   static int GmailSignIn = 2;
   static int  EmailPassword = 3;
+  static int debitcardValue = 1;
+  static int creditcardValue = 2;
 
   static read( String key) async {
     final prefs = await SharedPreferences.getInstance();
@@ -47,6 +49,14 @@ class Constants{
     var val = jsonEncode(BankData);
     print('printbankjsondata $val' );
     prefs.setString(Key, val);
+  }
+ static Future<UserDetail> getUserDetail() async {
+    String bdata = await Constants.read(Constants.userDetailKey);
+   // if (bdata != "") {
+      dynamic dicData = jsonDecode(bdata);
+      UserDetail udetail = UserDetail.fromJson(dicData);
+      return udetail;
+   // }
   }
 
   static delete(String key, String value ) async {
@@ -74,6 +84,17 @@ class Constants{
     return resultData;
 
   }
+   static getdeviceType()
+  {
+    String deviceType = "android";
+    if(IO.Platform.isIOS)
+      {
+        deviceType = "ios";
+      }
+    return deviceType;
+
+  }
+
 
 }
 
