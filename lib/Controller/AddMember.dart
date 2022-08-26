@@ -87,7 +87,7 @@ class newmemberState extends State<AddMember> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddAccount()),
+            MaterialPageRoute(builder: (context) => Dashboard()),
           );
         },
         child: Text(

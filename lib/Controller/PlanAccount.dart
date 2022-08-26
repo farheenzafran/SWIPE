@@ -21,6 +21,7 @@ import 'package:swipeapp/Controller/AddNewPlan.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
 import 'BankData.dart';
+import 'Dashboard.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
 import 'Request/LiabilityRequest.dart';
@@ -38,7 +39,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class PlanAccount extends StatefulWidget {
+  const PlanAccount({Key? key}) : super(key: key);
+
   @override
+
 planacountState createState() => planacountState();
 }
 
@@ -58,6 +62,8 @@ class planacountState extends State<PlanAccount> {
                   children: <Widget>[
                     addAccountHeader(),
                     addButton(),
+                    dcButton(),
+
 
                   ]
                 ),
@@ -152,7 +158,42 @@ addButton() {
                   ));
 
   }
+  dcButton() {
+    return Container(
+      height: 38,
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            //color: const Color(0xFFA781D3),
+          )),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xFFA781D3),
+          padding: const EdgeInsets.all(5),
+        ),
 
+        onPressed: () {
+          setState(() {
+          });
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+          // ));
+
+        },
+        child: Text(
+          'Move to Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }

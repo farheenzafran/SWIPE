@@ -41,6 +41,8 @@ class _manageacountState extends State<ManageAccount> {
   TextEditingController lnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   bool _validate = false;
+  bool _validate1 = false;
+  bool _validate2 = false;
   checkTextFieldEmptyOrNot(){
 
     // Creating 3 String Variables.
@@ -76,7 +78,7 @@ class _manageacountState extends State<ManageAccount> {
                 children: <Widget>[
                   addAccountHeader(),
                   emailVerify(),
-                 // historyUser(),
+                  historyUser(),
                   addaccountButton(),
 
                 ],
@@ -152,74 +154,78 @@ class _manageacountState extends State<ManageAccount> {
                 },
               ),
 
-
-          Container(
-            margin: EdgeInsets.only(
-                right: 20, left: 15, top: 5, bottom: 10),
-            child: Container(
-              height: 35,
-              width: double.infinity,
-              //color: Colors.white,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.white,
-              ),
-              margin: const EdgeInsets.only(
-                top: 15,),
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    height: 35,
-                    width: 100,
-                    child: Theme(
-                      data: ThemeData.light().copyWith(
-                          colorScheme: ColorScheme.light(
-                            primary: Colors.black,
-                          )),
-                      child: CountryListPick(
-                          theme: CountryTheme(
-                            isShowFlag: true,
-                            isShowTitle: false,
-                            isShowCode: true,
-                            isDownIcon: false,
-                            showEnglishName: true,
-                            alphabetTextColor: Colors.black,
-                            alphabetSelectedTextColor:
-                            Colors.black,
-                            labelColor: Colors.black,
-                            alphabetSelectedBackgroundColor:
-                            Colors.black,
-                          ),
-                          useUiOverlay: false,
-                          useSafeArea: false,
-                          initialSelection: 'US',
-                          onChanged: (CountryCode? code) {
-                            countryCode = (code!).dialCode!;
-                            //  print('-----+++++__QQQQQQQQQQQQ)');
-                            //  print(countryCode);
-                          }),
-
-                    ),
+Container(
+  height: 80,
+  child:  Container(
+    margin: EdgeInsets.only(
+        right: 20, left: 15, top: 8, bottom: 5),
+    child: Container(
+      height: 35,
+      width: double.infinity,
+      //color: Colors.white,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white,
+      ),
+      margin: const EdgeInsets.only(
+        top: 10,),
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            height: 35,
+            width: 100,
+            child: Theme(
+              data: ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: Colors.black,
+                  )),
+              child: CountryListPick(
+                  theme: CountryTheme(
+                    isShowFlag: true,
+                    isShowTitle: false,
+                    isShowCode: true,
+                    isDownIcon: false,
+                    showEnglishName: true,
+                    alphabetTextColor: Colors.black,
+                    alphabetSelectedTextColor:
+                    Colors.black,
+                    labelColor: Colors.black,
+                    alphabetSelectedBackgroundColor:
+                    Colors.black,
                   ),
-                  SizedBox(
-                      height: 30,
-                      width: 170,
-                      child: TextField(
-                        controller: phoneController,
-                        autocorrect: true,
-                        decoration: InputDecoration(
+                  useUiOverlay: false,
+                  useSafeArea: false,
+                  initialSelection: 'US',
+                  onChanged: (CountryCode? code) {
+                    countryCode = (code!).dialCode!;
+                    //  print('-----+++++__QQQQQQQQQQQQ)');
+                    //  print(countryCode);
+                  }),
 
-                            errorText: _validate ? 'Value Can\'t Be Empty' : null,
-
-
-
-                        ),
-                      )
-                  ),
-                ],
-              ),
             ),
           ),
+          SizedBox(
+              height: 50,
+              width: 170,
+              child: TextField(
+                controller: phoneController,
+                autocorrect: true,
+                decoration: InputDecoration(
+
+                  errorText: _validate ? 'Value Can\'t Be Empty' : null,
+
+
+
+                ),
+              )
+          ),
+        ],
+      ),
+    ),
+  ),
+
+),
+
 
 
           RadioListTile(
@@ -253,7 +259,7 @@ class _manageacountState extends State<ManageAccount> {
           ),
           Container(
             padding: const EdgeInsets.only(
-                top: 20.0,left: 15 , bottom: 10),
+                top: 12.0,left: 15 , bottom: 10),
             alignment: Alignment.topLeft,
             child: SizedBox(
               child: Text(
@@ -277,7 +283,7 @@ class _manageacountState extends State<ManageAccount> {
               controller: fnameController,
               obscureText: true,
               decoration: InputDecoration(
-                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
                 border: OutlineInputBorder(),
                 labelText: 'First Name ',
                 //hintText: 'Enter Code',
@@ -292,7 +298,7 @@ class _manageacountState extends State<ManageAccount> {
              controller: lnameController,
               obscureText: true,
               decoration: InputDecoration(
-                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
 
                 border: OutlineInputBorder(),
                 labelText: 'Last Name ',
@@ -310,7 +316,7 @@ class _manageacountState extends State<ManageAccount> {
     return Container(
       height: 38,
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
+      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
@@ -325,16 +331,26 @@ class _manageacountState extends State<ManageAccount> {
         onPressed: () {
           setState(() {
             phoneController.text.isEmpty ? _validate = true : _validate = false;
+            fnameController.text.isEmpty ? _validate1 = true : _validate1 = false;
+            lnameController.text.isEmpty ? _validate2 = true : _validate2 = false;
           });
           phoneNumber = phoneController.value.text.toString();
           fname = fnameController.value.text.toString();
           lname = lnameController.value.text.toString();
           email = emailController.value.text.toString();
 
+
           checkTextFieldEmptyOrNot();
           addUser(countryCode , phoneNumber, email, fname, lname );
             //  .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty)).then((value) =>
+          if(_validate == false && _validate == false && _validate == false )
+            {
               Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
+            }
+          else
+            {
+          print("all filled");
+            }
          // ));
 
         },
@@ -352,87 +368,142 @@ class _manageacountState extends State<ManageAccount> {
   }
   historyUser()
   {
-    Column(
-      children: [
-        Text("History"),
-
+    return
     Container(
-    height: 180,
+      margin: EdgeInsets.only(
+          top: 10,),
+     padding: EdgeInsets.all(8),
+     // height: 40,
 
-    child:
-    FutureBuilder<List<ChildDataResult>>(
-  future: datalist,
-    builder: (context, snapshot) {
-  if (snapshot.hasData) {
-  return ListView.builder(
-  itemCount: snapshot.data!.length,
-  itemBuilder: (context, i) {
-  var item = snapshot.data![i];
-  return
+       child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 8),
+              child:
+               Text("History", style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.w600),
+              textAlign: TextAlign.left,
 
-  ListTile(
-  title: Row(
-  children: [
-  CircleAvatar(
-  radius: 30,
-  backgroundImage: AssetImage('asset/images/pic.png'),
-  ),
-  Text(snapshot.data![i].lastName.toString(),
-  style: TextStyle(
-  color: Colors.black,
-  fontSize: 16,
-  fontWeight: FontWeight.w600),),
+            ),
+            ),
+            Container(
+              height: 130,
+              child:
+              FutureBuilder<List<ChildDataResult>>(
+                  future: datalist,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, i) {
+                            var item = snapshot.data![i];
 
-  ],
-  )
+                            return Card(
+
+                           child:   ListTile(
+                            leading:  CircleAvatar(
+                              radius: 27,
+                              backgroundImage: AssetImage('asset/images/pic.png'),
+
+                            ),
+                            trailing: Column(
+                              children: [
+                                Text(snapshot.data![i].lastName.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),),
+                               Text(snapshot.data![i].email.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),),
+                              ],
+                            )
+
+                           // trailing: const Icon(Icons.add_a_photo),
+                            ),
+                            );
+                            ListTile(
+
+                                leading:
+                                  // Row(
+                                  //   children: [
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: AssetImage('asset/images/pic.png'),
+
+                                      ),
+
+                                         title: Text(snapshot.data![i].lastName.toString(),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),),
+                                  subtitle: Text(snapshot.data![i].email.toString(),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),),
 
 
 
-  );
-  // ListView(
-  //   scrollDirection: Axis.horizontal,
-  //   children: [
+                                  //   ],
+                                  // )
 
 
-  // ]
-  //   );
 
-  // Text("first return>>>>>>"+ item.toString());
-  });
-  }
-  else
-  {
-  return Container();
-  }
-  // if (snapshot.data == null) {
-  //return Text("first return>>>>>>");
-  // }
-  // else {
-  //   return
-  //     ListView.builder(
-  //         shrinkWrap: true,
-  //         scrollDirection: Axis.vertical,
-  //         itemCount: snapshot.data!.length,
-  //         itemBuilder: (context, posxition) {
-  //           return
-  //             ListTile(
-  //               title: Text(
-  //                 snapshot.data![i].lastName.toString(),
-  //                 style: TextStyle(
-  //                     color: Colors.red,
-  //                     fontSize: 11,
-  //                     fontWeight:
-  //                     FontWeight.w500),
-  //               ),
-  //             );
-  //         });
-  // }
-  }
-    ),
-    ),
+                              );
+                            // ListView(
+                            //   scrollDirection: Axis.horizontal,
+                            //   children: [
 
-      ],
+
+                            // ]
+                            //   );
+
+                            // Text("first return>>>>>>"+ item.toString());
+                          });
+                    }
+                    else
+                    {
+                      return Container();
+                    }
+                    // if (snapshot.data == null) {
+                    //return Text("first return>>>>>>");
+                    // }
+                    // else {
+                    //   return
+                    //     ListView.builder(
+                    //         shrinkWrap: true,
+                    //         scrollDirection: Axis.vertical,
+                    //         itemCount: snapshot.data!.length,
+                    //         itemBuilder: (context, posxition) {
+                    //           return
+                    //             ListTile(
+                    //               title: Text(
+                    //                 snapshot.data![i].lastName.toString(),
+                    //                 style: TextStyle(
+                    //                     color: Colors.red,
+                    //                     fontSize: 11,
+                    //                     fontWeight:
+                    //                     FontWeight.w500),
+                    //               ),
+                    //             );
+                    //         });
+                    // }
+                  }
+              ),
+            ),
+
+          ],
+        )
     );
+
 
 
   }

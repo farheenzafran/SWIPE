@@ -66,20 +66,13 @@ class MyApp extends StatelessWidget {
 }
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
-
+ // final Function callback;
+  //const Dashboard(this.callback);
   @override
   tdashboardState createState() => tdashboardState();
 }
 
 class tdashboardState extends State<Dashboard> {
-
-  int _selectedScreenIndex = 0;
-
-  void _selectScreen(int index) {
-    setState(() {
-      _selectedScreenIndex = index;
-    });
-  }
 
 
   BankData bankDataobj = BankData();
@@ -165,43 +158,22 @@ class tdashboardState extends State<Dashboard> {
     PlaidLink.onSuccess(_onSuccessCallback);
     PlaidLink.onEvent(_onEventCallback);
     PlaidLink.onExit(_onExitCallback);
-    bankdatalist = fetchBankData(Constants.debitcardValue) ;
+ bankdatalist = fetchBankData(Constants.debitcardValue) ;
     var linktoken = linktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
     // PlaidLink.onSuccess(creditonSuccessCallback);
     // PlaidLink.onEvent(creditonEventCallback);
     // PlaidLink.onExit(creditonExitCallback);
-    creditbankdatalist = creditfetchBankData(Constants.creditcardValue); // as Future<List<creditBankData>>;// as List<BankData>;
+    creditbankdatalist = fetchBankData(Constants.creditcardValue); // as Future<List<creditBankData>>;// as List<BankData>;
     var creditlinktoken = creditlinktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
-    setState(() {
 
-    });
+
   }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>start>>>>>>>>>>>>>>>>>>>>>>>>
   String libKey = "data";
 
-  Future<List<BankData>> creditgetBankData(List<BankData> creditbankresultList) async {
-    List<BankData> creditbankdatalist = [];
-    try {
-      creditbankdatalist = creditbankresultList;
-
-      // String cdata = await Constants.read(libKey);
-      // if (cdata != "") {
-      //   List<dynamic> dicData = jsonDecode(cdata);
-      //   creditbankdatalist =
-      //       List<BankData>.from(dicData.map((i) => BankData.fromJson(i)))
-      //           .toList();
-      // }
-      creditTotalValue(creditbankdatalist);
-     //return creditbankdatalist;
-    } catch (Excepetion) {
-      throw Exception('Failed to load credit ');
-    }
-    return creditbankdatalist;
-
-  }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -261,29 +233,54 @@ class tdashboardState extends State<Dashboard> {
       // print('---calling end accessTokenResponse---');
     }
   }
+  //--
+  Future<List<BankData>> appendElements(Future<List<BankData>> listFuture, List<BankData> elementsToAdd) async {
+    // final list = await listFuture;
+    // int count = list.length;
+    // for(int i = count; i>0; i-- )
+    //   {
+    //     list.remove(list[i]);
+    //   }
+   // List<BankData>
+   // list.addAll(elementsToAdd);
+    return elementsToAdd;
+  }
+  //--
 
-  Future<List<BankData>> getBankData(List<BankData> bankresultList) async {
+  Future<List<BankData>> getBankData(List<BankData> bankresultList ) async {
+    print("frfgr<<<<<<>>>>>>");
 
-    List<BankData> bankdatalist = [];
     try {
-      bankdatalist = bankresultList;
-      //String bdata = await Constants.read(ExpenseKey);
-    //  if (bdata != "") {
-        //List<dynamic> dicData = jsonDecode(bdata);
-        //bankdatalist = List<BankData>.from(bankresultList.map((i) => BankData.fromJson(i)));
-     // }
-     //   print('&&&&&&&&12345');
-     //   print(jsonEncode(bankdatalist));
-      // print(bankdatalist.length);
-      debitTotalValue(bankdatalist);
+    // var bankdatalist1 =  [] as Future<List<BankData>>;
+       // setState(() {
+          bankdatalist =
+              appendElements(bankdatalist,bankresultList);
+        //});
+      print("<<<<<<>>>>>>");
 
-    } catch (Excepetion) {
+      debitTotalValue(bankresultList);
+    } catch (Excepetion ) {
       throw Exception('Failed to load debitbankdata');
     }
     return bankdatalist;
   }
 
 
+  Future<List<BankData>> getCreditBankData(List<BankData> bankresultList ) async {
+    try {
+      //creditbankdatalist =  [] as Future<List<BankData>>;
+//
+     // setState(() {
+       creditbankdatalist =
+           appendElements(creditbankdatalist,bankresultList);
+     // });
+
+      creditTotalValue(bankresultList);
+    } catch (Excepetion ) {
+      throw Exception('Failed to load creditbankdata');
+    }
+    return creditbankdatalist;
+  }
 
 
   Future<List<BankData>> fetchBankData(int type) async {
@@ -296,8 +293,11 @@ class tdashboardState extends State<Dashboard> {
           'Authorization': 'Bearer $banktoken',
 
         });
+    print(response.body);
 
     List<BankData> tempbankdatalist =  <BankData>[];
+
+
     if (response.statusCode == 200) {
       GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
       for(var i in bankdataResponse.result!)
@@ -313,8 +313,22 @@ class tdashboardState extends State<Dashboard> {
           bd.accountid = i.accountid;
           tempbankdatalist.add(bd);
         }
-      getBankData(tempbankdatalist);
-      return tempbankdatalist ;
+
+      print(jsonEncode(tempbankdatalist));
+      print("reposne>>>>>>>");
+      // getBankData(tempbankdatalist);
+      // return tempbankdatalist ;
+      if(type == Constants.debitcardValue)
+        {
+          getBankData(tempbankdatalist);
+          return tempbankdatalist ;
+        }
+      else
+      {
+        getCreditBankData(tempbankdatalist);
+        return tempbankdatalist ;
+      }
+
      // return GetBankDataResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to call user childuserid .');
@@ -338,18 +352,12 @@ class tdashboardState extends State<Dashboard> {
     print("banklogooooooooo>>>>>>>>");
     saveBankDataRequest.bankthemecolor = bankDataobj.bankthemecolor;
     saveBankDataRequest.publictoken = bankDataobj.publictoken;
-    setState(() {
+
       if (isexpanse) {
-
         saveBankDataRequest.type = Constants.debitcardValue;
-
       } else {
-
         saveBankDataRequest.type = Constants.creditcardValue;
-
       }
-    });
-
     print('/////////request <<<<<<<<<<<<<<<<<<<<<<<<<');
     print(jsonEncode(saveBankDataRequest));
     print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
@@ -372,11 +380,7 @@ class tdashboardState extends State<Dashboard> {
 
     if (savebankresponse.statusCode == 200) {
 
-      @override
-      void dispose() {
-        Loader.hide();
-        // super.dispose();
-      }
+     fetchBankData(saveBankDataRequest.type!);
 
       return SaveBankDataResponse.fromJson(jsonDecode(savebankresponse.body));
     } else {
@@ -385,52 +389,8 @@ class tdashboardState extends State<Dashboard> {
       throw Exception('Failed to call plaid save bank data.');
     }
   }
-
-  Future<List<BankData>> creditfetchBankData(int type) async {
-    UserDetail tempuserdetail = await Constants.getUserDetail();
-    String banktoken = tempuserdetail.accessToken.toString();
-    final response = await http.get(Uri.parse(Constants.baseUrl2 + '/Bank/GetBankData?type='+type.toString()),
-        headers: <String, String>{
-          'Content-Type': 'application/json', 'Accept': 'application/json',
-          'Authorization': 'Bearer $banktoken',
-
-        });
-   print(response.statusCode);
-    print(response.body);
-    print(response);
-    print("&&&&&&&&&&&&&check value");
-    List<BankData> tempbankdatalist =  <BankData>[];
-    if (response.statusCode == 200) {
-    print("templist %%%%%%%%%%%333");
-    GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
-    print("templist22 %%%%%%%%%%%");
-    for(var i in bankdataResponse.result!)
-    {
-    BankData bd = new BankData();
-    bd.publictoken = i.publictoken;
-    bd.bankthemecolor = i.bankthemecolor;
-    bd.banklogo = i.banklogo;
-    bd.mask = i.mask;
-    bd.accountname = i.accountname;
-    bd.accesstoken = i.accesstoken;
-    bd.bankname = i.bankname;
-    bd.accountid = i.accountid;
-    tempbankdatalist.add(bd);
-    }
-    print("templist %%%%%%%%%%%");
-    print(tempbankdatalist);
-    print("templist 9999%%%%%%%%%%%");
-    getBankData(tempbankdatalist);
-    return tempbankdatalist ;
-    // return GetBankDataResponse.fromJson(jsonDecode(response.body));
-    } else {
-    throw Exception('Failed to call user debit childuserid .');
-    }
-  }
-
-
-
-
+  late final Function callback;
+ // const Dashboard(this.callback);
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width * 0.8;
@@ -451,7 +411,7 @@ class tdashboardState extends State<Dashboard> {
                 debitTransaction(),
                 creditLiability(),
                 paymentButton(),
-                bottomNavBar(),
+               bottomNavBar(),
 
               ],
             ),
@@ -464,9 +424,30 @@ class tdashboardState extends State<Dashboard> {
         )
 
       ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: onTabTapped,
+      //   currentIndex: _currentIndex,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       title: Text('Home'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.search),
+      //       title: Text('Search'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.person),
+      //         title: Text('Profile')
+      //     )
+      //   ],
+      // ),
 
     );
+
   }
+
+
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -977,7 +958,7 @@ class tdashboardState extends State<Dashboard> {
               AssetImage("asset/images/pmoney.png"),
               size: 140,
               color: isFavourite2 ? const Color(0xFFA781D3) : Colors.grey,
-              
+
             ),
             onPressed: () {
               Navigator.push(
@@ -1016,9 +997,9 @@ class tdashboardState extends State<Dashboard> {
     );
   }
 
-  //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-//------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//   <<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+//
+// ------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   debitTotalValue(List<BankData> debitlistbankdata) async
   {
     double totalTransactionValue = 0;

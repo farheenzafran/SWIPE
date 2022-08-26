@@ -38,6 +38,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class AddNewplan extends StatefulWidget {
+  const AddNewplan({Key? key}) : super(key: key);
+
   @override
   newplanState createState() => newplanState();
 }
@@ -144,7 +146,7 @@ class newplanState extends State<AddNewplan> {
             alignment: Alignment.center,
             margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
             child: TextField(
-              style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.normal),
               controller: phoneController,
               decoration: InputDecoration(
                // border: OutlineInputBorder(),

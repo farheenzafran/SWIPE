@@ -23,6 +23,7 @@ import 'package:swipeapp/Controller/Response/AddUserResponse.dart';
 import 'package:swipeapp/Controller/Response/ChildUserResponse.dart';
 import '../Model Helper.dart';
 import 'BankData.dart';
+import 'Dashboard.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
 import 'Request/LiabilityRequest.dart';
@@ -42,14 +43,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddAccount extends StatefulWidget {
- // const AddAccount({Key? key}) : super(key: key);
-  AddAccount() : super();
+  const AddAccount({Key? key}) : super(key: key);
+  //AddAccount() : super();
 
   @override
   addacountState createState() => addacountState();
 }
 
 class addacountState extends State<AddAccount> {
+  late Function setTabIndex;
+
   late String countryCode;
   late String phoneNumber;
   late Future<List<ChildDataResult>> datalist ;//= [] as Future<List<ChildDataResult>>;
@@ -105,6 +108,7 @@ class addacountState extends State<AddAccount> {
             children: <Widget>[
               addAccountHeader(),
               addButton(),
+              dcButton(),
              // addchild()
              //  showuserData(),
            ]
@@ -117,93 +121,127 @@ class addacountState extends State<AddAccount> {
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
     return
-      Container(
-        height: 300,
-        width: double.infinity,
-        padding: EdgeInsets.all(15),
-        //color: const Color(0xDEB46FEA),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage("asset/images/background.png"),
-          fit: BoxFit.cover,
-        )),
-        child: Column(children: [
+    SafeArea(
+        child: SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+          height: 300,
+          width: double.infinity,
+          padding: EdgeInsets.all(15),
+          //color: const Color(0xDEB46FEA),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("asset/images/background.png"),
+                fit: BoxFit.cover,
+              )),
+          child: Column(children: [
 
 
-              Container(
-                alignment: Alignment.topRight,
-                child:
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Icons.settings;
-                  },
-                  child: Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ),
+            Container(
+              alignment: Alignment.topRight,
+              child:
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  Icons.settings;
+                },
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.white,
                 ),
               ),
+            ),
 
 
-       Row(
-              mainAxisSize: MainAxisSize.min,
-              children:[
-                Container(
-                    margin: EdgeInsets.all(8),
-                    alignment: Alignment.topLeft,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: const Color(0xffECDCFF)),
+            Row(
+                mainAxisSize: MainAxisSize.min,
+                children:[
+                  Container(
+                      margin: EdgeInsets.all(8),
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0xffECDCFF)),
 
-                    child:
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    Text('Admin Account',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.black, //font color
-                          fontStyle: FontStyle.italic
-                      ),
-
-
-                    )
+                      child:
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      Text('Admin Account',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.black, //font color
+                            fontStyle: FontStyle.italic
+                        ),
 
 
+                      )
 
 
 
-    ),
 
-              ]
 
-          ),
+                  ),
 
-          addButton(),
-          showuserData(),
+                ]
 
-        ])
+            ),
+
+
+            addButton(),
+            showuserData(),
+
+          ])
 
         //  ),
-        );
+      ),
+        ],
+      ),
+    ));
+
   }
 
   addButton() {
-    return Container(
-      alignment: Alignment.centerLeft,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
-        },
-          child: Image.asset('asset/images/addaccount.png',
-              width: 50.0, height: 50.0),
+    return
+    Padding(padding: EdgeInsets.only(bottom: 10),
+   child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
 
-      ),
 
+        Container(
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(bottom: 5.0,),
+
+          child: InkWell(
+            onTap: () {
+              // setTabIndex(0);
+              // Provider.of<ValueNotifier<int>>(context, listen: false).value = 1;
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
+            },
+            child: Image.asset('asset/images/addaccount.png',
+                width: 50.0, height: 50.0),
+
+          ),
+
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child:  Text("Add Account",style:
+          TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.w300),
+          ),),
+      ],
+    )
     );
+
+
+
   }
   addchild() {
     return Container(
@@ -224,7 +262,9 @@ class addacountState extends State<AddAccount> {
   {
     return
       Container(
-          height: 180,
+          height: 100,
+      margin:  EdgeInsets.only(
+          bottom: 5.0,),
 
           child:
           FutureBuilder<List<ChildDataResult>>(
@@ -237,58 +277,30 @@ class addacountState extends State<AddAccount> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, i) {
                       var item = snapshot.data![i];
-                      return Container(
-                         width: MediaQuery.of(context).size.width * 0.3,
+                      return
 
-                      // child: Card(
-                      //   shape: RoundedRectangleBorder(
-                      //     //borderRadius: BorderRadius.circular(100),
-                      //   ),
-                      color: Colors.transparent,
-                      child: Container(
-                        height: 20,
-                      child: Center(child:
-                      //ListTile(title:
                            Column(
+                             mainAxisSize: MainAxisSize.min,
                              children: [
                                CircleAvatar(
                                  radius: 30,
                                  backgroundImage: AssetImage('asset/images/pic.png'),
                                ),
                                Text(snapshot.data![i].firstName.toString(),
-
                                  style: TextStyle(
-                                     color: Colors.black,
-                                     fontSize: 16,
-                                     fontWeight: FontWeight.w600),),
+                                     color: Colors.white,
+                                     fontSize: 14,
+                                     fontWeight: FontWeight.bold),
+                               ),
+                               Text(snapshot.data![i].lastName.toString(),
+                                 style: TextStyle(
+                                     color: Colors.white,
+                                     fontSize: 11,
+                                     fontWeight: FontWeight.w300),
+                               ),
 
                              ],
-                           )
 
-
-
-                      // )
-                      ),
-                      ),
-                         // ListTile(
-                         //      title: Row(
-                         //        children: [
-                         //          CircleAvatar(
-                         //            radius: 30,
-                         //            backgroundImage: AssetImage('asset/images/pic.png'),
-                         //          ),
-                         //          Text(snapshot.data![i].lastName.toString(),
-                         //            style: TextStyle(
-                         //                color: Colors.black,
-                         //                fontSize: 16,
-                         //                fontWeight: FontWeight.w600),),
-                         //
-                         //        ],
-                         //      )
-                         //
-                         //
-                         //
-                        //   )
                       );
 
 
@@ -335,6 +347,42 @@ class addacountState extends State<AddAccount> {
           ),
       );
 
+  }
+  dcButton() {
+    return Container(
+      height: 38,
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            //color: const Color(0xFFA781D3),
+          )),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xFFA781D3),
+          padding: const EdgeInsets.all(5),
+        ),
+
+        onPressed: () {
+          setState(() {
+          });
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+          // ));
+
+        },
+        child: Text(
+          'Move to Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 vertcalListtile()
 {

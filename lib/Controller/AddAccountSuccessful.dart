@@ -60,6 +60,7 @@ class addacountState extends State<AddAccountSuccessful> {
                   buttonsuccesful(),
                   textAccount(),
                   paymentButton(),
+               //   dcButton()
                 ],
               ),
             //],
@@ -89,7 +90,7 @@ class addacountState extends State<AddAccountSuccessful> {
 
           onPressed: () {
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccount()),);
             // ));
 
           },
@@ -209,7 +210,42 @@ class addacountState extends State<AddAccountSuccessful> {
 
   }
 
+  dcButton() {
+    return Container(
+      height: 38,
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            //color: const Color(0xFFA781D3),
+          )),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xFFA781D3),
+          padding: const EdgeInsets.all(5),
+        ),
 
+        onPressed: () {
+          setState(() {
+          });
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+          // ));
+
+        },
+        child: Text(
+          'Move to Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }

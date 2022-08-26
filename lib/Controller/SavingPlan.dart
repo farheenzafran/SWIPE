@@ -260,28 +260,23 @@ Align(
   alignment: Alignment.topRight,
   child:
   Container(
+
     padding: EdgeInsets.all(0),
     margin: const EdgeInsets.only( left:20, right: 10),
     alignment: Alignment.topRight,
     height: 40,
     width: 160,
 
-    child: TextField(
+    child: Text(dollar+"0000",
       style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          fontSize: 18,
           overflow: TextOverflow.ellipsis,
-          color: Colors.black
+  color: const Color(0xFFA781D3),
 
 
       ),
-      controller: Controller3,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(13.0),
-        ),
-        labelText: dollar,
-      ),
+
     ) ,
   ),
 )

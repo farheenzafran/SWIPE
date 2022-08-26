@@ -21,6 +21,7 @@ import 'package:swipeapp/Controller/ManageAccount.dart';
 import 'package:swipeapp/Controller/Request/AddUserRequest.dart';
 import 'package:swipeapp/Controller/Response/AddUserResponse.dart';
 import 'package:swipeapp/Controller/Response/ChildUserResponse.dart';
+import 'package:swipeapp/Controller/navbar.dart';
 import '../Model Helper.dart';
 import 'BankData.dart';
 import 'Dashboard.dart';

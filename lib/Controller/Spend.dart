@@ -39,6 +39,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class Spend extends StatefulWidget {
+  const Spend({Key? key}) : super(key: key);
+
   @override
  spendacountState createState() => spendacountState();
 }

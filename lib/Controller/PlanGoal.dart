@@ -152,7 +152,7 @@ class goalsavingplanState extends State<PlanGoal> {
           )),
          // Text('I want to add 400 in my account to plan'),
           _myRadioButton(
-            title: "I want to add" + dollar + "in my account to plan",
+            title: "I want to add" + dollar +  "in my account to plan",
             value: 1,
             onChanged: (newValue) => setState(() => _groupValue = newValue),
           ),

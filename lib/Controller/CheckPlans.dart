@@ -19,6 +19,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/AddNewPlan.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/PlanAccount.dart';
 import 'package:swipeapp/Controller/SavingPlan.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
@@ -57,8 +58,11 @@ class checkplanState extends State<CheckPlans> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   addAccountHeader(),
-                  goalText(),
+                  buttonsuccesful(),
+                  textAccount(),
                   addButton(),
+
+
 
                 ],
               ),
@@ -170,7 +174,7 @@ class checkplanState extends State<CheckPlans> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
+            MaterialPageRoute(builder: (context) => PlanAccount()),
           );
         },
         child: Text(
@@ -185,7 +189,61 @@ class checkplanState extends State<CheckPlans> {
       ),
     );
   }
+  textAccount()
+  {
+    return
+      Align(
+        //   heightFactor: 6,
+        child:
+        Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(5),
+              margin:  EdgeInsets.only(right: 15, left: 15),
+              child:
 
+              Text("You are on the way approaching to your goal!",style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: const Color(0xFFA781D3),
+                // fontFamily: 'Ubuntu',
+              ),),
+
+            ),
+            Container(
+              padding: EdgeInsets.all(5),
+              margin:  EdgeInsets.only(left: 16,right: 16, bottom: 20, top:12),
+              child:Text("You’re set to save  per month in order to reach your goal  by Jan, 2023"
+                ,style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: Colors.grey,
+                  // fontFamily: 'Ubuntu',
+                ),
+              ),
+            ),
+
+
+          ],
+        ),
+      );
+
+  }
+  buttonsuccesful()
+  {
+    return
+      Container(
+        child: Align(
+          // alignment: Alignment.center,
+          heightFactor: 2,
+
+          child: Image.asset('asset/images/plan.png', width: 300.0, height: 150.0),
+        ),
+
+
+      );
+
+  }
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }

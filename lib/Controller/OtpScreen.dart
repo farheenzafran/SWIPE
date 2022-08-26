@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeapp/Controller/Request/MobileRequest.dart';
 import 'package:swipeapp/Controller/Response/MobileResponse.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
+import 'package:swipeapp/Controller/navbar.dart';
 import 'package:swipeapp/main.dart';
 
 import '../Model Helper.dart';
@@ -35,6 +36,45 @@ class OtpScreen  extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: <Widget>[
+            Container(
+              height: 60,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("asset/images/background.png"),
+                    fit: BoxFit.cover,
+                  )),
+
+              padding: EdgeInsets.only(top: 20, left: 15, bottom: 20),
+              child: Wrap(
+                spacing: 120,
+                children: <Widget>[
+                  // Container(
+                  // alignment: Alignment.center,
+                  //  child:
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Icons.arrow_left;
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
+                  ),
+                  // ),
+                  Text(
+                    'Log in',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                      color: Colors.white,
+                      // fontFamily: 'Ubuntu',
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             Padding(
               padding: const EdgeInsets.only(top: 25.0, left: 15),
