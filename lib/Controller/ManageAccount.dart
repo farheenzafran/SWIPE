@@ -480,6 +480,8 @@ Container(
                     //   return
                     //     ListView.builder(
                     //         shrinkWrap: true,
+                    //         shrinkWrap: true,
+                    //         shrinkWrap: true,
                     //         scrollDirection: Axis.vertical,
                     //         itemCount: snapshot.data!.length,
                     //         itemBuilder: (context, posxition) {
