@@ -330,7 +330,7 @@ Container(
 
         onPressed: () {
           setState(() {
-            phoneController.text.isEmpty ? _validate = true : _validate = false;
+            //phoneController.text.isEmpty ? _validate = true : _validate = false;
             fnameController.text.isEmpty ? _validate1 = true : _validate1 = false;
             lnameController.text.isEmpty ? _validate2 = true : _validate2 = false;
           });
@@ -343,7 +343,7 @@ Container(
           checkTextFieldEmptyOrNot();
           addUser(countryCode , phoneNumber, email, fname, lname );
             //  .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty)).then((value) =>
-          if(_validate == false && _validate == false && _validate == false )
+          if( _validate1 == false && _validate2 == false )
             {
               Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
             }
