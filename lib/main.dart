@@ -8,15 +8,14 @@ import 'dart:async';
 import 'Controller/Test.dart';
 
 void main() async{
-  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  // runApp(MaterialApp(
-  //     debugShowCheckedModeBanner: false,
-  //     theme: ThemeData(fontFamily: 'Poppins'),
-  //     home: MyHomePage()));
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  runApp(MyApp());
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Poppins'),
+      home: MyApp()));
 }
+
+
 
 
 class MyApp extends StatelessWidget {

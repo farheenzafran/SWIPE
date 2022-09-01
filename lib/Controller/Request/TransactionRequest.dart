@@ -38,22 +38,43 @@ class TransactionRequest {
     return data;
   }
 }
-
 class Transactionoptions {
-  int? count;
   int? offset;
+  int? count;
+  List<String>? accountIds;
 
-  Transactionoptions({this.count, this.offset});
+  Transactionoptions({this.offset, this.count, this.accountIds});
 
   Transactionoptions.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
     offset = json['offset'];
+    count = json['count'];
+    accountIds = json['account_ids'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
     data['offset'] = this.offset;
+    data['count'] = this.count;
+    data['account_ids'] = this.accountIds;
     return data;
   }
 }
+// class Transactionoptions {
+//   int? count;
+//   int? offset;
+//   String[] account_ids ;
+//
+//   Transactionoptions({this.count, this.offset});
+//
+//   Transactionoptions.fromJson(Map<String, dynamic> json) {
+//     count = json['count'];
+//     offset = json['offset'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['count'] = this.count;
+//     data['offset'] = this.offset;
+//     return data;
+//   }
+// }

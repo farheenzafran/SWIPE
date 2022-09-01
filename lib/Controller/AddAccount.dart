@@ -17,33 +17,22 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
 import 'package:swipeapp/Controller/ManageAccount.dart';
 import 'package:swipeapp/Controller/Request/AddUserRequest.dart';
 import 'package:swipeapp/Controller/Response/AddUserResponse.dart';
 import 'package:swipeapp/Controller/Response/ChildUserResponse.dart';
 import '../Model Helper.dart';
-import 'BankData.dart';
 import 'Dashboard.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'Response/UserDeatail.dart';
-import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddAccount extends StatefulWidget {
-  const AddAccount({Key? key}) : super(key: key);
+  const AddAccount({Key? key,}) : super(key: key);
   //AddAccount() : super();
 
   @override
@@ -69,11 +58,13 @@ class addacountState extends State<AddAccount> {
           'Authorization': 'Bearer $ctoken',
         });
     print(ctoken);
-      print("responseprint>>>>>>>>>>>>>");
+      print("!!!!!!!!!!!!!!!!!!!!!!");
+      print("!!!!!!!!!!!!!!!!!!!!!!");
       print(response);
       print("bodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
       print(response.body);
-      print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+      print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
+      print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
       print(response.statusCode);
       print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
 
@@ -88,7 +79,7 @@ class addacountState extends State<AddAccount> {
 
       {
     // return List<ChildDataResult>;
-      throw Exception('Failed to call user childuserid .');
+      throw Exception('Failed to call user getgoalchild .');
      }
   }
   String bname = "";
@@ -108,7 +99,7 @@ class addacountState extends State<AddAccount> {
             children: <Widget>[
               addAccountHeader(),
               addButton(),
-              dcButton(),
+            //  dcButton(),
              // addchild()
              //  showuserData(),
            ]
@@ -126,9 +117,10 @@ class addacountState extends State<AddAccount> {
       child: Column(
         children: [
           Container(
-          height: 300,
+          height: 280,
           width: double.infinity,
           padding: EdgeInsets.all(15),
+          margin: EdgeInsets.only(bottom: 18),
           //color: const Color(0xDEB46FEA),
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -154,45 +146,67 @@ class addacountState extends State<AddAccount> {
             ),
 
 
-            Row(
+            Column(
                 mainAxisSize: MainAxisSize.min,
                 children:[
-                  Container(
-                      margin: EdgeInsets.all(8),
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color(0xffECDCFF)),
 
-                      child:
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      Text('Admin Account',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.black, //font color
-                            fontStyle: FontStyle.italic
-                        ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children:[
+                          Container(
+                              margin: EdgeInsets.all(8),
+                              alignment: Alignment.topLeft,
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: const Color(0x54ecdcff)),
+                              child:
+                              // Row(
+                              //   mainAxisSize: MainAxisSize.min,
+                              //   children: [
+                              Text(
+                                'Admin Account',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                                    color: Colors.white, //font color
+                                    fontStyle: FontStyle.italic
+                                ),
 
 
-                      )
+                              )
+                            //   ],
+                            // )
 
 
 
 
+                          ),
 
+                        ]
+
+                    ),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                  child:  Row(
+                    children: [
+                      showuserData(),
+                      addButton(),
+
+                    ],
+
+                    )
+                  )
 
                 ]
 
             ),
 
 
-            addButton(),
-            showuserData(),
+
 
           ])
 
@@ -220,7 +234,14 @@ class addacountState extends State<AddAccount> {
             onTap: () {
               // setTabIndex(0);
               // Provider.of<ValueNotifier<int>>(context, listen: false).value = 1;
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
+             // Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
+              Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) => ManageAccount(), maintainState: false));
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => ManageAccount(),
+              //   ),
+              // );
             },
             child: Image.asset('asset/images/addaccount.png',
                 width: 50.0, height: 50.0),
@@ -262,9 +283,10 @@ class addacountState extends State<AddAccount> {
   {
     return
       Container(
-          height: 100,
+          height: 130,
+      width: 190,
       margin:  EdgeInsets.only(
-          bottom: 5.0,),
+          bottom: 5.0,right:15 ),
 
           child:
           FutureBuilder<List<ChildDataResult>>(
@@ -369,6 +391,7 @@ class addacountState extends State<AddAccount> {
           });
 
           Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+
           // ));
 
         },
@@ -432,33 +455,7 @@ vertcalListtile()
 }
 
 
-  // Future<List<Result>?> addChildUser() async {
-  //   UserDetail tempuserdetail = await Constants.getUserDetail();
-  //   String ctoken = tempuserdetail.accessToken.toString();
-  //   final response = await http.get(Uri.parse(Constants.baseUrl2 + '/User/GetChildUser'),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json', 'Accept': 'application/json',
-  //         'Authorization': 'Bearer $ctoken',
-  //       });
-  //   print(ctoken);
-  //   print("responseprint>>>>>>>>>>>>>");
-  //   print(response);
-  //   print("bodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
-  //   print(response.body);
-  //   print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
-  //   print(response.statusCode);
-  //   print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
-  //
-  //
-  //   //if (response.statusCode == 200) {
-  //     print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(response)}');
-  //     ChildUserResponse userResponse =  ChildUserResponse.fromJson(jsonDecode(response.body));
-  //     return  userResponse.result;
-  //  // }
-  //   // else {
-  //   //   throw Exception('Failed to call user childuserid .');
-  //   // }
-  // }
+
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 

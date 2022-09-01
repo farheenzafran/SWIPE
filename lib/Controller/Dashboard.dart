@@ -25,6 +25,7 @@ import 'package:swipeapp/Controller/Request/RefreshTokenRequest.dart';
 import 'package:swipeapp/Controller/Response/GetBankDataResponse.dart';
 import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
 import 'package:swipeapp/Controller/Response/SaveBankDataResponse.dart';
+import 'package:swipeapp/Controller/TransactionDetail.dart';
 import '../Model Helper.dart';
 import 'AddAccount.dart';
 import 'BankData.dart';
@@ -82,8 +83,8 @@ class tdashboardState extends State<Dashboard> {
 //<<<<<<<<<<<<<<<<Debit>>>>>>>>>>>>>>>>>>>>
   late Future<List<BankData>> bankdatalist = [] as Future<List<BankData>>;
   late Future<List<BankData>> creditbankdatalist = [] as Future<List<BankData>>;
-
   List<Transactions> transactionlist = [];
+
   Future<TransactionResponse>? transactionResponseList;
   late LegacyLinkConfiguration _publicKeyConfiguration;
   late LinkTokenConfiguration _linkTokenConfiguration;
@@ -112,7 +113,13 @@ class tdashboardState extends State<Dashboard> {
   bool isLoading = false;
   bool isexpanse = true;
   bool viewVisibleTransaction = true;
-
+  bool viewVisible1 = true;
+  void hideWidget1() {
+    setState(() {
+      viewVisible1 = !viewVisible1;
+      viewVisible1 = false;
+    });
+  }
   void showWidget() {
     setState(() {
       viewVisible = true;
@@ -140,7 +147,10 @@ class tdashboardState extends State<Dashboard> {
   //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
 
   void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
     super.initState();
+
     _publicKeyConfiguration = LegacyLinkConfiguration(
       clientName: Constants.ClientId,
       publicKey: "PUBLIC_KEY",
@@ -258,7 +268,8 @@ class tdashboardState extends State<Dashboard> {
         //});
       print("<<<<<<>>>>>>");
 
-      debitTotalValue(bankresultList);
+   bankdatalist =   debitTotalValue(bankresultList);
+
     } catch (Excepetion ) {
       throw Exception('Failed to load debitbankdata');
     }
@@ -296,8 +307,6 @@ class tdashboardState extends State<Dashboard> {
     print(response.body);
 
     List<BankData> tempbankdatalist =  <BankData>[];
-
-
     if (response.statusCode == 200) {
       GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
       for(var i in bankdataResponse.result!)
@@ -320,7 +329,7 @@ class tdashboardState extends State<Dashboard> {
       // return tempbankdatalist ;
       if(type == Constants.debitcardValue)
         {
-          getBankData(tempbankdatalist);
+          tempbankdatalist =  getBankData(tempbankdatalist) as List<BankData>;
           return tempbankdatalist ;
         }
       else
@@ -358,9 +367,9 @@ class tdashboardState extends State<Dashboard> {
       } else {
         saveBankDataRequest.type = Constants.creditcardValue;
       }
-    print('/////////request <<<<<<<<<<<<<<<<<<<<<<<<<');
-    print(jsonEncode(saveBankDataRequest));
-    print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
+    //print('/////////request <<<<<<<<<<<<<<<<<<<<<<<<<');
+    //print(jsonEncode(saveBankDataRequest));
+    //print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
 
     final savebankresponse =
     await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
@@ -370,13 +379,13 @@ class tdashboardState extends State<Dashboard> {
           'Authorization': 'Bearer $accounttoken',
         },
         body: jsonEncode(saveBankDataRequest));
-    print('/////////.svaebankdata <<<<<<<<<<<<<<<<<<<<<<<<<');
-    print(accounttoken);
-    print(saveBankDataRequest);
-    print(savebankresponse);
-    print(savebankresponse.body);
-    print(savebankresponse.statusCode);
-    print('/////////<<<<svaebankdata<<<<<<<<<<<<<<<<<<<<<');
+    // print('/////////.svaebankdata <<<<<<<<<<<<<<<<<<<<<<<<<');
+    // print(accounttoken);
+    // print(saveBankDataRequest);
+    // print(savebankresponse);
+    // print(savebankresponse.body);
+    // print(savebankresponse.statusCode);
+    // print('/////////<<<<svaebankdata<<<<<<<<<<<<<<<<<<<<<');
 
     if (savebankresponse.statusCode == 200) {
 
@@ -398,50 +407,136 @@ class tdashboardState extends State<Dashboard> {
     final mq = MediaQueryData.fromWindow(window);
     var _val;
     var chidern;
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: SingleChildScrollView(
-         // children: [
-       child: Column(
+      body: SingleChildScrollView(
+            // children: [
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-             // crossAxisAlignment: CrossAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 dashboardHeader(),
                 debitTransaction(),
-                creditLiability(),
-                paymentButton(),
-               bottomNavBar(),
+               creditLiability(),
+               paymentButton(),
+                // bottomNavBar(),
+                viewtransaction(),
+                Visibility(
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: viewVisible1,
+                  child:
+                  Container(
+                    width: double.infinity,
+                    height: 200.0,
+                   // color: Colors.yellow,
+                    child: Stack(
+                      //child: Column(
+                      children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: transactionlist.length,
+                            itemBuilder: (context, int index) {
+                              var $;
+                              return Card(color: const Color(0xffF7F6FA),
+                                       child:   Container(
+                                            width: double.infinity,
+                                            height: 80.0,
+                                            margin: const EdgeInsets.only(
+                                                right: 9, left: 9),
+                                              child: ListTile(
+                                                contentPadding: EdgeInsets.only(
+                                                    left: 10.0, right: 0.0),
+                                         leading: CircleAvatar(
+                                                radius: 20,
+                                                child: Image(
+                                                  image: AssetImage("asset/images/cart.png"),
+                                                  //width: 40,
+                                                  //color: const Color(0xffECDCFF)
+                                                ),
+                                              ),
+                                                title: Text(
+                                                  transactionlist[index]
+                                                      .name
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w600),
+                                                ),
+                                                subtitle:
+                                                      Text(
+                                                            transactionlist[index]
+                                                                .category
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                            FontWeight.w600),
+                                                      ),
 
+                                                trailing:
+                                                    Padding(
+                                                      padding: EdgeInsets.only(top:5),
+                                                      child:     Column(
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding:EdgeInsets.only(top:3, bottom: 3),
+                                                              child:
+                                                              Text(dollar+transactionlist[index].amount.toStringAsFixed(2),
+                                                                style: TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontSize: 14,
+                                                                    fontWeight:
+                                                                    FontWeight.w600),
+                                                              ),
+                                                            ),
+
+
+                                                                Text(transactionlist[index].date.toString(),
+
+                                                                  style: TextStyle(
+                                                                  color: Colors.grey,
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                  FontWeight.w500),
+                                                            ),
+                                                          ]),
+
+                                                    )
+
+
+
+                                              ),
+
+
+                                          ),
+
+
+
+
+                              );
+                            }
+                          // );
+                          // }
+                          //},
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-           // _screens[_selectedScreenIndex]["screen"],
-
-          //],
-        //  _screens[_selectedScreenIndex]["screen"],
+          )
 
 
-        )
 
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: onTabTapped,
-      //   currentIndex: _currentIndex,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       title: Text('Home'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.search),
-      //       title: Text('Search'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.person),
-      //         title: Text('Profile')
-      //     )
-      //   ],
-      // ),
+
 
     );
 
@@ -453,9 +548,9 @@ class tdashboardState extends State<Dashboard> {
 
   dashboardHeader() {
     return Container(
-      height: 90,
+      height: 120,
       width: double.infinity,
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(5),
       //color: const Color(0xDEB46FEA),
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -463,35 +558,114 @@ class tdashboardState extends State<Dashboard> {
         fit: BoxFit.cover,
       )),
       //child: Align(alignment: Alignment.center,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Debit',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.left,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children:[
+                  Container(
+                      margin: EdgeInsets.all(8),
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0x75f5f5f5)),
+                      child:
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      Text(
+                        'Admin Account',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 15, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.white,
+                          fontWeight: FontWeight.bold//font color
+                        ),
+
+
+                      )
+                    //   ],
+                    // )
+
+
+
+
+                  ),
+
+                ]
+
             ),
-            Image.asset(
-              "asset/images/downarrow.png", // width: 300,
-              height: 20,
-              width: 20,
-              alignment: Alignment.center,
-            ),
-            Text(
-              'Credit',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ]),
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: [
+
+                    Text(
+                      dollar+ tDebitValue.toStringAsFixed(2),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white, //font color
+                          fontStyle: FontStyle.italic
+                      ),
+
+                    ),
+
+                    Text(
+                      'Debit',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+
+                Image.asset(
+                  "asset/images/downarrow.png", // width: 300,
+                  height: 20,
+                  width: 20,
+                  alignment: Alignment.center,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      dollar+ tCreditValue.toStringAsFixed(2),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                        color: Colors.white, //font color
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w700,
+
+                      ),
+
+                    ),
+
+                    Text(
+                      'Credit',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+              ]),
+        ],
+      )
+
 
       //  ),
     );
@@ -624,7 +798,8 @@ class tdashboardState extends State<Dashboard> {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 trailing: Text(
-                                  dollar + item.mask.toString(),
+                                  dollar +
+                                      item.totalamount.toString(),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -641,6 +816,7 @@ class tdashboardState extends State<Dashboard> {
                               );
                             },
                             body:
+                               // Text("gcdsgchgdsv"),
                             debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
                             isExpanded: item.isExpaneded,
                           );
@@ -788,7 +964,8 @@ class tdashboardState extends State<Dashboard> {
                                 fontWeight: FontWeight.w600),
                           ),
                           trailing: Text(
-                            dollar + item.mask.toString(),
+                            dollar + item.totalamount.toString(),
+
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -996,6 +1173,67 @@ class tdashboardState extends State<Dashboard> {
       ),
     );
   }
+  viewtransaction() {
+    return
+        Container(
+
+          child: Row(
+              children:[
+                Container(
+                    margin: EdgeInsets.all(8),
+                    alignment: Alignment.topLeft,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: const Color(0xffECDCFF)),
+                    child:
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [
+                    Text(
+                      'Recent Transactions',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.black, //font color
+                          fontStyle: FontStyle.italic
+                      ),
+
+                    )
+                  //   ],
+                  // )
+
+
+
+
+                ),
+                Spacer(),
+                Container(
+                  margin: EdgeInsets.all(8),
+                  alignment: Alignment.topRight,
+                  child:  InkWell(
+                      onTap: () async {
+                        viewVisible1 = true;
+
+                        setState(() {
+                          //selectedIndex = i;
+                        });                      },
+                      child: new Text("View All",
+                        style: TextStyle(
+                            fontSize: 13, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                        color: const Color(0xffA781D3),
+                           fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+
+
+              ]
+
+          ),
+
+        );
+  }
 
 //   <<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
 //
@@ -1005,19 +1243,29 @@ class tdashboardState extends State<Dashboard> {
     double totalTransactionValue = 0;
   for(var debitdata in debitlistbankdata)
     {
+      double debitcardtotalTransactionValue = 0;
       var response = await transactionResponse(debitdata.accesstoken.toString(), debitdata.accountid.toString(), cmonth);
       for(var t_transaction in response.transactions!)
         {
+          transactionlist.add(t_transaction);
           totalTransactionValue += t_transaction.amount;
+          debitcardtotalTransactionValue += t_transaction.amount;
+          print("||||||||||");
 
+          print(t_transaction.amount);
 
         }
-//print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt"+ totalTransactionValue.toString());
+      debitdata.totalamount = debitcardtotalTransactionValue;
+print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt"+ totalTransactionValue.toString());
+print(debitdata.totalamount);
+print(debitcardtotalTransactionValue);
     }
     setState(() {
       tDebitValue =  totalTransactionValue;
 
     });
+  print(jsonEncode(debitlistbankdata));
+  return debitlistbankdata;
   }
 
   creditTotalValue(List<BankData> creditlistbankdata) async
@@ -1025,27 +1273,34 @@ class tdashboardState extends State<Dashboard> {
     double totalLiabilityValue = 0;
     for(var cdata in creditlistbankdata)
     {
+      double creditcardtotalLiabilityValue = 0;
+
       var libilityresponse = await liabilityData(cdata.accesstoken.toString(), cdata.accountid.toString());
       liabilitylist = libilityresponse.liabilities as Liabilities;
       if (liabilitylist.student != null) {
         for(var t_liability in liabilitylist.student!)
         {
           totalLiabilityValue += t_liability.lastPaymentAmount!;
+          creditcardtotalLiabilityValue += t_liability.lastPaymentAmount!;
         }
       }
       if (liabilitylist.mortgage != null) {
         for(var s_liability in liabilitylist.mortgage!)
         {
           totalLiabilityValue += s_liability.lastPaymentAmount!;
+          creditcardtotalLiabilityValue += s_liability.lastPaymentAmount!;
+
         }
       }
       if (liabilitylist.credit != null) {
-        for(var s_liability in liabilitylist.credit!)
+        for(var c_liability in liabilitylist.credit!)
         {
-          totalLiabilityValue += s_liability.lastPaymentAmount!;
+          totalLiabilityValue += c_liability.lastPaymentAmount!;
+          creditcardtotalLiabilityValue += c_liability.lastPaymentAmount!;
         }
       }
      // print("||||||||||total creditttttttt"+ totalLiabilityValue.toString());
+      cdata.totalamount = creditcardtotalLiabilityValue;
 
     }
    // print("||||||||||total creditttttttt value"+ totalLiabilityValue.toString());
@@ -1054,6 +1309,7 @@ class tdashboardState extends State<Dashboard> {
       tCreditValue =  totalLiabilityValue;
 
     });
+    return creditlistbankdata;
   }
 
   debitBuildExpandableContent(
@@ -1176,12 +1432,12 @@ class tdashboardState extends State<Dashboard> {
 
 //------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
- print('+++++++++++++++++}');
+ //print('+++++++++++++++++}');
     var libilityresponse = liabilityData(accessToken, accountID);
     print(libilityresponse);
     // return Text("abcd55555555");
     if (libilityresponse == null) {
-      print('2+++++++++++++++++');
+     // print('2+++++++++++++++++');
 
       //return ListTile(
       return Text(
@@ -2313,6 +2569,7 @@ Future<TransactionResponse> transactionResponse(
   Transactionoptions transactionoptions = Transactionoptions();
   transactionoptions.count = 20;
   transactionoptions.offset = 0;
+  transactionoptions.accountIds = [accountid] ;
   TransactionRequest transactionRequest = TransactionRequest();
   transactionRequest.clientId = Constants.ClientId;
   transactionRequest.secret = Constants.Secret;
@@ -2320,7 +2577,8 @@ Future<TransactionResponse> transactionResponse(
   transactionRequest.options = transactionoptions;
   transactionRequest.startDate = startdate;
   transactionRequest.endDate = enddate;
-  // print('Request body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+
+   print('Request body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
   final response4 =
       await http.post(Uri.parse(Constants.URL + '/transactions/get'),
           headers: <String, String>{
@@ -2328,12 +2586,14 @@ Future<TransactionResponse> transactionResponse(
             'Accept': 'application/json',
           },
           body: jsonEncode(transactionRequest));
-  // print('###########################################################################################################');
-  // print('respose44 body-----: ${jsonEncode(response4.body)}');
+  print('!!!!!!!!!!!!###########################################################################################################');
+  print('respose44 body-----: ${response4}');
+  print(response4.statusCode);
+  print(response4);
   // print(accesstoken);
-  // print('##########################################'
-  //     '###################################################'
-  //     '##############');
+  print('##########################################'
+      '###################################################'
+      '##############');
   if (response4.statusCode == 200) {
     void dispose() {
       Loader.hide();
@@ -2501,11 +2761,11 @@ Future<LiabilityResponse> liabilityData(String accesstoken, String accountid) as
   //     '###################################################'
   //     '##############');
   // print('respose44 body44-----: ${jsonEncode(response4.body)}');
-   print('credit bpdyyyyy');
-   print(response4.body);
-   print(response4.statusCode);
-   print(jsonEncode(liabilityRequest));
-  print('credit bpdyyyyy');
+  //  print('credit bpdyyyyy');
+  //  print(response4.body);
+  //  print(response4.statusCode);
+  //  print(jsonEncode(liabilityRequest));
+  // print('credit bpdyyyyy');
 
   // print(
   //     '#################################credit##################################################');

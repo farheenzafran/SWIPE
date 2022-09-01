@@ -126,6 +126,7 @@ class Balances {
 }
 
 class Transactions {
+  //final String note;
   String? accountId;
   dynamic? amount;
   String? isoCurrencyCode;

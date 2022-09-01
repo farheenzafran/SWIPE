@@ -24,15 +24,18 @@ import 'BankData.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
 import 'Request/LiabilityRequest.dart';
+import 'Request/SaveGoalBankdataRequest.dart';
 import 'Request/TokenResquest.dart';
 import 'Request/TransactionRequest.dart';
 import 'Response/AccessTokenResponse.dart';
+import 'Response/GoalBankDataResponse.dart';
 import 'Response/InstitutionResponse.dart';
 import 'Response/LiabilityResponse.dart';
 import 'Response/LinkTokenResponse.dart';
 import 'Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'Response/UserDeatail.dart';
 import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -46,16 +49,22 @@ class SavingPlan extends StatefulWidget {
 }
 
 class savingplanState extends State<SavingPlan> {
-  final Controller1 = TextEditingController();
-  final Controller2 = TextEditingController();
-  final Controller3 = TextEditingController();
-  TextEditingController dateInput = TextEditingController();
+  TextEditingController amountinput = TextEditingController();
+  TextEditingController  dateInput = TextEditingController();
+  late LinkTokenConfiguration _linkTokenConfiguration;
 
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
   }
   String dollar = " \$";
+  late String name;
+  late String a_associate;
+  late int tamount;
+  late String goaldate;
+  bool _validate = false;
+  bool _validate1 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,17 +164,23 @@ class savingplanState extends State<SavingPlan> {
   padding: EdgeInsets.all(0),
   margin: const EdgeInsets.only( left:20,top: 15,right: 10),
   alignment: Alignment.topRight,
-  height: 40,
+  height: 45,
   width: 160,
   child: TextField(
-  controller: Controller1,
+  controller: amountinput,
   style: TextStyle(fontSize: 16.0,  color: Colors.black , fontWeight: FontWeight.w600),
+    keyboardType: TextInputType.number,
+    inputFormatters: <TextInputFormatter>[
+      FilteringTextInputFormatter.digitsOnly
+    ],
   decoration: InputDecoration(
+
   border: OutlineInputBorder(
   borderRadius: BorderRadius.circular(13.0),
   ),
   // border: OutlineInputBorder(),
    labelText: dollar,
+    errorText: _validate ? 'Value Can\'t Be Empty' : null,
   //hintText: 'Enter Code',
   ),
   ) ,
@@ -177,7 +192,6 @@ class savingplanState extends State<SavingPlan> {
             padding: const EdgeInsets.only(top: 18.0,left: 8 , ),
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(left: 15),
-
             child: SizedBox(
               child: Text(
                 'I need it before',
@@ -196,8 +210,8 @@ class savingplanState extends State<SavingPlan> {
             alignment: Alignment.topRight,
             child:  Container(
                 padding: EdgeInsets.all(15),
-                height:  60,//MediaQuery.of(context).size.width / 3,
-                width: 200,
+                height:  70,//MediaQuery.of(context).size.width / 3,
+                width: 180,
                 child: Center(
                     child: TextField(
                       controller: dateInput,
@@ -207,7 +221,8 @@ class savingplanState extends State<SavingPlan> {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           icon: Icon(Icons.calendar_today), //icon of text field
-                          labelText: "Enter Date" //label text of field
+                          labelText: "Enter Date", //label text of field
+                        errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
                       ),
                       readOnly: true,
                       //set it true, so that user will not able to edit text
@@ -223,7 +238,7 @@ class savingplanState extends State<SavingPlan> {
                           print(
                               pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                           String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                          DateFormat('MMM-dd-yy').format(pickedDate);
                           print(
                               formattedDate); //formatted date output using intl package =>  2021-03-16
                           setState(() {
@@ -267,7 +282,7 @@ Align(
     height: 40,
     width: 160,
 
-    child: Text(dollar+"0000",
+    child: Text(dollar+ "",
       style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
@@ -296,21 +311,47 @@ Align(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
+          color:  amountinput.text.isEmpty && dateInput.text.isEmpty
+              ? Colors.grey
+              : const Color(0xFFA781D3),
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
             //color: const Color(0xFFA781D3),
           )),
       child: TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFA781D3),
+
+        //  backgroundColor: const Color(0xFFA781D3),
           padding: const EdgeInsets.all(5),
         ),
 
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PlanGoal()),
-          );
+          setState(() {
+            amountinput.text.isEmpty ? _validate = true : _validate = false;
+            dateInput.text.isEmpty ? _validate1 = true : _validate1 = false;
+          });
+
+         tamount =  amountinput.value.text.length;
+         goaldate = dateInput.value.text.toString();
+         // GoalData(name, a_associate, tamount, goaldate);
+
+
+          if( _validate == false && _validate1 == false )
+          {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlanGoal()),
+            );
+          }
+          else
+          {
+            print("all filled");
+          }
+
+
+          // GoalData(name , a_associate,tamount,goaldate)..onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
+          //    .then((value) => Navigator.push(context, MaterialPageRoute(
+          //    builder: (_) => PlanGoal()),));
         },
         child: Text(
           'Continue',

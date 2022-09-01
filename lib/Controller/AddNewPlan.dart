@@ -38,14 +38,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class AddNewplan extends StatefulWidget {
-  const AddNewplan({Key? key}) : super(key: key);
 
   @override
   newplanState createState() => newplanState();
 }
 
 class newplanState extends State<AddNewplan> {
-  final phoneController = TextEditingController();
+  final tController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +146,7 @@ class newplanState extends State<AddNewplan> {
             margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
             child: TextField(
               style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.normal),
-              controller: phoneController,
+              controller: tController,
               decoration: InputDecoration(
                // border: OutlineInputBorder(),
               ),
@@ -180,6 +179,7 @@ class newplanState extends State<AddNewplan> {
         ),
 
         onPressed: () {
+          tController.value.text.toString();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => SavingPlan()),

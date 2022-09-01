@@ -19,6 +19,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/AddNewPlan.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/SpendNewBudget.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
 import 'BankData.dart';
@@ -47,6 +48,7 @@ class Spend extends StatefulWidget {
 
 class spendacountState extends State<Spend> {
   @override
+  String dollar = " \$";
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -76,55 +78,129 @@ class spendacountState extends State<Spend> {
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
-    return
-      Container(
+
+    return Container(
         height: 120,
         width: double.infinity,
+        padding: EdgeInsets.all(5),
+        //color: const Color(0xDEB46FEA),
         decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("asset/images/background.png"),
               fit: BoxFit.cover,
             )),
-
-        padding: EdgeInsets.only(top: 20, left: 15, bottom: 25),
-    child:    Column(
+        //child: Align(alignment: Alignment.center,
+        child: Column(
           children: [
-            Text('Member', textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white),
-                ),
-         Wrap(
-              spacing: 100,
-              children: <Widget>[
-                // Container(
-                // alignment: Alignment.center,
-                //  child:
-                Text(
-                  'Spend',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: Colors.white,
-                    // fontFamily: 'Ubuntu',
-                  ),
-                ),
-                // ),
-                Text(
-                  'Income',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: Colors.white,
-                    // fontFamily: 'Ubuntu',
-                  ),
-                ),
-              ],
+            Align(
+              alignment: Alignment.center,
+              child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children:[
+                    Container(
+                        margin: EdgeInsets.all(8),
+                        alignment: Alignment.topLeft,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0x75f5f5f5)),
+                        child:
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        Text(
+                          'Admin Account',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold//font color
+                          ),
+
+
+                        )
+                      //   ],
+                      // )
+
+
+
+
+                    ),
+
+                  ]
+
+              ),
             ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: [
+
+                      Text(
+                        dollar+"",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.white, //font color
+                            fontStyle: FontStyle.italic
+                        ),
+
+                      ),
+
+                      Text(
+                        'Spend',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+
+                  Image.asset(
+                    "asset/images/downarrow.png", // width: 300,
+                    height: 20,
+                    width: 20,
+                    alignment: Alignment.center,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                       dollar+"",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white, //font color
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w700,
+
+                        ),
+
+                      ),
+
+                      Text(
+                        'Income',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                ]),
           ],
         )
 
 
-        // color: Colors.purpleAccent,
-      );
+      //  ),
+    );
   }
   catogeriesType(){
     return Align(
@@ -166,7 +242,7 @@ class spendacountState extends State<Spend> {
 
                 ),
                 onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SpendNewBudget()),);
                 },
                 child: Image(
                   image: AssetImage("asset/images/Plus.png"),

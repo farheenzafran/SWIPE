@@ -50,6 +50,7 @@ class checkplanState extends State<CheckPlans> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       body: SafeArea(
           child: ListView(
             children: [
@@ -233,10 +234,10 @@ class checkplanState extends State<CheckPlans> {
   {
     return
       Container(
+        color: Colors.white,
         child: Align(
           // alignment: Alignment.center,
           heightFactor: 2,
-
           child: Image.asset('asset/images/plan.png', width: 300.0, height: 150.0),
         ),
 

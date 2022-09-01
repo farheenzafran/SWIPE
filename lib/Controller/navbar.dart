@@ -1,156 +1,236 @@
-// import 'package:flutter/material.dart';
-// import 'package:swipeapp/Controller/AddAccount.dart';
-// import 'package:swipeapp/Controller/AddNewPlan.dart';
-// import 'package:swipeapp/Controller/Dashboard.dart';
-// import 'package:swipeapp/Controller/PlanAccount.dart';
-// import 'package:swipeapp/Controller/Spend.dart';
 //
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:swipeapp/Controller/AddAccount.dart';
+import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
+import 'package:swipeapp/Controller/AddNewPlan.dart';
+import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/ManageAccount.dart';
+import 'package:swipeapp/Controller/PlanAccount.dart';
+import 'package:swipeapp/Controller/Spend.dart';
+// const Dashboard(),
+// const  Spend(),
+// const  PlanAccount(),
+// const  AddAccount()
+import 'package:flutter/material.dart';
+
+class  navbar extends StatefulWidget {
+  @override
+  _navState createState() => _navState();
+}
+
+class _navState extends State<navbar> {
+  late int _currentIndex;
+  late List<Widget> _children;
+  @override
+  void initState() {
+    _currentIndex = 0;
+    _children = [
+       Dashboard(),
+        Spend(),
+        PlanAccount(),
+        AddAccount()
+    ];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          currentIndex: _currentIndex,
+          onTap: onTabTapped,
+          activeColor: Color(0xFFA781D3),
+          inactiveColor: Colors.grey,
+          items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+              backgroundColor:  const Color(0xF5F7F6FA),
+          icon:
+              ImageIcon(
+                AssetImage("asset/images/home2.png"),
+                size: 30,
+                //color: Color(0xFF3A5A98),
+              ),
+              label:'Home',
+            ),
+            BottomNavigationBarItem(
+              icon:
+              ImageIcon(
+                AssetImage("asset/images/pbox.png"),
+                size: 30,
+               // color: Color(0xFF3A5A98),
+
+              ),              label: 'Spend',
+            ),
+            BottomNavigationBarItem(
+              icon:
+              ImageIcon(
+                AssetImage("asset/images/pmoney.png"),
+                size: 30,
+               // color: Color(0xFF3A5A98),
+
+              ),              label: 'Plan',
+            ),
+            BottomNavigationBarItem(
+              icon:
+              ImageIcon(
+                AssetImage("asset/images/paccount.png"),
+                size: 30,
+
+              ),
+              label: 'Account',
+            )
+
+          ],
+        ),
+
+        tabBuilder: ( context,  index) {
+          switch(index){
+            case 0:
+              return CupertinoTabView(builder: (context)
+                  {return CupertinoPageScaffold(child: Dashboard(),);
+          });
+
+    case 1:
+    return CupertinoTabView(builder: (context)
+    {return CupertinoPageScaffold(child: Spend(),);
+    });
+
+    case 2:
+    return CupertinoTabView(builder: (context)
+    {return CupertinoPageScaffold(child: PlanAccount(),);
+    });
+
+    case 3:
+    return CupertinoTabView(builder: (context)
+    {return CupertinoPageScaffold(child: AddAccount(),);
+    });
+            default:
+              return CupertinoTabView(builder: (context)
+              {return CupertinoPageScaffold(child: Dashboard(),);
+              });
+                  }
+    },
+
+
+          // return CupertinoTabView(
+          //   builder: (BuildContext context) {
+          //     return SafeArea(
+          //       top: false,
+          //       bottom: false,
+          //       child: CupertinoApp(
+          //         home: CupertinoPageScaffold(
+          //           resizeToAvoidBottomInset: false,
+          //           child: _children[_currentIndex],
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // );
+       // }
+    );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+}
+//--------------------------
+//   late int _currentIndex;
+//   late List<Widget> _children;
 //
-// void main() {
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       // Hide the debug banner
-//       debugShowCheckedModeBanner: false,
-//       home: navbar(),
-//
-//     );
-//   }
-// }
-//
-// class navbar extends StatefulWidget {
-//   const navbar({Key? key}) : super(key: key);
-//
-//   @override
-//   _MyPageState createState() => _MyPageState();
-//
-// }
-//
-// class _MyPageState extends State<navbar> {
-//   late List<Widget> _pages;
-//   late Widget _page1;
-//   late Widget _page2;
-//   late Widget _page3;
-//   late Widget _page4;
-//   late Widget _currentPage;
-//   late TabController _tabController;
-//   int _selectedScreenIndex = 0;
-//   // final List _screens = [
-//   //   {"screen": const Dashboard(), },
-//   //   {"screen": const Spend(), },
-//   //   {"screen": const PlanAccount(), },
-//   //   {"screen": const AddAccount(), },
-//   // ];
-//
-//   void _selectScreen(int index) {
-//     setState(() {
-//       _selectedScreenIndex = index;
-//       _currentPage = _pages[index];
-//
-//     });
-//   }
 //   @override
 //   void initState() {
+//     _currentIndex = 0;
+//     _children = [
+//       _getBodyWidget(),
+//       Dashboard(),
+//       Spend(),
+//       PlanAccount(),
+//       AddAccount(),
+//       ManageAccount()
+//     ];
 //     super.initState();
-//     _page1 = const Dashboard();
-//     _page2 = const Spend();
-//     _page3 = const PlanAccount();
-//     _page4 = AddAccount(changePage: _selectedScreenIndex);
-//     _pages = [_page1, _page2, _page3,_page4];
-//     _selectedScreenIndex = 0;
-//     _currentPage = _page1;
-//
 //   }
 //
-//   void _handleTabSelection() {
+//   void _onItemTapped(int index) {
 //     setState(() {
+//       _currentIndex = index;
 //     });
+//   }
+//   bool shouldShowDetails = true;
+//   Widget _getBodyWidget() {
+//     switch (_currentIndex) {
+//       case 0:
+//         return shouldShowDetails ? ManageAccount() : AddAccount();
+//       case 1:
+//         return AddAccountSuccessful();
+//       default:
+//         return AddAccount();
+//     }
 //   }
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
+//       return CustomNavigationBar(
+//    // Center(
+//    //        child: _children.elementAt(_currentIndex),
+//    //      ),
+//         bottomNavigationBar: BottomNavigationBar(
+//           type: BottomNavigationBarType.fixed, // Fixed
+//           items: const <BottomNavigationBarItem>[
+//             BottomNavigationBarItem(
+//               backgroundColor:  const Color(0xF5F7F6FA),
+//           icon:
+//               ImageIcon(
+//                 AssetImage("asset/images/home2.png"),
+//                 size: 30,
+//                 //color: Color(0xFF3A5A98),
+//               ),
+//               label:'Home',
+//             ),
+//             BottomNavigationBarItem(
+//               icon:
+//               ImageIcon(
+//                 AssetImage("asset/images/pbox.png"),
+//                 size: 30,
+//                // color: Color(0xFF3A5A98),
 //
-//         //  backgroundColor: const Color(0xffECDCFF)
+//               ),              label: 'Spend',
+//             ),
+//             BottomNavigationBarItem(
+//               icon:
+//               ImageIcon(
+//                 AssetImage("asset/images/pmoney.png"),
+//                 size: 30,
+//                // color: Color(0xFF3A5A98),
 //
-//       body:  _currentPage,//_screens[_selectedScreenIndex]["screen"],
-//       // bottomNavigationBar: BottomNavigationBar(
-//       //   backgroundColor: Colors.yellowAccent,
-//       //   showSelectedLabels: false, showUnselectedLabels: false,
-//       //   currentIndex: _selectedScreenIndex,
-//       //   onTap: _selectScreen,
-//       //  // fixedColor:   _tabController.index == 0? Colors.black: Colors.grey),
-//       // //  backgroundColor: Colors.yellow,
-//       //   items: const [
-//       //     BottomNavigationBarItem(icon: Icon(Icons.home_work,
-//       //       ), label: "Home"),
-//       //     BottomNavigationBarItem(icon: Icon(Icons.monitor_heart_rounded,), label: "Spend"),
-//       //     BottomNavigationBarItem(icon: Icon(Icons.party_mode_rounded,), label: 'Plan'),
-//       //     BottomNavigationBarItem(icon: Icon(Icons.person,), label: 'Profile'),
-//       //
-//       //   ],
-//       // ),
-//       bottomNavigationBar: BottomNavigationBar(
-//         currentIndex: _selectedScreenIndex,
-//         onTap: _selectScreen,
-//         unselectedItemColor: Colors.grey,
-//         selectedItemColor:   Color(0xFFA781D3),
-//         showUnselectedLabels: true,
-//         items: [
-//           BottomNavigationBarItem(
-//             backgroundColor: Colors.white,
-//             icon: Icon(Icons.home),
-//             label: 'Home',
-//           ),
-//           BottomNavigationBarItem(
-//             backgroundColor: Colors.white,
-//             icon: Icon(Icons.monitor_heart),
-//             label: 'Spend',
-//           ),
-//           BottomNavigationBarItem(
-//             backgroundColor: Colors.white,
-//             icon: Icon(Icons.pages_sharp),
-//             label: 'Plan',
-//           ),
-//           BottomNavigationBarItem(
-//             backgroundColor: Colors.white,
-//             icon: Icon(Icons.person_pin_rounded),
-//             label: 'Profile',
-//           )
+//               ),              label: 'Plan',
+//             ),
+//             BottomNavigationBarItem(
+//               icon:
+//               ImageIcon(
+//                 AssetImage("asset/images/paccount.png"),
+//                 size: 30,
+//                 //color: Color(0xFF3A5A98),
 //
-//         ],
-//       ),
-//       drawer: Drawer(
-//         child: Container(
-//           margin: const EdgeInsets.only(top: 20.0),
-//           child: Column(
-//             children: <Widget>[
-//               _navigationItemListTitle(page1, 0),
-//               _navigationItemListTitle(page2, 1),
-//               _navigationItemListTitle(page3, 2),
-//               _navigationItemListTitle(page4, 2),
-//             ],
-//           ),
+//               ),              label: 'Account',
+//             ),
+//           ],
+//           currentIndex: _currentIndex,
+//           selectedItemColor: Color(0xFFA781D3),
+//           unselectedItemColor: Colors.grey,
+//           onTap: _onItemTapped,
 //         ),
-//       ),
-//     );
+//
+//
+//       );
+//
 //   }
+//
+//
 // }
-// Widget _navigationItemListTitle(String title, int index) {
-//   return ListTile(
-//     title: Text(
-//       '$title Page',
-//       style: TextStyle(color: Colors.blue[400], fontSize: 22.0),
-//     ),
-//     onTap: () {
-//       Navigator.pop(context);
-//       _changeTab(index);
-//     },
-//   );
-// }
-// }
+//
+//

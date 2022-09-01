@@ -9,6 +9,7 @@ class BankData {
   String? banklogo;
   String? bankthemecolor;
   bool isExpaneded = false;
+  double? totalamount = 0.00;
   BankData({
     this.bankname,
     this.mask,
@@ -17,7 +18,8 @@ class BankData {
     this.banklogo,
     this.accesstoken,
     this.bankthemecolor,
-    this.publictoken
+    this.publictoken,
+    this.totalamount,
   });
   // Map<String, dynamic> toJson(BankData)
   // {
@@ -44,6 +46,7 @@ class BankData {
     'accesstoken':accesstoken,
     'bankthemecolor':bankthemecolor,
     'publictoken':publictoken,
+
   };
 
   // BankData.fromJson(Map<String, dynamic> json)
@@ -68,6 +71,7 @@ class BankData {
       publictoken: json['publictoken'],
       banklogo: json['banklogo'],
       accountid: json['accountid'],
+
     );
   }
 

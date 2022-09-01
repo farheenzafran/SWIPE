@@ -117,7 +117,10 @@ class OtpScreen  extends StatelessWidget {
               padding: EdgeInsets.only(top: 5,left: 15 , right: 15),
               child: TextField(
                 controller: otpController,
-                obscureText: true,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Code',
@@ -139,7 +142,7 @@ class OtpScreen  extends StatelessWidget {
                     otpLogin(phoneNumber, this.countryCode, otpno)
                         .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty))
                         .then((value) => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      MaterialPageRoute(builder: (context) => navbar()),
                     ));
                   },
                   style: TextButton.styleFrom( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

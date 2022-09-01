@@ -16,10 +16,27 @@ import 'Request/AddUserRequest.dart';
 import 'Response/AddUserResponse.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 import 'Response/ChildUserResponse.dart';
 String? select;
+
+void main() {
+  runApp(accMyApp());
+}
+
+class accMyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ManageAccount(),
+    );
+  }
+}
 class ManageAccount extends StatefulWidget {
+  const ManageAccount({Key? key,}) : super(key: key);
+
   @override
   _manageacountState createState() => _manageacountState();
 }
@@ -34,7 +51,6 @@ class _manageacountState extends State<ManageAccount> {
   late String fname;
   late String lname;
   late String countrycode;
-
   late Future<List<ChildDataResult>> datalist ;
   TextEditingController phoneController = TextEditingController();
   TextEditingController fnameController = TextEditingController();
@@ -209,6 +225,10 @@ Container(
               width: 170,
               child: TextField(
                 controller: phoneController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 autocorrect: true,
                 decoration: InputDecoration(
 
@@ -249,7 +269,6 @@ Container(
 
             child: TextField(
               controller: emailController,
-              obscureText: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Member Email',
@@ -281,7 +300,7 @@ Container(
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
               controller: fnameController,
-              obscureText: true,
+             // obscureText: true,
               decoration: InputDecoration(
                 errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
                 border: OutlineInputBorder(),
@@ -296,7 +315,7 @@ Container(
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
              controller: lnameController,
-              obscureText: true,
+             // obscureText: true,
               decoration: InputDecoration(
                 errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
 
@@ -318,13 +337,16 @@ Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
+          color:  fnameController.text.isEmpty && lnameController.text.isEmpty
+              ? Colors.grey
+              : const Color(0xFFA781D3),
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
             //color: const Color(0xFFA781D3),
           )),
       child: TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFA781D3),
+         // backgroundColor: const Color(0xFFA781D3),
           padding: const EdgeInsets.all(5),
         ),
 
@@ -345,7 +367,9 @@ Container(
             //  .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty)).then((value) =>
           if( _validate1 == false && _validate2 == false )
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
+            //  Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
+              Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccountSuccessful(), maintainState: false));
+
             }
           else
             {
@@ -427,6 +451,7 @@ Container(
 
                            // trailing: const Icon(Icons.add_a_photo),
                             ),
+                      //
                             );
                             ListTile(
 
@@ -580,6 +605,7 @@ Future<List<ChildDataResult>>  getChildUser( ) async {
   print(response.body);
   print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
   print(response.statusCode);
+  print(ctoken);
   print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
 
   if (response.statusCode == 200) {

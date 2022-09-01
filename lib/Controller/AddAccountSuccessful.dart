@@ -49,6 +49,7 @@ class addacountState extends State<AddAccountSuccessful> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       body: SafeArea(
           child: SingleChildScrollView(
           //  children: [
@@ -90,7 +91,11 @@ class addacountState extends State<AddAccountSuccessful> {
 
           onPressed: () {
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccount()),);
+           // Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccount()),);
+          //  Navigator.of(context, rootNavigator: true).push( MaterialPageRoute(builder: (context) => AddAccount()),);
+            Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccount(), maintainState: false));
+
+
             // ));
 
           },
@@ -110,12 +115,15 @@ class addacountState extends State<AddAccountSuccessful> {
   {
     return
   Container(
+    color: Colors.transparent,
    child: Align(
      // alignment: Alignment.center,
      heightFactor: 2,
 
       child: Image.asset('asset/images/accadd.png', width: 300.0, height: 150.0),
-    ),
+     //  Image.network('https://example.com/animated-image.gif')
+
+   ),
 
 
       );

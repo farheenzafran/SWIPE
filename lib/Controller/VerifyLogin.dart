@@ -2,6 +2,7 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:swipeapp/Controller/EmailScreen.dart';
@@ -227,11 +228,14 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                               width: 170,
                               child: TextField(
                                 controller: phoneController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
                                 autocorrect: true,
+
                                 decoration: InputDecoration(
                                   errorText: _validate ? 'Value Can\'t Be Empty' : null,
-
-
                                 ),
                               )
                           ),
@@ -245,6 +249,17 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                           top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                       child: TextButton(
                         onPressed: () {
+                          Loader.show(context,
+                              isSafeAreaOverlay: false,
+                              progressIndicator: CircularProgressIndicator(),
+                              isBottomBarOverlay: false,
+                              overlayFromBottom: 80,
+                              themeData: Theme.of(context)
+                                  .copyWith(accentColor: Colors.black),
+                              overlayColor: Color(0x0000ffff));
+                          Future.delayed(Duration(seconds:2 ), () {
+                            Loader.hide();
+                          });
                           setState(() {
                             phoneController.text.isEmpty ? _validate = true : _validate = false;
                           });
@@ -332,7 +347,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                           themeData:
                           Theme.of(context).copyWith(accentColor: Colors.black),
                           overlayColor: Color(0x0000ffff));
-                      Future.delayed(Duration(seconds: 4), () {
+                      Future.delayed(Duration(seconds: 3), () {
                         Loader.hide();
                       });
                       signInWithGoogle();
@@ -384,6 +399,10 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                     padding: EdgeInsets.only( left: 15 , right: 15),
                     child: TextField(
                       obscureText: true,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',
@@ -573,7 +592,10 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
   print(response5.statusCode);
   if (response5.statusCode == 200) {
 
-
+    void dispose() {
+      Loader.hide();
+      // super.dispose();
+    }
     return LoginResponse.fromJson(jsonDecode(response5.body));
   } else {
     //void dispose() {
@@ -581,6 +603,10 @@ Future<LoginResponse> login(String countrycode , String mobilenumber) async {
 
     // super.dispose();
     //}
+    void dispose() {
+          Loader.hide();
+          // super.dispose();
+        }
 
     throw Exception('Failed to call transaction .');
   }
