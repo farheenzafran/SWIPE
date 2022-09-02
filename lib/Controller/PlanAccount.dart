@@ -183,7 +183,7 @@ class planacountState extends State<PlanAccount> {
                     children: [
 
                       Text(
-                        dollar+"saving",
+                      "",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -209,7 +209,7 @@ class planacountState extends State<PlanAccount> {
                     children: [
 
                       Text(
-                        dollar+"togo",
+                        "",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -235,7 +235,7 @@ class planacountState extends State<PlanAccount> {
                   Column(
                     children: [
                       Text(
-                        dollar + 'Total',
+                        '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height

@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
@@ -29,6 +30,7 @@ import 'package:swipeapp/Controller/TransactionDetail.dart';
 import '../Model Helper.dart';
 import 'AddAccount.dart';
 import 'BankData.dart';
+import 'Chart.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
 import 'Request/LiabilityRequest.dart';
@@ -48,6 +50,7 @@ import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -60,22 +63,22 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       // Hide the debug banner
       debugShowCheckedModeBanner: false,
-     // title: 'Kindacode.com',
+      // title: 'Kindacode.com',
       home: Dashboard(),
     );
   }
 }
+
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
- // final Function callback;
+
+  // final Function callback;
   //const Dashboard(this.callback);
   @override
   tdashboardState createState() => tdashboardState();
 }
 
 class tdashboardState extends State<Dashboard> {
-
-
   BankData bankDataobj = BankData();
 
   //creditBankData creditbankDataobj = creditBankData();
@@ -84,6 +87,10 @@ class tdashboardState extends State<Dashboard> {
   late Future<List<BankData>> bankdatalist = [] as Future<List<BankData>>;
   late Future<List<BankData>> creditbankdatalist = [] as Future<List<BankData>>;
   List<Transactions> transactionlist = [];
+
+  List<double> debitGraphdata = [];
+  List<double> creditGraphdata = [];
+  List<String> graphbankname = [];
 
   Future<TransactionResponse>? transactionResponseList;
   late LegacyLinkConfiguration _publicKeyConfiguration;
@@ -102,7 +109,6 @@ class tdashboardState extends State<Dashboard> {
   late double tDebitValue = 0;
   late double tCreditValue = 0;
 
-
 //<<<<<<<<<<<<<<<<Debit>>>>>>>>>>>>>>>>>>>>
 
   String dollar = " \$";
@@ -114,12 +120,14 @@ class tdashboardState extends State<Dashboard> {
   bool isexpanse = true;
   bool viewVisibleTransaction = true;
   bool viewVisible1 = true;
+
   void hideWidget1() {
     setState(() {
       viewVisible1 = !viewVisible1;
       viewVisible1 = false;
     });
   }
+
   void showWidget() {
     setState(() {
       viewVisible = true;
@@ -145,12 +153,38 @@ class tdashboardState extends State<Dashboard> {
   }
 
   //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
+  LabelLayoutStrategy? xContainerLabelLayoutStrategy;
+  late ChartData chartData;
+  ChartOptions chartOptions = const ChartOptions();
+  late var verticalBarChartContainer = VerticalBarChartTopContainer(
+      chartData: chartData,
+      xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy);
 
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-
-    super.initState();
-
+   // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    //super.initState();
+    chartData = ChartData(
+      // dataRows:  [
+      //   debitGraphdata,
+      //   creditGraphdata,
+      // ],
+      // xUserLabels: graphbankname,
+      dataRows: const [
+        [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
+        [0, 0, 0, 0, 0, -1800.0],
+      ],
+      xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      dataRowsLegends: const ['Values', 'Values 2'],
+      dataRowsColors: const [
+        Colors.green,
+        Colors.red,
+      ],
+      chartOptions: chartOptions,
+    );
+    verticalBarChartContainer = VerticalBarChartTopContainer(
+      chartData: chartData,
+      xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy,
+    );
     _publicKeyConfiguration = LegacyLinkConfiguration(
       clientName: Constants.ClientId,
       publicKey: "PUBLIC_KEY",
@@ -168,41 +202,44 @@ class tdashboardState extends State<Dashboard> {
     PlaidLink.onSuccess(_onSuccessCallback);
     PlaidLink.onEvent(_onEventCallback);
     PlaidLink.onExit(_onExitCallback);
- bankdatalist = fetchBankData(Constants.debitcardValue) ;
+    bankdatalist = fetchBankData(Constants.debitcardValue);
     var linktoken = linktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // PlaidLink.onSuccess(creditonSuccessCallback);
-    // PlaidLink.onEvent(creditonEventCallback);
-    // PlaidLink.onExit(creditonExitCallback);
-    creditbankdatalist = fetchBankData(Constants.creditcardValue); // as Future<List<creditBankData>>;// as List<BankData>;
+    creditbankdatalist = fetchBankData(Constants
+        .creditcardValue); // as Future<List<creditBankData>>;// as List<BankData>;
     var creditlinktoken = creditlinktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
+
+    // var verticalBarChart = VerticalBarChart(
+    //   painter: VerticalBarChartPainter(
+    //     verticalBarChartContainer: verticalBarChartContainer,
+    //   ),
+    // );
   }
 
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>start>>>>>>>>>>>>>>>>>>>>>>>>
   String libKey = "data";
 
-
   //--------------libility>>>>>>>>>>>>>>>>>>>>>>>>>>>>end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   void _onSuccessCallback(String publicToken, LinkSuccessMetadata metadata) {
-   // print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
+    // print("onSuccess222: $publicToken, metadata: ${metadata.description()}");
     bankDataobj.publictoken = publicToken;
     bankDataobj.accesstoken = accesstoken;
     savingBankData(metadata);
   }
 
   void _onEventCallback(String event, LinkEventMetadata metadata) {
-   // print("onEvent123: $event, metadata: ${metadata.description()}");
+    // print("onEvent123: $event, metadata: ${metadata.description()}");
   }
 
   void _onExitCallback(LinkError? error, LinkExitMetadata metadata) {
-   // print("onExit metadata: ${metadata.description()}");
+    // print("onExit metadata: ${metadata.description()}");
 
     if (error != null) {
-     // print("onExit error: ${error.description()}");
+      // print("onExit error: ${error.description()}");
     }
   }
 
@@ -224,121 +261,117 @@ class tdashboardState extends State<Dashboard> {
           await accessTokenResponse(bankDataobj.publictoken.toString());
       bankDataobj.accesstoken = accesstokenres.accessToken;
 
-    //  if (isexpanse) {
-       // saveBankdataResponse();
-       // List<BankData> templstbankdata = await bankdatalist;
-        //templstbankdata.add(bankDataobj);
-        //await Constants.save(ExpenseKey, jsonEncode(templstbankdata));
-    //  } else {
-        // List<BankData> templstbankdata = await creditbankdatalist;
-        // templstbankdata.add(bankDataobj);
-        // await Constants.save(libKey, jsonEncode(templstbankdata));
-     // }
+      //  if (isexpanse) {
+      // saveBankdataResponse();
+      // List<BankData> templstbankdata = await bankdatalist;
+      //templstbankdata.add(bankDataobj);
+      //await Constants.save(ExpenseKey, jsonEncode(templstbankdata));
+      //  } else {
+      // List<BankData> templstbankdata = await creditbankdatalist;
+      // templstbankdata.add(bankDataobj);
+      // await Constants.save(libKey, jsonEncode(templstbankdata));
+      // }
 
-
-   //   setState(() {
-        saveBankdataResponse();
-    //  });
+      //   setState(() {
+      saveBankdataResponse();
+      //  });
 
       // print('---calling end accessTokenResponse---');
     }
   }
+
   //--
-  Future<List<BankData>> appendElements(Future<List<BankData>> listFuture, List<BankData> elementsToAdd) async {
+  Future<List<BankData>> appendElements(
+      Future<List<BankData>> listFuture, List<BankData> elementsToAdd) async {
     // final list = await listFuture;
     // int count = list.length;
     // for(int i = count; i>0; i-- )
     //   {
     //     list.remove(list[i]);
     //   }
-   // List<BankData>
-   // list.addAll(elementsToAdd);
+    // List<BankData>
+    // list.addAll(elementsToAdd);
     return elementsToAdd;
   }
+
   //--
 
-  Future<List<BankData>> getBankData(List<BankData> bankresultList ) async {
+  Future<List<BankData>> getBankData(List<BankData> bankresultList) async {
     print("frfgr<<<<<<>>>>>>");
 
     try {
-    // var bankdatalist1 =  [] as Future<List<BankData>>;
-       // setState(() {
-          bankdatalist =
-              appendElements(bankdatalist,bankresultList);
-        //});
+      // var bankdatalist1 =  [] as Future<List<BankData>>;
+      // setState(() {
+      bankdatalist = appendElements(bankdatalist, bankresultList);
+      //});
       print("<<<<<<>>>>>>");
 
-   bankdatalist =   debitTotalValue(bankresultList);
-
-    } catch (Excepetion ) {
+      bankdatalist = debitTotalValue(bankresultList);
+    } catch (Excepetion) {
       throw Exception('Failed to load debitbankdata');
     }
     return bankdatalist;
   }
 
-
-  Future<List<BankData>> getCreditBankData(List<BankData> bankresultList ) async {
+  Future<List<BankData>> getCreditBankData(
+      List<BankData> bankresultList) async {
     try {
       //creditbankdatalist =  [] as Future<List<BankData>>;
 //
-     // setState(() {
-       creditbankdatalist =
-           appendElements(creditbankdatalist,bankresultList);
-     // });
+      // setState(() {
+      creditbankdatalist = appendElements(creditbankdatalist, bankresultList);
+      // });
 
       creditTotalValue(bankresultList);
-    } catch (Excepetion ) {
+    } catch (Excepetion) {
       throw Exception('Failed to load creditbankdata');
     }
     return creditbankdatalist;
   }
 
-
   Future<List<BankData>> fetchBankData(int type) async {
-
     UserDetail tempuserdetail = await Constants.getUserDetail();
     String banktoken = tempuserdetail.accessToken.toString();
-    final response = await http.get(Uri.parse(Constants.baseUrl2 + '/Bank/GetBankData?type='+type.toString()),
+    final response = await http.get(
+        Uri.parse(
+            Constants.baseUrl2 + '/Bank/GetBankData?type=' + type.toString()),
         headers: <String, String>{
-          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $banktoken',
-
         });
     print(response.body);
 
-    List<BankData> tempbankdatalist =  <BankData>[];
+    List<BankData> tempbankdatalist = <BankData>[];
     if (response.statusCode == 200) {
-      GetBankDataResponse bankdataResponse = GetBankDataResponse.fromJson(jsonDecode(response.body));
-      for(var i in bankdataResponse.result!)
-        {
-          BankData bd = new BankData();
-          bd.publictoken = i.publictoken;
-          bd.bankthemecolor = i.bankthemecolor;
-          bd.banklogo = i.banklogo;
-          bd.mask = i.mask;
-          bd.accountname = i.accountname;
-          bd.accesstoken = i.accesstoken;
-          bd.bankname = i.bankname;
-          bd.accountid = i.accountid;
-          tempbankdatalist.add(bd);
-        }
+      GetBankDataResponse bankdataResponse =
+          GetBankDataResponse.fromJson(jsonDecode(response.body));
+      for (var i in bankdataResponse.result!) {
+        BankData bd = new BankData();
+        bd.publictoken = i.publictoken;
+        bd.bankthemecolor = i.bankthemecolor;
+        bd.banklogo = i.banklogo;
+        bd.mask = i.mask;
+        bd.accountname = i.accountname;
+        bd.accesstoken = i.accesstoken;
+        bd.bankname = i.bankname;
+        bd.accountid = i.accountid;
+        tempbankdatalist.add(bd);
+      }
 
       print(jsonEncode(tempbankdatalist));
       print("reposne>>>>>>>");
       // getBankData(tempbankdatalist);
       // return tempbankdatalist ;
-      if(type == Constants.debitcardValue)
-        {
-          tempbankdatalist =  getBankData(tempbankdatalist) as List<BankData>;
-          return tempbankdatalist ;
-        }
-      else
-      {
+      if (type == Constants.debitcardValue) {
+        tempbankdatalist = getBankData(tempbankdatalist) as List<BankData>;
+        return tempbankdatalist;
+      } else {
         getCreditBankData(tempbankdatalist);
-        return tempbankdatalist ;
+        return tempbankdatalist;
       }
 
-     // return GetBankDataResponse.fromJson(jsonDecode(response.body));
+      // return GetBankDataResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to call user childuserid .');
     }
@@ -362,23 +395,23 @@ class tdashboardState extends State<Dashboard> {
     saveBankDataRequest.bankthemecolor = bankDataobj.bankthemecolor;
     saveBankDataRequest.publictoken = bankDataobj.publictoken;
 
-      if (isexpanse) {
-        saveBankDataRequest.type = Constants.debitcardValue;
-      } else {
-        saveBankDataRequest.type = Constants.creditcardValue;
-      }
+    if (isexpanse) {
+      saveBankDataRequest.type = Constants.debitcardValue;
+    } else {
+      saveBankDataRequest.type = Constants.creditcardValue;
+    }
     //print('/////////request <<<<<<<<<<<<<<<<<<<<<<<<<');
     //print(jsonEncode(saveBankDataRequest));
     //print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
 
     final savebankresponse =
-    await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accounttoken',
-        },
-        body: jsonEncode(saveBankDataRequest));
+        await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $accounttoken',
+            },
+            body: jsonEncode(saveBankDataRequest));
     // print('/////////.svaebankdata <<<<<<<<<<<<<<<<<<<<<<<<<');
     // print(accounttoken);
     // print(saveBankDataRequest);
@@ -388,18 +421,17 @@ class tdashboardState extends State<Dashboard> {
     // print('/////////<<<<svaebankdata<<<<<<<<<<<<<<<<<<<<<');
 
     if (savebankresponse.statusCode == 200) {
-
-     fetchBankData(saveBankDataRequest.type!);
+      fetchBankData(saveBankDataRequest.type!);
 
       return SaveBankDataResponse.fromJson(jsonDecode(savebankresponse.body));
     } else {
-
-
       throw Exception('Failed to call plaid save bank data.');
     }
   }
+
   late final Function callback;
- // const Dashboard(this.callback);
+
+  // const Dashboard(this.callback);
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width * 0.8;
@@ -409,8 +441,8 @@ class tdashboardState extends State<Dashboard> {
     var chidern;
     return SafeArea(
       child: Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
+          resizeToAvoidBottomInset: false,
+          body: SingleChildScrollView(
             // children: [
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -418,257 +450,259 @@ class tdashboardState extends State<Dashboard> {
               children: <Widget>[
                 dashboardHeader(),
                 debitTransaction(),
-               creditLiability(),
-               paymentButton(),
-                // bottomNavBar(),
+                creditLiability(),
+                paymentButton(),
                 viewtransaction(),
-                Visibility(
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: viewVisible1,
-                  child:
-                  Container(
-                    width: double.infinity,
-                    height: 200.0,
-                   // color: Colors.yellow,
-                    child: Stack(
-                      //child: Column(
-                      children: [
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: transactionlist.length,
-                            itemBuilder: (context, int index) {
-                              var $;
-                              return Card(color: const Color(0xffF7F6FA),
-                                       child:   Container(
-                                            width: double.infinity,
-                                            height: 80.0,
-                                            margin: const EdgeInsets.only(
-                                                right: 9, left: 9),
-                                              child: ListTile(
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 10.0, right: 0.0),
-                                         leading: CircleAvatar(
-                                                radius: 20,
-                                                child: Image(
-                                                  image: AssetImage("asset/images/cart.png"),
-                                                  //width: 40,
-                                                  //color: const Color(0xffECDCFF)
-                                                ),
-                                              ),
-                                                title: Text(
-                                                  transactionlist[index]
-                                                      .name
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                      FontWeight.w600),
-                                                ),
-                                                subtitle:
-                                                      Text(
-                                                            transactionlist[index]
-                                                                .category
-                                                                .toString(),
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                            FontWeight.w600),
-                                                      ),
-
-                                                trailing:
-                                                    Padding(
-                                                      padding: EdgeInsets.only(top:5),
-                                                      child:     Column(
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding:EdgeInsets.only(top:3, bottom: 3),
-                                                              child:
-                                                              Text(dollar+transactionlist[index].amount.toStringAsFixed(2),
-                                                                style: TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontSize: 14,
-                                                                    fontWeight:
-                                                                    FontWeight.w600),
-                                                              ),
-                                                            ),
-
-
-                                                                Text(transactionlist[index].date.toString(),
-
-                                                                  style: TextStyle(
-                                                                  color: Colors.grey,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                  FontWeight.w500),
-                                                            ),
-                                                          ]),
-
-                                                    )
-
-
-
-                                              ),
-
-
-                                          ),
-
-
-
-
-                              );
-                            }
-                          // );
-                          // }
-                          //},
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                 Visibility(
+                   maintainSize: true,
+                   maintainAnimation: true,
+                   maintainState: true,
+                   visible: viewVisible1,
+                   child: Container(
+                     width: double.infinity,
+                     height: 200.0,
+                     // color: Colors.yellow,
+                     child: Stack(
+                       //child: Column(
+                       children: [
+                         ListView.builder(
+                             shrinkWrap: true,
+                             itemCount: transactionlist.length,
+                             itemBuilder: (context, int index) {
+                               var $;
+                               return Card(
+                                 color: const Color(0xffF7F6FA),
+                                 child: Container(
+                                   width: double.infinity,
+                                   height: 80.0,
+                                   margin:
+                                       const EdgeInsets.only(right: 9, left: 9),
+                                   child: ListTile(
+                                       contentPadding: EdgeInsets.only(
+                                           left: 10.0, right: 0.0),
+                                       leading: CircleAvatar(
+                                         radius: 20,
+                                         child: Image(
+                                           image: AssetImage(
+                                               "asset/images/cart.png"),
+                                           //width: 40,
+                                           //color: const Color(0xffECDCFF)
+                                         ),
+                                       ),
+                                       title: Text(
+                                         transactionlist[index].name.toString(),
+                                         style: TextStyle(
+                                             color: Colors.black,
+                                             fontSize: 14,
+                                             fontWeight: FontWeight.w600),
+                                       ),
+                                       subtitle: Text(
+                                         transactionlist[index]
+                                             .category
+                                             .toString(),
+                                         style: TextStyle(
+                                             color: Colors.grey,
+                                             fontSize: 12,
+                                             fontWeight: FontWeight.w600),
+                                       ),
+                                       trailing: Padding(
+                                         padding: EdgeInsets.only(top: 5),
+                                         child: Column(children: <Widget>[
+                                           Padding(
+                                             padding: EdgeInsets.only(
+                                                 top: 3, bottom: 3),
+                                             child: Text(
+                                               dollar +
+                                                   transactionlist[index]
+                                                       .amount
+                                                       .toStringAsFixed(2),
+                                               style: TextStyle(
+                                                   color: Colors.black,
+                                                   fontSize: 14,
+                                                   fontWeight: FontWeight.w600),
+                                             ),
+                                           ),
+                                           Text(
+                                             transactionlist[index]
+                                                 .date
+                                                 .toString(),
+                                             style: TextStyle(
+                                                 color: Colors.grey,
+                                                 fontSize: 12,
+                                                 fontWeight: FontWeight.w500),
+                                           ),
+                                         ]),
+                                       )),
+                                 ),
+                               );
+                             }
+                             // );
+                             // }
+                             //},
+                             ),
+                       ],
+                     ),
+                   ),
+                 ),
               ],
             ),
-          )
-
-
-
-      ),
-
-
+          )),
     );
-
   }
-
-
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+  Widget chartToRun() {
+    LabelLayoutStrategy? xContainerLabelLayoutStrategy;
+    ChartData chartData;
+    ChartOptions chartOptions = const ChartOptions();
+    // Example shows a mix of positive and negative data values.
+    chartData = ChartData(
+      dataRows: const [
+        [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
+        [0,0,0,0,0, -1800.0],
+      ],
+      xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      dataRowsLegends: const [
+        'Values',
+        'Values 2'
+      ],
+      dataRowsColors: const [
+        Colors.green,
+        Colors.red,
+      ],
+      chartOptions: chartOptions,
+    );
+    var verticalBarChartContainer = VerticalBarChartTopContainer(
+      chartData: chartData,
+      xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy,
+    );
+
+    var verticalBarChart = VerticalBarChart(
+      painter: VerticalBarChartPainter(
+        verticalBarChartContainer: verticalBarChartContainer,
+      ),
+    );
+    return verticalBarChart;
+  }
   dashboardHeader() {
     return Container(
-      height: 120,
-      width: double.infinity,
-      padding: EdgeInsets.all(5),
-      //color: const Color(0xDEB46FEA),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage("asset/images/background.png"),
-        fit: BoxFit.cover,
-      )),
-      //child: Align(alignment: Alignment.center,
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children:[
-                  Container(
-                      margin: EdgeInsets.all(8),
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color(0x75f5f5f5)),
-                      child:
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      Text(
-                        'Admin Account',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.white,
-                          fontWeight: FontWeight.bold//font color
-                        ),
-
-
-                      )
+        height: 120,
+        width: double.infinity,
+        padding: EdgeInsets.all(5),
+        //color: const Color(0xDEB46FEA),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage("asset/images/background.png"),
+          fit: BoxFit.cover,
+        )),
+        //child: Align(alignment: Alignment.center,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                    margin: EdgeInsets.all(8),
+                    alignment: Alignment.topLeft,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        //color: const Color(0x75f5f5f5)
+                    ),
+                    child:
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        Text(
+                      'Admin Account',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15,
+                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold //font color
+                          ),
+                    )
                     //   ],
                     // )
 
-
-
-
-                  ),
-
-                ]
-
-            ),
-          ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: [
-
-                    Text(
-                      dollar+ tDebitValue.toStringAsFixed(2),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.white, //font color
-                          fontStyle: FontStyle.italic
-                      ),
-
                     ),
-
-                    Text(
-                      'Debit',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                ),
-
-                Image.asset(
-                  "asset/images/downarrow.png", // width: 300,
-                  height: 20,
-                  width: 20,
-                  alignment: Alignment.center,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      dollar+ tCreditValue.toStringAsFixed(2),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                        color: Colors.white, //font color
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700,
-
-                      ),
-
-                    ),
-
-                    Text(
-                      'Credit',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                ),
               ]),
-        ],
-      )
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Text(
+                        dollar + tDebitValue.toStringAsFixed(2),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                            //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.white,
+                            //font color
+                            fontStyle: FontStyle.italic),
+                      ),
+                      Text(
+                        'Debit',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>Chart()),
+                        );
+                      },
+                 child: Image.asset(
+                    "asset/images/downarrow.png", // width: 300,
+                    height: 20,
+                    width: 20,
+                    alignment: Alignment.center,
+                  ),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        dollar + tCreditValue.toStringAsFixed(2),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white,
+                          //font color
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'Credit',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                ]),
+          ],
+        )
 
-
-      //  ),
-    );
+        //  ),
+        );
   }
 
   debitTransaction() {
@@ -676,42 +710,34 @@ class tdashboardState extends State<Dashboard> {
       children: [
         Align(
           alignment: Alignment.topLeft,
-            child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children:[
-                  Container(
-                      margin: EdgeInsets.all(8),
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color(0xffECDCFF)),
-                      child:
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      Text(
-                        'Debit:'+dollar+ tDebitValue.toStringAsFixed(2),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.black, //font color
-                            fontStyle: FontStyle.italic
-                        ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Container(
+                margin: EdgeInsets.all(8),
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xffECDCFF)),
+                child:
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [
+                    Text(
+                  'Debit:' + dollar + tDebitValue.toStringAsFixed(2),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 14,
+                      //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                      color: Colors.black,
+                      //font color
+                      fontStyle: FontStyle.italic),
+                )
+                //   ],
+                // )
 
-                      )
-                    //   ],
-                    // )
-
-
-
-
-                  ),
-
-                ]
-
-            ),
-         // ),
+                ),
+          ]),
+          // ),
         ),
         Container(
             // height: 250.0,
@@ -730,10 +756,9 @@ class tdashboardState extends State<Dashboard> {
                 child: Row(
                   children: [
                     TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(5),
-
-                ),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.all(5),
+                      ),
                       onPressed: () async {
                         isexpanse = true;
                         Loader.show(context,
@@ -787,8 +812,8 @@ class tdashboardState extends State<Dashboard> {
                                 leading: CircleAvatar(
                                   radius: 30,
                                   child:
-                                 // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
-                                  Image.network(item.banklogo.toString()),
+                                      // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
+                                      Image.network(item.banklogo.toString()),
                                 ),
                                 title: Text(
                                   item.bankname.toString(),
@@ -798,8 +823,7 @@ class tdashboardState extends State<Dashboard> {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 trailing: Text(
-                                  dollar +
-                                      item.totalamount.toString(),
+                                  dollar + item.totalamount.toString(),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -816,8 +840,11 @@ class tdashboardState extends State<Dashboard> {
                               );
                             },
                             body:
-                               // Text("gcdsgchgdsv"),
-                            debitBuildExpandableContent(item.accesstoken.toString(), item.accountid.toString(), cmonth),
+                                // Text("gcdsgchgdsv"),
+                                debitBuildExpandableContent(
+                                    item.accesstoken.toString(),
+                                    item.accountid.toString(),
+                                    cmonth),
                             isExpanded: item.isExpaneded,
                           );
                         }).toList(),
@@ -842,13 +869,10 @@ class tdashboardState extends State<Dashboard> {
   }
 
   creditLiability() {
-    return
-    Column(children: [
+    return Column(children: [
       Align(
         alignment: Alignment.topLeft,
-        child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children:[
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
           Container(
               margin: EdgeInsets.all(8),
               alignment: Alignment.topLeft,
@@ -856,32 +880,25 @@ class tdashboardState extends State<Dashboard> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: const Color(0xffECDCFF)),
-                  child:
+              child:
                   // Row(
                   //   mainAxisSize: MainAxisSize.min,
                   //   children: [
-                      Text(
-                        'Credit: '+ dollar+tCreditValue.toStringAsFixed(2),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.black, //font color
-                            fontStyle: FontStyle.italic
-                        ),
+                  Text(
+                'Credit: ' + dollar + tCreditValue.toStringAsFixed(2),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 14,
+                    //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                    color: Colors.black,
+                    //font color
+                    fontStyle: FontStyle.italic),
+              )
+              //   ],
+              // )
 
-
-                      )
-                  //   ],
-                  // )
-
-
-
-
-          ),
-
-  ]
-
-      ),
+              ),
+        ]),
       ),
       Container(
           height: 35,
@@ -894,11 +911,9 @@ class tdashboardState extends State<Dashboard> {
           child: Row(
             children: [
               TextButton(
-          style: TextButton.styleFrom(
-              padding:  EdgeInsets.all(5),
-
-          ),
-
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(5),
+                ),
                 onPressed: () async {
                   isexpanse = false;
                   Loader.show(context,
@@ -947,15 +962,12 @@ class tdashboardState extends State<Dashboard> {
                       headerBuilder: (BuildContext context, bool isExpanded) {
                         return ListTile(
                           iconColor: Colors.red,
-                          leading: 
-                          
-                          CircleAvatar(
-                            radius: 30,
-                            child: 
-                            //Image.memory(Base64Codec().decode(item.banklogo.toString())),
-                            
-                            Image.network(item.banklogo.toString())
-                          ),
+                          leading: CircleAvatar(
+                              radius: 30,
+                              child:
+                                  //Image.memory(Base64Codec().decode(item.banklogo.toString())),
+
+                                  Image.network(item.banklogo.toString())),
                           title: Text(
                             item.bankname.toString(),
                             style: TextStyle(
@@ -965,7 +977,6 @@ class tdashboardState extends State<Dashboard> {
                           ),
                           trailing: Text(
                             dollar + item.totalamount.toString(),
-
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -998,14 +1009,14 @@ class tdashboardState extends State<Dashboard> {
                     // print(index);
                     // print(isExpanded);
                     // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                    TransactionResponse tempresponse2 =
-                        await transactionResponse(
-                            snapshot.data![index].accesstoken.toString(),
-                            snapshot.data![index].accountid.toString(),
-                            cmonth);
-
-                    transactionlist =
-                        tempresponse2.transactions as List<Transactions>;
+                    // TransactionResponse tempresponse2 =
+                    //     await transactionResponse(
+                    //         snapshot.data![index].accesstoken.toString(),
+                    //         snapshot.data![index].accountid.toString(),
+                    //         cmonth);
+                    //
+                    // transactionlist =
+                    //     tempresponse2.transactions as List<Transactions>;
                     // viewVisible = true;
                     viewVisibleTransaction = true;
                     showWidget();
@@ -1055,10 +1066,9 @@ class tdashboardState extends State<Dashboard> {
               )),
       child: TextButton(
         style: TextButton.styleFrom(
-           backgroundColor: const Color(0xFFA781D3),
-           padding: const EdgeInsets.all(5),
+          backgroundColor: const Color(0xFFA781D3),
+          padding: const EdgeInsets.all(5),
         ),
-
         onPressed: () {
           // Navigator.push(
           //   context,
@@ -1093,7 +1103,7 @@ class tdashboardState extends State<Dashboard> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-         IconButton(
+          IconButton(
             // icon: Image.asset('assets/images/dashboard.png'),
             icon: ImageIcon(
               AssetImage("asset/images/home2.png"),
@@ -1110,7 +1120,6 @@ class tdashboardState extends State<Dashboard> {
               });
             },
           ),
-
           IconButton(
             icon: ImageIcon(
               AssetImage("asset/images/pbox.png"),
@@ -1135,7 +1144,6 @@ class tdashboardState extends State<Dashboard> {
               AssetImage("asset/images/pmoney.png"),
               size: 140,
               color: isFavourite2 ? const Color(0xFFA781D3) : Colors.grey,
-
             ),
             onPressed: () {
               Navigator.push(
@@ -1173,150 +1181,148 @@ class tdashboardState extends State<Dashboard> {
       ),
     );
   }
+
   viewtransaction() {
-    return
+    return Container(
+      child: Row(children: [
         Container(
+            margin: EdgeInsets.all(8),
+            alignment: Alignment.topLeft,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xffECDCFF)),
+            child:
+                // Row(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: [
+                Text(
+              'Recent Transactions',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 14,
+                  //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                  color: Colors.black,
+                  //font color
+                  fontStyle: FontStyle.italic),
+            )
+            //   ],
+            // )
 
-          child: Row(
-              children:[
-                Container(
-                    margin: EdgeInsets.all(8),
-                    alignment: Alignment.topLeft,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: const Color(0xffECDCFF)),
-                    child:
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    Text(
-                      'Recent Transactions',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.black, //font color
-                          fontStyle: FontStyle.italic
-                      ),
-
-                    )
-                  //   ],
-                  // )
-
-
-
-
+            ),
+        Spacer(),
+        Container(
+          margin: EdgeInsets.all(8),
+          alignment: Alignment.topRight,
+          child: InkWell(
+            onTap: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TransactionDetail(),
+                  // Pass the arguments as part of the RouteSettings. The
+                  // DetailScreen reads the arguments from these settings.
+                  settings: RouteSettings(
+                    arguments: transactionlist,
+                  ),
                 ),
-                Spacer(),
-                Container(
-                  margin: EdgeInsets.all(8),
-                  alignment: Alignment.topRight,
-                  child:  InkWell(
-                      onTap: () async {
-                        viewVisible1 = true;
-
-                        setState(() {
-                          //selectedIndex = i;
-                        });                      },
-                      child: new Text("View All",
-                        style: TextStyle(
-                            fontSize: 13, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                        color: const Color(0xffA781D3),
-                           fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-
-
-              ]
-
+              );
+              setState(() {
+                //selectedIndex = i;
+              });
+            },
+            child: new Text(
+              "View All",
+              style: TextStyle(
+                  fontSize: 13,
+                  //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                  color: const Color(0xffA781D3),
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-
-        );
+        ),
+      ]),
+    );
   }
 
 //   <<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
 //
 // ------->>>>>>>>>>>Debit>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  debitTotalValue(List<BankData> debitlistbankdata) async
-  {
+  debitTotalValue(List<BankData> debitlistbankdata) async {
     double totalTransactionValue = 0;
-  for(var debitdata in debitlistbankdata)
-    {
+    for (var debitdata in debitlistbankdata) {
       double debitcardtotalTransactionValue = 0;
-      var response = await transactionResponse(debitdata.accesstoken.toString(), debitdata.accountid.toString(), cmonth);
-      for(var t_transaction in response.transactions!)
-        {
-          transactionlist.add(t_transaction);
-          totalTransactionValue += t_transaction.amount;
-          debitcardtotalTransactionValue += t_transaction.amount;
-          print("||||||||||");
+      var response = await transactionResponse(debitdata.accesstoken.toString(),
+          debitdata.accountid.toString(), cmonth);
+      for (var t_transaction in response.transactions!) {
+        transactionlist.add(t_transaction);
+        totalTransactionValue += t_transaction.amount;
+        debitcardtotalTransactionValue += t_transaction.amount;
+        print("||||||||||");
 
-          print(t_transaction.amount);
-
-        }
+        print(t_transaction.amount);
+      }
       debitdata.totalamount = debitcardtotalTransactionValue;
-print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt"+ totalTransactionValue.toString());
-print(debitdata.totalamount);
-print(debitcardtotalTransactionValue);
+      debitGraphdata.add(debitcardtotalTransactionValue);
+      graphbankname.add(debitdata.bankname.toString());
+      creditGraphdata.add(0);
+      print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt" +
+          totalTransactionValue.toString());
+      print(debitdata.totalamount);
+      print(debitcardtotalTransactionValue);
     }
     setState(() {
-      tDebitValue =  totalTransactionValue;
-
+      tDebitValue = totalTransactionValue;
     });
-  print(jsonEncode(debitlistbankdata));
-  return debitlistbankdata;
+    print(jsonEncode(debitlistbankdata));
+    return debitlistbankdata;
   }
 
-  creditTotalValue(List<BankData> creditlistbankdata) async
-  {
+  creditTotalValue(List<BankData> creditlistbankdata) async {
     double totalLiabilityValue = 0;
-    for(var cdata in creditlistbankdata)
-    {
+    for (var cdata in creditlistbankdata) {
       double creditcardtotalLiabilityValue = 0;
 
-      var libilityresponse = await liabilityData(cdata.accesstoken.toString(), cdata.accountid.toString());
+      var libilityresponse = await liabilityData(
+          cdata.accesstoken.toString(), cdata.accountid.toString());
       liabilitylist = libilityresponse.liabilities as Liabilities;
       if (liabilitylist.student != null) {
-        for(var t_liability in liabilitylist.student!)
-        {
+        for (var t_liability in liabilitylist.student!) {
           totalLiabilityValue += t_liability.lastPaymentAmount!;
           creditcardtotalLiabilityValue += t_liability.lastPaymentAmount!;
         }
       }
       if (liabilitylist.mortgage != null) {
-        for(var s_liability in liabilitylist.mortgage!)
-        {
+        for (var s_liability in liabilitylist.mortgage!) {
           totalLiabilityValue += s_liability.lastPaymentAmount!;
           creditcardtotalLiabilityValue += s_liability.lastPaymentAmount!;
-
         }
       }
       if (liabilitylist.credit != null) {
-        for(var c_liability in liabilitylist.credit!)
-        {
+        for (var c_liability in liabilitylist.credit!) {
           totalLiabilityValue += c_liability.lastPaymentAmount!;
           creditcardtotalLiabilityValue += c_liability.lastPaymentAmount!;
         }
       }
-     // print("||||||||||total creditttttttt"+ totalLiabilityValue.toString());
+      // print("||||||||||total creditttttttt"+ totalLiabilityValue.toString());
       cdata.totalamount = creditcardtotalLiabilityValue;
-
+      debitGraphdata.add(0);
+      graphbankname.add(cdata.bankname.toString());
+      creditGraphdata.add(creditcardtotalLiabilityValue);
     }
-   // print("||||||||||total creditttttttt value"+ totalLiabilityValue.toString());
+    // print("||||||||||total creditttttttt value"+ totalLiabilityValue.toString());
 
     setState(() {
-      tCreditValue =  totalLiabilityValue;
-
+      tCreditValue = totalLiabilityValue;
     });
     return creditlistbankdata;
   }
 
   debitBuildExpandableContent(
       String accessToken, String accountID, int cmonth) {
-   // print('+++++++++++++++++}');
+    // print('+++++++++++++++++}');
     var response = transactionResponse(accessToken, accountID, cmonth);
-   //
+    //
     // print(response);
     if (response == null) {
       return Text(
@@ -1329,14 +1335,13 @@ print(debitcardtotalTransactionValue);
           FutureBuilder<TransactionResponse>(
               future: response,
               builder: (context, snapshot) {
-             //   print('snnnnnnnnapshot');
-              //  print(snapshot.data!.transactions.toString());
+                //   print('snnnnnnnnapshot');
+                //  print(snapshot.data!.transactions.toString());
                 return debitBuildTransactionListView(snapshot.data!);
               });
     }
     ;
   }
-
 
   debitBuildTransactionListView(TransactionResponse tdata) {
     //Text("jhbvkjndfkjvnfdv");
@@ -1352,70 +1357,67 @@ print(debitcardtotalTransactionValue);
                 children: [
                   for (var t in tdata.transactions!)
                     Column(children: <Widget>[
-
-
-                          Container(
-                            margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
-                            color: const Color(0xffF5F5F5),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(8),
-                              leading: CircleAvatar(
-                                radius: 20,
-                                child: Image(
-                                  image: AssetImage("asset/images/cart.png"),
-                                  //width: 40,
-                                  //color: const Color(0xffECDCFF)
-                                ),
-                              ),
-                              title: Padding(
-                                padding: EdgeInsets.only(top: 5, bottom: 8),
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: 5, left: 13, right: 13, bottom: 3),
+                        color: const Color(0xffF5F5F5),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(8),
+                          leading: CircleAvatar(
+                            radius: 20,
+                            child: Image(
+                              image: AssetImage("asset/images/cart.png"),
+                              //width: 40,
+                              //color: const Color(0xffECDCFF)
+                            ),
+                          ),
+                          title: Padding(
+                            padding: EdgeInsets.only(top: 5, bottom: 8),
+                            child: Text(
+                              t.category.toString(),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          trailing: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10, top: 5),
                                 child: Text(
-                                  t.category.toString(),
+                                  dollar + t.amount.toStringAsFixed(2),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 13,
                                       fontWeight: FontWeight.w700),
                                 ),
                               ),
-                              trailing: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 10, top: 5),
-                                    child: Text(
-                                      dollar + t.amount.toStringAsFixed(2),
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 2),
-                                    child: Text(
-                                      t.date.toString(),
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              subtitle: Padding(
+                              Padding(
                                 padding: EdgeInsets.only(bottom: 2),
                                 child: Text(
-                                  t.name.toString(),
+                                  t.date.toString(),
                                   style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400),
                                 ),
                               ),
-                              selected: true,
+                            ],
+                          ),
+                          subtitle: Padding(
+                            padding: EdgeInsets.only(bottom: 2),
+                            child: Text(
+                              t.name.toString(),
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400),
                             ),
-
+                          ),
+                          selected: true,
+                        ),
                       )
-
                     ]),
                 ],
               )),
@@ -1432,12 +1434,12 @@ print(debitcardtotalTransactionValue);
 
 //------->>>>>>>>>>>CREDIT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   creditBuildExpandableContent(String accessToken, String accountID) {
- //print('+++++++++++++++++}');
+    //print('+++++++++++++++++}');
     var libilityresponse = liabilityData(accessToken, accountID);
     print(libilityresponse);
     // return Text("abcd55555555");
     if (libilityresponse == null) {
-     // print('2+++++++++++++++++');
+      // print('2+++++++++++++++++');
 
       //return ListTile(
       return Text(
@@ -1450,12 +1452,13 @@ print(debitcardtotalTransactionValue);
       return FutureBuilder<LiabilityResponse>(
           future: libilityresponse,
           builder: (context, snapshot) {
-         //   print('snnnnnnnnapshot');
-          //  print(snapshot.data!.liabilities.toString());
+            //   print('snnnnnnnnapshot');
+            //  print(snapshot.data!.liabilities.toString());
             // return Text("233222222222");
             return creditBuildLiabilityListView(snapshot.data!);
           });
-    };
+    }
+    ;
   }
 
   creditBuildLiabilityListView(LiabilityResponse ldata) {
@@ -1487,7 +1490,7 @@ print(debitcardtotalTransactionValue);
                               bottomLeft: Radius.circular(8.0)),
                           color: const Color(0xffF5F5F5),
 
-                         // color: const Color(0xffEFF4F8),
+                          // color: const Color(0xffEFF4F8),
                         ),
                         child: ListView(
                           children: <Widget>[
@@ -1830,9 +1833,8 @@ print(debitcardtotalTransactionValue);
                               bottomRight: Radius.circular(8.0),
                               topLeft: Radius.circular(8.0),
                               bottomLeft: Radius.circular(8.0)),
-                        //  color: const Color(0xffEFF4F8),
+                          //  color: const Color(0xffEFF4F8),
                           color: const Color(0xffF5F5F5),
-
                         ),
                         child: ListView(children: [
                           Row(children: <Widget>[
@@ -2194,9 +2196,8 @@ print(debitcardtotalTransactionValue);
                                 bottomRight: Radius.circular(8.0),
                                 topLeft: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0)),
-                           // color: const Color(0xffEFF4F8),
+                            // color: const Color(0xffEFF4F8),
                             color: const Color(0xffF5F5F5),
-
                           ),
                           child: ListView(children: [
                             Row(children: <Widget>[
@@ -2388,7 +2389,8 @@ Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
   RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest();
   refreshTokenRequest.refreshToken = refreshtoken;
   // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
-  final responsetoken = await http.post(Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
+  final responsetoken = await http.post(
+      Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -2415,8 +2417,7 @@ Future<RefreshTokenResponse> valueToken(String refreshtoken) async {
   //
   //
   // }
-  else
-  {
+  else {
     bool _isLoading = false;
     throw Exception('Failed to call redfresh token  .');
   }
@@ -2444,7 +2445,7 @@ Future<LinkTokenResponse> linktokenResponse() async {
           body: jsonEncode(tokenRequest));
   // prfint(Uri.parse(Constants.URL + '/link/token/create'));
 //  print('>>>>>>>>>>>>>>>>>>>>>>>> Link Token <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
- // print(response.body);
+  // print(response.body);
   if (response.statusCode == 200) {
     // If the server did return a 201 CREATED response,
     // then parse the JSON.
@@ -2569,7 +2570,7 @@ Future<TransactionResponse> transactionResponse(
   Transactionoptions transactionoptions = Transactionoptions();
   transactionoptions.count = 20;
   transactionoptions.offset = 0;
-  transactionoptions.accountIds = [accountid] ;
+  transactionoptions.accountIds = [accountid];
   TransactionRequest transactionRequest = TransactionRequest();
   transactionRequest.clientId = Constants.ClientId;
   transactionRequest.secret = Constants.Secret;
@@ -2578,7 +2579,8 @@ Future<TransactionResponse> transactionResponse(
   transactionRequest.startDate = startdate;
   transactionRequest.endDate = enddate;
 
-   print('Request body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+  print(
+      'dasgboardRequest body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
   final response4 =
       await http.post(Uri.parse(Constants.URL + '/transactions/get'),
           headers: <String, String>{
@@ -2586,12 +2588,13 @@ Future<TransactionResponse> transactionResponse(
             'Accept': 'application/json',
           },
           body: jsonEncode(transactionRequest));
-  print('!!!!!!!!!!!!###########################################################################################################');
-  print('respose44 body-----: ${response4}');
+  print(
+      '!!!!!!!!!!!!###########################################################################################################');
+  print('dshrespose44 body-----: ${response4}');
   print(response4.statusCode);
   print(response4);
   // print(accesstoken);
-  print('##########################################'
+  print('dash##########################################'
       '###################################################'
       '##############');
   if (response4.statusCode == 200) {
@@ -2739,7 +2742,8 @@ Future<AccessTokenResponse> creditaccessTokenResponse2(
   }
 }
 
-Future<LiabilityResponse> liabilityData(String accesstoken, String accountid) async {
+Future<LiabilityResponse> liabilityData(
+    String accesstoken, String accountid) async {
   bool _isLoading = true;
   LiabilityOptions liabilityOptions = LiabilityOptions();
   liabilityOptions.accountIds = [accountid];
@@ -2787,7 +2791,8 @@ Future<RefreshTokenResponse> refreshValueToken(String refreshtoken) async {
   RefreshTokenRequest refreshTokenRequest = RefreshTokenRequest();
   refreshTokenRequest.refreshToken = refreshtoken;
   // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
-  final responsetoken = await http.post(Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
+  final responsetoken = await http.post(
+      Uri.parse(Constants.baseUrl2 + '/User/UpdateRefreshToken'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -2814,11 +2819,8 @@ Future<RefreshTokenResponse> refreshValueToken(String refreshtoken) async {
   //
   //
   // }
-  else
-    {
-      bool _isLoading = false;
-      throw Exception('Failed to call  .');
-    }
+  else {
+    bool _isLoading = false;
+    throw Exception('Failed to call  .');
+  }
 }
-
-

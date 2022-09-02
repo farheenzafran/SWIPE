@@ -14,6 +14,8 @@ import 'package:swipeapp/Controller/Spend.dart';
 // const  AddAccount()
 import 'package:flutter/material.dart';
 
+import 'Chart.dart';
+
 class  navbar extends StatefulWidget {
   @override
   _navState createState() => _navState();

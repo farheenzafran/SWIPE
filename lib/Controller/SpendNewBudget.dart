@@ -6,6 +6,7 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
@@ -37,21 +38,10 @@ class _managebudgetacountState extends State<SpendNewBudget> {
   String accesstoken = "";
   String accountid = "";
   int cmonth = 0;
-  // TransactionResponse tempresponse2 =
-  //     await transactionResponse(
-  // snapshot.data![index].accesstoken.toString(),
-  // snapshot.data![index].accountid.toString(),
-  // cmonth);
-  //
-  // transactionlist =
-  // tempresponse2.transactions as List<Transactions>;
   void initState() {
     super.initState();
-    setState(() {
-      load();
-    });
-
-    //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // load();
+    debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
 
   }
  load()
@@ -79,8 +69,8 @@ class _managebudgetacountState extends State<SpendNewBudget> {
               children: <Widget>[
                 addAccountHeader(),
                 tagBudget(),
-                dcButton(),
-               // budgetList(),
+              //  dcButton(),
+               budgetList(),
 
 
               ],
@@ -289,15 +279,15 @@ class _managebudgetacountState extends State<SpendNewBudget> {
         ),
 
         onPressed: () async {
-
-          TransactionResponse tempresponse2 =
-              await transactionResponse(
-              accesstoken.toString(),
-              accountid.toString(),
-              cmonth);
-
-          transactionlist =
-          tempresponse2.transactions as List<Transactions>;
+          debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
+          // TransactionResponse tempresponse2 =
+          //     await transactionResponse(
+          //     accesstoken.toString(),
+          //     accountid.toString(),
+          //     cmonth);
+          //
+          // transactionlist =
+          // tempresponse2.transactions as List<Transactions>;
           setState(() {
           });
 
@@ -320,7 +310,118 @@ class _managebudgetacountState extends State<SpendNewBudget> {
 
 
 
+  debitBuildExpandableContent(
+      String accessToken, String accountID, int cmonth) {
+    // print('+++++++++++++++++}');
+    var response = transactionResponse(accessToken, accountID, cmonth);
+    //
+    // print(response);
+    if (response == null) {
+      return Text(
+        'error ',
+        style: TextStyle(color: Colors.black),
+        //  ),
+      );
+    } else {
+      return //Text("jhbvkjndfkjvnfdv");
+        FutureBuilder<TransactionResponse>(
+            future: response,
+            builder: (context, snapshot) {
+              //   print('snnnnnnnnapshot');
+              //  print(snapshot.data!.transactions.toString());
+              return debitBuildTransactionListView(snapshot.data!);
+            });
+    }
+    ;
+  }
 
+
+  debitBuildTransactionListView(TransactionResponse tdata) {
+    //Text("jhbvkjndfkjvnfdv");
+    return //Text("credit4444444444444credit");
+      Column(
+        children: [
+          //for (var t in tdata.transactions!)
+
+            Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    for (var t in tdata.transactions!)
+                      Column(children: <Widget>[
+
+
+                        Container(
+                          margin: EdgeInsets.only(top:5, left: 13 , right: 13, bottom: 3  ),
+                          color: const Color(0xffF5F5F5),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(8),
+                            leading: CircleAvatar(
+                              radius: 20,
+                              child: Image(
+                                image: AssetImage("asset/images/cart.png"),
+                                //width: 40,
+                                //color: const Color(0xffECDCFF)
+                              ),
+                            ),
+                            title: Padding(
+                              padding: EdgeInsets.only(top: 5, bottom: 8),
+                              child: Text(
+                                t.category.toString(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            trailing: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10, top: 5),
+                                  child: Text(
+                                    dollar + t.amount.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  child: Text(
+                                    t.date.toString(),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Padding(
+                              padding: EdgeInsets.only(bottom: 2),
+                              child: Text(
+                                t.name.toString(),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            selected: true,
+                          ),
+
+                        )
+
+                      ]),
+                  ],
+                )),
+
+        ],
+      );
+    //selected: true;
+  }
 
 
 
@@ -335,12 +436,6 @@ Future<TransactionResponse> transactionResponse(
   var now = new DateTime.now().toString();
   var date = DateTime.parse(now);
   DateTime firstDayOfMonth = new DateTime(date.year, date.month, 1);
-  // var dateObj = new Date;
-  // var lmonth = dateObj.getUTCMonth() + 1; //months from 1-12
-  // var lday = dateObj.getUTCDate();
-  // var lyear = dateObj.getUTCFullYear();
-  // var lastendDayOfMonth = lyear + "/" + lmonth + "/" + lday;
-  // DateTime lastendDayOfMonth = DateTime(date.year, date.month+1 , 0);
   DateTime lastendDayOfMonth = (date.month < 12)
       ? new DateTime(date.year, date.month + 1, 0)
       : new DateTime(date.year + 1, 1, 0);
@@ -354,16 +449,10 @@ Future<TransactionResponse> transactionResponse(
   var lastday = "${lyear}-${lmonth}-${lday}";
   startdate = firstday;
   enddate = lastday;
-
-  // print(
-  //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-  // print(startdate);
-  // print(enddate);
-  // print(
-  //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
   Transactionoptions transactionoptions = Transactionoptions();
   transactionoptions.count = 20;
   transactionoptions.offset = 0;
+  transactionoptions.accountIds = [accountid] ;
   TransactionRequest transactionRequest = TransactionRequest();
   transactionRequest.clientId = Constants.ClientId;
   transactionRequest.secret = Constants.Secret;
@@ -371,7 +460,7 @@ Future<TransactionResponse> transactionResponse(
   transactionRequest.options = transactionoptions;
   transactionRequest.startDate = startdate;
   transactionRequest.endDate = enddate;
-  // print('Request body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+
   final response4 =
   await http.post(Uri.parse(Constants.URL + '/transactions/get'),
       headers: <String, String>{
@@ -379,24 +468,23 @@ Future<TransactionResponse> transactionResponse(
         'Accept': 'application/json',
       },
       body: jsonEncode(transactionRequest));
-  print('#####transaction############################################################################################');
-  print('respose44 body-----: ${jsonEncode(response4.body)}');
-  print(accesstoken);
+  print(' Budgetttt REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+  print('Budgetttt body-----: ${response4}');
   print(response4.statusCode);
-  print(jsonEncode(transactionRequest));
-
-  // print('##########################################'
-  //     '###################################################'
-  //     '##############');
+  print(response4);
+   print(accesstoken);
+   print(accountid);
+  print('Budget##########################################');
   if (response4.statusCode == 200) {
     void dispose() {
+      Loader.hide();
 
-      // super.dispose();
     }
 
     return TransactionResponse.fromJson(jsonDecode(response4.body));
   } else {
     //void dispose() {
+    Loader.hide();
 
     // super.dispose();
     //}

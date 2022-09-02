@@ -330,13 +330,13 @@ class goalsavingplanState extends State<PlanGoal> {
       throw Exception('Failed to call plaid save bank data.');
     }
   }
-  Future<GoalBankdataResponse> GoalData( int totalamount , String goaldate ) async {
+  Future<GoalBankdataResponse> GoalData( ) async {
     SaveGoallBankdataRequest saveGoallBankdataRequest = SaveGoallBankdataRequest();
     UserDetail tempuserdetail = await Constants.getUserDetail();
     saveGoallBankdataRequest.name = "";
     saveGoallBankdataRequest.accountassociate= bankDataobj.accountid ;
-    saveGoallBankdataRequest.totalamount= totalamount;
-    saveGoallBankdataRequest.goaldate= goaldate;
+    saveGoallBankdataRequest.totalamount= 0;
+    saveGoallBankdataRequest.goaldate= "";
     // saveGoallBankdataRequest.id = tempuserdetail.id;
     // saveGoallBankdataRequest.createdon= createdon;
     // saveGoallBankdataRequest.createdby= create;
@@ -352,7 +352,7 @@ class goalsavingplanState extends State<PlanGoal> {
         },
         body: jsonEncode(saveGoallBankdataRequest));
     print("plannn&&&&&&&&&&??????????????<<<<<<<");
-    print(response);
+    print(saveGoallBankdataRequest);
     print(response.body);
     print(response.statusCode);
     print("&&&&&&&&&&??????????????<<<<<<<");
@@ -491,10 +491,10 @@ class goalsavingplanState extends State<PlanGoal> {
 
         onPressed: () {
 
-          GoalData(tamount,goaldate)..onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
-             .then((value) => Navigator.push(context, MaterialPageRoute(
-             builder: (_) => CheckPlans()),));
-        //  Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans()),);
+       GoalData();//..onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
+          //    .then((value) => Navigator.push(context, MaterialPageRoute(
+          //    builder: (_) => CheckPlans()),));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans()),);
         },
         child: Text(
           'Create Goal',

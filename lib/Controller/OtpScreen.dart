@@ -10,8 +10,9 @@ import 'package:swipeapp/Controller/Response/MobileResponse.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
 import 'package:swipeapp/Controller/navbar.dart';
 import 'package:swipeapp/main.dart';
-
+import 'package:flutter/services.dart';
 import '../Model Helper.dart';
+import 'Chart.dart';
 import 'Dashboard.dart';
 import 'package:http/http.dart' as http;
 void main() {
@@ -25,8 +26,8 @@ class OtpScreen  extends StatelessWidget {
   String countryCode;
   late String otpno;
   OtpScreen(this.phoneNumber, this.countryCode);
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController otpController = TextEditingController();
+  final phoneController = TextEditingController();
+  final otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +102,7 @@ class OtpScreen  extends StatelessWidget {
               child: SizedBox(
                 width: 230,
                 child: Text(
-                  'Enter the 6-digital code we sent overSMS to 123-456-789',
+                  'Enter the 6-digital code we sent overSMS to ' + phoneNumber,
                   maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
@@ -117,10 +118,7 @@ class OtpScreen  extends StatelessWidget {
               padding: EdgeInsets.only(top: 5,left: 15 , right: 15),
               child: TextField(
                 controller: otpController,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
+               // keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Code',
@@ -138,7 +136,6 @@ class OtpScreen  extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     otpno = otpController.value.text.toString();
-
                     otpLogin(phoneNumber, this.countryCode, otpno)
                         .onError((error, stackTrace) => Future.error(error.toString(), StackTrace.empty))
                         .then((value) => Navigator.push(context,

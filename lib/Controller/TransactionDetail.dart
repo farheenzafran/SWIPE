@@ -68,98 +68,98 @@ class tacountState extends State<TransactionDetail> {
                 child: Stack(
                   //child: Column(
                   children: [
-                    // ListView.builder(
-                    //     shrinkWrap: true,
-                    //     itemCount: todo.length,
-                    //     itemBuilder: (context, int index) {
-                    //       return
-                    //         Card(color: const Color(0xffF7F6FA),
-                    //         child:
-                    //         Container(
-                    //           width: double.infinity,
-                    //           height: 80.0,
-                    //           margin: const EdgeInsets.only(
-                    //               right: 9, left: 9),
-                    //
-                    //           child: ListTile(
-                    //               contentPadding: EdgeInsets.only(
-                    //                   left: 10.0, right: 0.0),
-                    //               leading: CircleAvatar(
-                    //                 radius: 20,
-                    //                 child: Image(
-                    //                   image: AssetImage("asset/images/cart.png"),
-                    //                   //width: 40,
-                    //                   //color: const Color(0xffECDCFF)
-                    //                 ),
-                    //               ),
-                    //               title: Text(
-                    //                 transactionlist
-                    //                     .name
-                    //                     .toString(),
-                    //                 style: TextStyle(
-                    //                     color: Colors.black,
-                    //                     fontSize: 14,
-                    //                     fontWeight:
-                    //                     FontWeight.w600),
-                    //               ),
-                    //               subtitle:
-                    //               Text(
-                    //                 transactionlist
-                    //                     .category
-                    //                     .toString(),
-                    //                 style: TextStyle(
-                    //                     color: Colors.grey,
-                    //                     fontSize: 12,
-                    //                     fontWeight:
-                    //                     FontWeight.w600),
-                    //               ),
-                    //
-                    //               trailing:
-                    //               Padding(
-                    //                 padding: EdgeInsets.only(top:5),
-                    //                 child:     Column(
-                    //                     children: <Widget>[
-                    //                       Padding(
-                    //                         padding:EdgeInsets.only(top:3, bottom: 3),
-                    //                         child:
-                    //                         Text(dollar+transactionlist.amount.toStringAsFixed(2),
-                    //                           style: TextStyle(
-                    //                               color: Colors.black,
-                    //                               fontSize: 14,
-                    //                               fontWeight:
-                    //                               FontWeight.w600),
-                    //                         ),
-                    //                       ),
-                    //
-                    //
-                    //                       Text(transactionlist.date.toString(),
-                    //
-                    //                         style: TextStyle(
-                    //                             color: Colors.grey,
-                    //                             fontSize: 12,
-                    //                             fontWeight:
-                    //                             FontWeight.w500),
-                    //                       ),
-                    //                     ]),
-                    //
-                    //               )
-                    //
-                    //
-                    //
-                    //           ),
-                    //
-                    //
-                    //         ),
-                    //
-                    //
-                    //
-                    //
-                    //       );
-                    //     }
-                    //   // );
-                    //   // }
-                    //   //},
-                    // ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: todo.length,
+                        itemBuilder: (context, int i) {
+                          return
+                            Card(color: const Color(0xffF7F6FA),
+                            child:
+                            Container(
+                              width: double.infinity,
+                              height: 80.0,
+                              margin: const EdgeInsets.only(
+                                  right: 9, left: 9),
+
+                              child: ListTile(
+                                  contentPadding: EdgeInsets.only(
+                                      left: 10.0, right: 0.0),
+                                  leading: CircleAvatar(
+                                    radius: 20,
+                                    child: Image(
+                                      image: AssetImage("asset/images/cart.png"),
+                                      //width: 40,
+                                      //color: const Color(0xffECDCFF)
+                                    ),
+                                  ),
+                                  title: Text(
+                                    todo[i]
+                                        .name
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight:
+                                        FontWeight.w600),
+                                  ),
+                                  subtitle:
+                                  Text(
+                                    todo[i]
+                                        .category
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                        fontWeight:
+                                        FontWeight.w600),
+                                  ),
+
+                                  trailing:
+                                  Padding(
+                                    padding: EdgeInsets.only(top:5),
+                                    child:     Column(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:EdgeInsets.only(top:3, bottom: 3),
+                                            child:
+                                            Text(dollar+ todo[i].amount.toStringAsFixed(2),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight:
+                                                  FontWeight.w600),
+                                            ),
+                                          ),
+
+
+                                          Text(  todo[i].date.toString(),
+
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight.w500),
+                                          ),
+                                        ]),
+
+                                  )
+
+
+
+                              ),
+
+
+                            ),
+
+
+
+
+                          );
+                        }
+                      // );
+                      // }
+                      //},
+                    ),
                   ],
                 ),
               ),

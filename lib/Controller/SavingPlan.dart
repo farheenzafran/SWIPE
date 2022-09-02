@@ -164,7 +164,7 @@ class savingplanState extends State<SavingPlan> {
   padding: EdgeInsets.all(0),
   margin: const EdgeInsets.only( left:20,top: 15,right: 10),
   alignment: Alignment.topRight,
-  height: 45,
+  height: 50,
   width: 160,
   child: TextField(
   controller: amountinput,
@@ -176,7 +176,7 @@ class savingplanState extends State<SavingPlan> {
   decoration: InputDecoration(
 
   border: OutlineInputBorder(
-  borderRadius: BorderRadius.circular(13.0),
+  borderRadius: BorderRadius.circular(20.0),
   ),
   // border: OutlineInputBorder(),
    labelText: dollar,
@@ -209,16 +209,18 @@ class savingplanState extends State<SavingPlan> {
           Align(
             alignment: Alignment.topRight,
             child:  Container(
-                padding: EdgeInsets.all(15),
-                height:  70,//MediaQuery.of(context).size.width / 3,
+                color: const Color(0xffF7F6FA ),
+                padding: EdgeInsets.all(0),
+                margin: const EdgeInsets.only( left:20,top: 15,right: 10),
+                height:  55,//MediaQuery.of(context).size.width / 3,
                 width: 180,
-                child: Center(
+              //  child: Center(
                     child: TextField(
                       controller: dateInput,
                       //editing controller of this TextField
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                           icon: Icon(Icons.calendar_today), //icon of text field
                           labelText: "Enter Date", //label text of field
@@ -248,7 +250,7 @@ class savingplanState extends State<SavingPlan> {
                         } else {}
                       },
                     ))),
-          ),
+        //  ),
 
 
 

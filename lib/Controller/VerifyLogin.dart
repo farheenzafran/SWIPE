@@ -249,17 +249,17 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
                           top: 15,  bottom: 5.0, left: 15, right: 15),// Will take 50% of screen space
                       child: TextButton(
                         onPressed: () {
-                          Loader.show(context,
-                              isSafeAreaOverlay: false,
-                              progressIndicator: CircularProgressIndicator(),
-                              isBottomBarOverlay: false,
-                              overlayFromBottom: 80,
-                              themeData: Theme.of(context)
-                                  .copyWith(accentColor: Colors.black),
-                              overlayColor: Color(0x0000ffff));
-                          Future.delayed(Duration(seconds:2 ), () {
-                            Loader.hide();
-                          });
+                          // Loader.show(context,
+                          //     isSafeAreaOverlay: false,
+                          //     progressIndicator: CircularProgressIndicator(),
+                          //     isBottomBarOverlay: false,
+                          //     overlayFromBottom: 80,
+                          //     themeData: Theme.of(context)
+                          //         .copyWith(accentColor: Colors.black),
+                          //     overlayColor: Color(0x0000ffff));
+                          // Future.delayed(Duration(seconds:2 ), () {
+                          //   Loader.hide();
+                          // });
                           setState(() {
                             phoneController.text.isEmpty ? _validate = true : _validate = false;
                           });
