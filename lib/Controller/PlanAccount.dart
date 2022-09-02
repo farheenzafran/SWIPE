@@ -24,6 +24,7 @@ import 'package:swipeapp/Controller/Response/GoalBankDataResponse.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
 import 'BankData.dart';
+import 'Chart.dart';
 import 'Dashboard.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
@@ -175,97 +176,110 @@ class planacountState extends State<PlanAccount> {
 
               ),
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: [
-
-                      Text(
-                      "",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.white, //font color
-                            fontStyle: FontStyle.italic
-                        ),
-
-                      ),
-
-                      Text(
-                        'SAVING',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-
-                      Text(
-                        "",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.white, //font color
-                            fontStyle: FontStyle.italic
-                        ),
-
-                      ),
-
-                      Text(
-                        'TO GO',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-
-                  Column(
-                    children: [
-                      Text(
-                        '',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.white, //font color
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w700,
-
-                        ),
-
-                      ),
-
-                      Text(
-                        'TOTAL',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-                ]),
-            Image.asset(
-              "asset/images/downarrow.png", // width: 300,
-              height: 20,
-              width: 20,
-              alignment: Alignment.center,
+            // Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: <Widget>[
+            //       Column(
+            //         children: [
+            //
+            //           Text(
+            //           "",
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //                 fontWeight: FontWeight.w700,
+            //                 fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+            //                 color: Colors.white, //font color
+            //                 fontStyle: FontStyle.italic
+            //             ),
+            //
+            //           ),
+            //
+            //           Text(
+            //             'SAVING',
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.w300,
+            //               fontSize: 14,
+            //               color: Colors.white,
+            //             ),
+            //             textAlign: TextAlign.left,
+            //           ),
+            //         ],
+            //       ),
+            //       Column(
+            //         children: [
+            //
+            //           Text(
+            //             "",
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //                 fontWeight: FontWeight.w700,
+            //                 fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+            //                 color: Colors.white, //font color
+            //                 fontStyle: FontStyle.italic
+            //             ),
+            //
+            //           ),
+            //
+            //           Text(
+            //             'TO GO',
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.w300,
+            //               fontSize: 14,
+            //               color: Colors.white,
+            //             ),
+            //             textAlign: TextAlign.left,
+            //           ),
+            //         ],
+            //       ),
+            //
+            //       Column(
+            //         children: [
+            //           Text(
+            //             '',
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //               fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+            //               color: Colors.white, //font color
+            //               fontStyle: FontStyle.italic,
+            //               fontWeight: FontWeight.w700,
+            //
+            //             ),
+            //
+            //           ),
+            //
+            //           Text(
+            //             'TOTAL',
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.w300,
+            //               fontSize: 14,
+            //               color: Colors.white,
+            //             ),
+            //             textAlign: TextAlign.left,
+            //           ),
+            //         ],
+            //       ),
+            //     ]),
+            // Image.asset(
+            //   "asset/images/downarrow.png", // width: 300,
+            //   height: 20,
+            //   width: 20,
+            //   alignment: Alignment.center,
+            // ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>Chart()),
+                );
+              },
+              child: Image.asset(
+                "asset/images/downarrow.png", // width: 300,
+                height: 20,
+                width: 20,
+                alignment: Alignment.center,
+              ),
             ),
-
           ],
         )
 

@@ -74,12 +74,12 @@ class tacountState extends State<TransactionDetail> {
                         itemBuilder: (context, int i) {
                           return
                             Card(color: const Color(0xffF7F6FA),
-                            child:
-                            Container(
-                              width: double.infinity,
-                              height: 80.0,
-                              margin: const EdgeInsets.only(
-                                  right: 9, left: 9),
+                           // child:
+                            // Container(
+                            //   width: double.infinity,
+                            //   height: 80.0,
+                            //   margin: const EdgeInsets.only(
+                            //       right: 9, left: 9),
 
                               child: ListTile(
                                   contentPadding: EdgeInsets.only(
@@ -149,7 +149,7 @@ class tacountState extends State<TransactionDetail> {
                               ),
 
 
-                            ),
+                            //),
 
 
 
@@ -202,7 +202,7 @@ class tacountState extends State<TransactionDetail> {
             ),
             // ),
             Text(
-              'Login',
+              'Transaction Detail',
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
