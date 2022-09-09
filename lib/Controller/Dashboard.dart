@@ -8,9 +8,12 @@ import 'dart:core';
 import 'dart:core';
 import 'dart:core';
 import 'dart:core';
+import 'dart:core';
+import 'dart:core';
 import 'dart:math' as math;
 import 'dart:ui';
 import 'dart:ui';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -18,6 +21,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/BarChartGraph.dart';
 import 'package:swipeapp/Controller/EmailSignup.dart';
 import 'package:swipeapp/Controller/ManageAccount.dart';
 import 'package:swipeapp/Controller/PlanAccount.dart';
@@ -117,6 +121,7 @@ class tdashboardState extends State<Dashboard> {
   bool isFavourite2 = true;
   bool isFavourite3 = true;
   bool isLoading = false;
+  bool isLoading1 = true;
   bool isexpanse = true;
   bool viewVisibleTransaction = true;
   bool viewVisible1 = true;
@@ -151,11 +156,16 @@ class tdashboardState extends State<Dashboard> {
       viewVisible3 = false;
     });
   }
+  bool _expanded = false;
 
   //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
   LabelLayoutStrategy? xContainerLabelLayoutStrategy;
   late ChartData chartData;
-  ChartOptions chartOptions = const ChartOptions();
+  ChartOptions chartOptions = const ChartOptions(
+    labelCommonOptions: MyLabelCommonOptions(),
+
+  );
+
   late var verticalBarChartContainer = VerticalBarChartTopContainer(
       chartData: chartData,
       xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy);
@@ -164,22 +174,25 @@ class tdashboardState extends State<Dashboard> {
    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     //super.initState();
     chartData = ChartData(
-      // dataRows:  [
-      //   debitGraphdata,
-      //   creditGraphdata,
-      // ],
-      // xUserLabels: graphbankname,
-      dataRows: const [
-        [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
-        [0, 0, 0, 0, 0, -1800.0],
+      dataRows:  [
+        debitGraphdata,
+        creditGraphdata,
       ],
-      xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      xUserLabels: graphbankname,
+
+      // dataRows: const [
+      //   [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
+      //   [0, 0, 0, 0, 0, -1800.0],
+      // ],
+   //   xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
       dataRowsLegends: const ['Values', 'Values 2'],
       dataRowsColors: const [
         Colors.green,
         Colors.red,
       ],
+
       chartOptions: chartOptions,
+
     );
     verticalBarChartContainer = VerticalBarChartTopContainer(
       chartData: chartData,
@@ -431,7 +444,107 @@ class tdashboardState extends State<Dashboard> {
 
   late final Function callback;
 
+  final List<String> iconname = [
+    'asset/images/cart.png',
+    'asset/images/at.png',
+    'asset/images/travel.png',
+    'asset/images/movie.png',
+
+    //   'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  ];
+  List<String> TransactionIconCategory =[
+  "Bank Fees",
+  "Cash Advance",
+  "Community"
+  ];
+
+
+
+
+
   // const Dashboard(this.callback);
+
+  Future<TransactionResponse> transactionResponse(
+      String accesstoken, String accountid, int currentmonth) async {
+    String startdate = "";
+    String enddate = "";
+    var now = new DateTime.now().toString();
+    var date = DateTime.parse(now);
+    DateTime firstDayOfMonth = new DateTime(date.year, date.month, 1);
+    // var dateObj = new Date;
+    // var lmonth = dateObj.getUTCMonth() + 1; //months from 1-12
+    // var lday = dateObj.getUTCDate();
+    // var lyear = dateObj.getUTCFullYear();
+    // var lastendDayOfMonth = lyear + "/" + lmonth + "/" + lday;
+    // DateTime lastendDayOfMonth = DateTime(date.year, date.month+1 , 0);
+    DateTime lastendDayOfMonth = (date.month < 12)
+        ? new DateTime(date.year, date.month + 1, 0)
+        : new DateTime(date.year + 1, 1, 0);
+    var fyear = firstDayOfMonth.year;
+    var fmonth = firstDayOfMonth.month.toString().padLeft(2, '0');
+    var fday = firstDayOfMonth.day.toString().padLeft(2, '0');
+    var firstday = "${fyear}-${fmonth}-${fday}";
+    var lyear = lastendDayOfMonth.year;
+    var lmonth = lastendDayOfMonth.month.toString().padLeft(2, '0');
+    var lday = lastendDayOfMonth.day.toString().padLeft(2, '0');
+    var lastday = "${lyear}-${lmonth}-${lday}";
+    startdate = firstday;
+    enddate = lastday;
+
+    // print(
+    //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+    // print(startdate);
+    // print(enddate);
+    // print(
+    //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+    Transactionoptions transactionoptions = Transactionoptions();
+    transactionoptions.count = 20;
+    transactionoptions.offset = 0;
+    transactionoptions.accountIds = [accountid];
+    TransactionRequest transactionRequest = TransactionRequest();
+    transactionRequest.clientId = Constants.ClientId;
+    transactionRequest.secret = Constants.Secret;
+    transactionRequest.accessToken = accesstoken;
+    transactionRequest.options = transactionoptions;
+    transactionRequest.startDate = startdate;
+    transactionRequest.endDate = enddate;
+    isLoading1 = false;
+    print(
+        'dasgboardRequest body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+    final response4 =
+    await http.post(Uri.parse(Constants.URL + '/transactions/get'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(transactionRequest));
+    print(
+        '!!!!!!!!!!!!###########################################################################################################');
+    print('dshrespose44 body-----: ${response4}');
+    print(response4.statusCode);
+    print(response4);
+    // print(accesstoken);
+    print('dash##########################################'
+        '###################################################'
+        '##############');
+    if (response4.statusCode == 200) {
+      void dispose() {
+        Loader.hide();
+        isLoading1 = false;
+        // super.dispose();
+      }
+
+      return TransactionResponse.fromJson(jsonDecode(response4.body));
+    } else {
+      //void dispose() {
+      Loader.hide();
+
+      // super.dispose();
+      //}
+
+      throw Exception('Failed to call transaction .');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width * 0.8;
@@ -451,6 +564,32 @@ class tdashboardState extends State<Dashboard> {
                 dashboardHeader(),
                 debitTransaction(),
                 creditLiability(),
+
+                // SizedBox(
+                //     width: 350,
+                //     //height: 350,
+                //     child: FittedBox(child: Column(
+                //       children: [
+                //         //  addAccountHeader(),
+                //         Container(
+                //           // color: Colors.yellow,
+                //           height: 300,
+                //           width: 350,
+                //           child:
+                //           //Column(
+                //           // children: [
+                //           //  addAccountHeader(),
+                //           VerticalBarChart(
+                //             painter: VerticalBarChartPainter(
+                //               verticalBarChartContainer: verticalBarChartContainer,
+                //             ),
+                //           ),
+                //
+                //         )
+                //       ],
+                //     ))
+                // ),
+
                 paymentButton(),
                 viewtransaction(),
                  Visibility(
@@ -465,6 +604,8 @@ class tdashboardState extends State<Dashboard> {
                      child: Stack(
                        //child: Column(
                        children: [
+                      isLoading1 ?
+                     Center(child: CircularProgressIndicator()) :
                          ListView.builder(
                              shrinkWrap: true,
                              itemCount: transactionlist.length,
@@ -482,12 +623,10 @@ class tdashboardState extends State<Dashboard> {
                                            left: 10.0, right: 0.0),
                                        leading: CircleAvatar(
                                          radius: 20,
-                                         child: Image(
-                                           image: AssetImage(
-                                               "asset/images/cart.png"),
-                                           //width: 40,
-                                           //color: const Color(0xffECDCFF)
-                                         ),
+                                         child:
+                                         Image(image: AssetImage("asset/images/cart.png"),
+                                         //Image.asset( iconname[index],),
+                                       ),
                                        ),
                                        title: Text(
                                          transactionlist[index].name.toString(),
@@ -586,8 +725,9 @@ class tdashboardState extends State<Dashboard> {
     return verticalBarChart;
   }
   dashboardHeader() {
-    return Container(
-        height: 120,
+    return   Flexible(
+     child: Container(
+        //height: 120,
         width: double.infinity,
         padding: EdgeInsets.all(5),
         //color: const Color(0xDEB46FEA),
@@ -658,20 +798,8 @@ class tdashboardState extends State<Dashboard> {
                       ),
                     ],
                   ),
-                  InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) =>Chart()),
-                        );
-                      },
-                 child: Image.asset(
-                    "asset/images/downarrow.png", // width: 300,
-                    height: 20,
-                    width: 20,
-                    alignment: Alignment.center,
-                  ),
-                  ),
+
+
                   Column(
                     children: [
                       Text(
@@ -698,11 +826,71 @@ class tdashboardState extends State<Dashboard> {
                     ],
                   ),
                 ]),
+            Container(
+              //width: 80,
+              child:
+              ExpandableNotifier(  // <-- Provides ExpandableController to its children
+                child: Column(
+                  children: [
+                    Expandable(           // <-- Driven by ExpandableController from ExpandableNotifier
+                      collapsed: ExpandableButton(  // <-- Expands when tapped on the cover photo
+                        child: //Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.white,),
+                        Image.asset(
+                          "asset/images/down.png", // width: 300,
+                          height: 20,
+                          width: 20,
+                          alignment: Alignment.center,
+                        ),
+
+                      ),
+                      expanded: Column(
+                          children: [
+                            //Text("Backjdsgcygdsucudshiodhycoe"),
+                            SizedBox(
+                                width: 400,
+                                height: 350,
+                                child: FittedBox(child: Column(
+                                  children: [
+                                    //  addAccountHeader(),
+                                    Container(
+                                      // color: Colors.yellow,
+                                      height: 300,
+                                      width: 350,
+                                      child:
+                                      //Column(
+                                      // children: [
+                                      //  addAccountHeader(),
+                                      VerticalBarChart(
+                                        painter: VerticalBarChartPainter(
+                                          verticalBarChartContainer: verticalBarChartContainer,
+                                        ),
+                                      ),
+
+                                    )
+                                  ],
+                                ))
+                            ),
+                            ExpandableButton(
+                              child:  Image.asset(
+                                "asset/images/up.png", // width: 300,
+                                height: 20,
+                                width: 20,
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                          ]
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
           ],
         )
 
         //  ),
-        );
+        ));
   }
 
   debitTransaction() {
@@ -2534,87 +2722,6 @@ Future<AccessTokenResponse> accessTokenResponse(String publicToken) async {
   }
 }
 
-Future<TransactionResponse> transactionResponse(
-    String accesstoken, String accountid, int currentmonth) async {
-  String startdate = "";
-  String enddate = "";
-  var now = new DateTime.now().toString();
-  var date = DateTime.parse(now);
-  DateTime firstDayOfMonth = new DateTime(date.year, date.month, 1);
-  // var dateObj = new Date;
-  // var lmonth = dateObj.getUTCMonth() + 1; //months from 1-12
-  // var lday = dateObj.getUTCDate();
-  // var lyear = dateObj.getUTCFullYear();
-  // var lastendDayOfMonth = lyear + "/" + lmonth + "/" + lday;
-  // DateTime lastendDayOfMonth = DateTime(date.year, date.month+1 , 0);
-  DateTime lastendDayOfMonth = (date.month < 12)
-      ? new DateTime(date.year, date.month + 1, 0)
-      : new DateTime(date.year + 1, 1, 0);
-  var fyear = firstDayOfMonth.year;
-  var fmonth = firstDayOfMonth.month.toString().padLeft(2, '0');
-  var fday = firstDayOfMonth.day.toString().padLeft(2, '0');
-  var firstday = "${fyear}-${fmonth}-${fday}";
-  var lyear = lastendDayOfMonth.year;
-  var lmonth = lastendDayOfMonth.month.toString().padLeft(2, '0');
-  var lday = lastendDayOfMonth.day.toString().padLeft(2, '0');
-  var lastday = "${lyear}-${lmonth}-${lday}";
-  startdate = firstday;
-  enddate = lastday;
-
-  // print(
-  //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-  // print(startdate);
-  // print(enddate);
-  // print(
-  //     '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-  Transactionoptions transactionoptions = Transactionoptions();
-  transactionoptions.count = 20;
-  transactionoptions.offset = 0;
-  transactionoptions.accountIds = [accountid];
-  TransactionRequest transactionRequest = TransactionRequest();
-  transactionRequest.clientId = Constants.ClientId;
-  transactionRequest.secret = Constants.Secret;
-  transactionRequest.accessToken = accesstoken;
-  transactionRequest.options = transactionoptions;
-  transactionRequest.startDate = startdate;
-  transactionRequest.endDate = enddate;
-
-  print(
-      'dasgboardRequest body4--REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
-  final response4 =
-      await http.post(Uri.parse(Constants.URL + '/transactions/get'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(transactionRequest));
-  print(
-      '!!!!!!!!!!!!###########################################################################################################');
-  print('dshrespose44 body-----: ${response4}');
-  print(response4.statusCode);
-  print(response4);
-  // print(accesstoken);
-  print('dash##########################################'
-      '###################################################'
-      '##############');
-  if (response4.statusCode == 200) {
-    void dispose() {
-      Loader.hide();
-
-      // super.dispose();
-    }
-
-    return TransactionResponse.fromJson(jsonDecode(response4.body));
-  } else {
-    //void dispose() {
-    Loader.hide();
-
-    // super.dispose();
-    //}
-
-    throw Exception('Failed to call transaction .');
-  }
-}
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
@@ -2824,3 +2931,23 @@ Future<RefreshTokenResponse> refreshValueToken(String refreshtoken) async {
     throw Exception('Failed to call  .');
   }
 }
+class MyLabelCommonOptions extends LabelCommonOptions {
+         const MyLabelCommonOptions(
+         ) : super ();
+
+         /// Override [labelTextStyle] with a new font, color, etc.
+         @override
+         // get labelTextStyle => GoogleFonts.comforter(
+         //  style: TextStyle(
+         //   color: Color,
+         //   fontSize: 14.0,
+         //   fontWeight: FontWeight.w400, // Regular
+         //   ),
+         // );
+
+         get labelTextStyle =>
+           const ChartOptions().labelCommonOptions.labelTextStyle.copyWith(
+             color: Colors.white
+           );
+
+       }

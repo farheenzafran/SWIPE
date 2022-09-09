@@ -45,6 +45,7 @@ dependencies:
   firebase_auth: ^1.0.3
   google_sign_in: ^5.4.1
   flutter_charts: ^0.5.0
+  expandable: ^5.0.1
 #  firebase_core: ^1.10.0
 ##  firebase_auth: ^0.20.0+1
 #  firebase_auth: ^3.6.3
@@ -133,6 +134,13 @@ flutter:
     - asset/images/setting.jpeg
     - asset/images/accadd.png
     - asset/images/plan.png
+    - asset/images/down.png
+    - asset/images/up.png
+    - asset/images/movie.png
+    - asset/images/eat.png
+    - asset/images/travel.png
+    - asset/images/at.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

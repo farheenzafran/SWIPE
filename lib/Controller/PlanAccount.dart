@@ -11,10 +11,12 @@ import 'dart:core';
 import 'dart:math' as math;
 import 'dart:ui';
 import 'dart:ui';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/AddNewPlan.dart';
@@ -88,8 +90,45 @@ class planacountState extends State<PlanAccount> {
   late int tamount;
   late String goaldate;
   late Future<GoalGetBankdataResponse> datalist ;//= [] as Future<List<ChildDataResult>>;
-  void initState()  {
+  LabelLayoutStrategy? xContainerLabelLayoutStrategy;
+  late ChartData chartData;
+  ChartOptions chartOptions = const ChartOptions(
+    labelCommonOptions: MyLabelCommonOptions(),
+
+  );
+
+  late var verticalBarChartContainer = VerticalBarChartTopContainer(
+      chartData: chartData,
+      xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy);
+
+  void initState() {
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     super.initState();
+    chartData = ChartData(
+    //   dataRows:  [
+    //     debitGraphdata,
+    //     creditGraphdata,
+    //   ],
+    //   xUserLabels: graphbankname,
+
+      dataRows: const [
+        [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
+        [0, 0, 0, 0, 0, -1800.0],
+      ],
+        xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      dataRowsLegends: const ['Values', 'Values 2'],
+      dataRowsColors: const [
+        Colors.green,
+        Colors.red,
+      ],
+
+      chartOptions: chartOptions,
+
+    );
+    verticalBarChartContainer = VerticalBarChartTopContainer(
+      chartData: chartData,
+      xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy,
+    );
 
   }
   @override
@@ -123,9 +162,9 @@ class planacountState extends State<PlanAccount> {
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
+    return   Flexible(
+ child:Container(
 
-    return Container(
-        height: 120,
         width: double.infinity,
         padding: EdgeInsets.all(5),
         //color: const Color(0xDEB46FEA),
@@ -148,7 +187,8 @@ class planacountState extends State<PlanAccount> {
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            color: const Color(0x75f5f5f5)),
+                            color: const Color(0x54ecdcff)
+                        ),
                         child:
                         // Row(
                         //   mainAxisSize: MainAxisSize.min,
@@ -266,25 +306,70 @@ class planacountState extends State<PlanAccount> {
             //   width: 20,
             //   alignment: Alignment.center,
             // ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>Chart()),
-                );
-              },
-              child: Image.asset(
-                "asset/images/downarrow.png", // width: 300,
-                height: 20,
-                width: 20,
-                alignment: Alignment.center,
+            Container(
+              //width: 80,
+              child:
+              ExpandableNotifier(  // <-- Provides ExpandableController to its children
+                child: Column(
+                  children: [
+                    Expandable(           // <-- Driven by ExpandableController from ExpandableNotifier
+                      collapsed: ExpandableButton(  // <-- Expands when tapped on the cover photo
+                        child: //Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.white,),
+                        Image.asset(
+                          "asset/images/down.png", // width: 300,
+                          height: 20,
+                          width: 20,
+                          alignment: Alignment.center,
+                        ),
+
+                      ),
+                      expanded: Column(
+                          children: [
+                            //Text("Backjdsgcygdsucudshiodhycoe"),
+                            SizedBox(
+                                width: 400,
+                                height: 350,
+                                child: FittedBox(child: Column(
+                                  children: [
+                                    //  addAccountHeader(),
+                                    Container(
+                                      // color: Colors.yellow,
+                                      height: 300,
+                                      width: 350,
+                                      child:
+                                      //Column(
+                                      // children: [
+                                      //  addAccountHeader(),
+                                      VerticalBarChart(
+                                        painter: VerticalBarChartPainter(
+                                          verticalBarChartContainer: verticalBarChartContainer,
+                                        ),
+                                      ),
+
+                                    )
+                                  ],
+                                ))
+                            ),
+                            ExpandableButton(
+                              child:  Image.asset(
+                                "asset/images/up.png", // width: 300,
+                                height: 20,
+                                width: 20,
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                          ]
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         )
 
 
-      //  ),
+        ),
     );
   }
 

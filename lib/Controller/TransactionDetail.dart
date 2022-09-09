@@ -116,7 +116,7 @@ class tacountState extends State<TransactionDetail> {
 
                                   trailing:
                                   Padding(
-                                    padding: EdgeInsets.only(top:5),
+                                    padding: EdgeInsets.only(top:5, right: 7),
                                     child:     Column(
                                         children: <Widget>[
                                           Padding(
