@@ -44,7 +44,9 @@ class AddNewplan extends StatefulWidget {
 }
 
 class newplanState extends State<AddNewplan> {
+ // final tController = TextEditingController();
   final tController = TextEditingController();
+  bool _validate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class newplanState extends State<AddNewplan> {
                 children: <Widget>[
                   addAccountHeader(),
                   emailVerify(),
-               addButton(),
+                addButton(),
 
               //  ],
              // ),
@@ -148,8 +150,11 @@ class newplanState extends State<AddNewplan> {
               style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.normal),
               controller: tController,
               decoration: InputDecoration(
-               // border: OutlineInputBorder(),
+                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+
+                // border: OutlineInputBorder(),
               ),
+
             ) ,
           ),
 
@@ -162,7 +167,6 @@ class newplanState extends State<AddNewplan> {
   addButton() {
     return
       Align(
-        heightFactor: 8,
     child:  Container(
       height: 38,
       width: double.infinity,
@@ -179,11 +183,19 @@ class newplanState extends State<AddNewplan> {
         ),
 
         onPressed: () {
-          tController.value.text.toString();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SavingPlan()),
-          );
+          tController.text.isEmpty ? _validate = true : _validate = false;
+          //   tController.value.text.toString();
+         // Navigator.push(context, MaterialPageRoute(builder: (context) => SavingPlan()),);
+          if( _validate == false  )
+          {
+
+            _sendDataToSecondScreen(context);
+          }
+          else
+          {
+            print("all filled");
+          }
+
         },
         child: Text(
           'Continue',
@@ -199,7 +211,13 @@ class newplanState extends State<AddNewplan> {
     );
   }
 
+  void _sendDataToSecondScreen(BuildContext context) {
 
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SavingPlan(nameholder: tController.text),));
+    print(tController.text);
+    print(tController);
+    print("<<<<<Last Btracket >>>>>>>>>>");
+  }
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 

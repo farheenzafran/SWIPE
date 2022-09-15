@@ -556,135 +556,116 @@ class tdashboardState extends State<Dashboard> {
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
-            // children: [
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                dashboardHeader(),
-                debitTransaction(),
-                creditLiability(),
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
 
-                // SizedBox(
-                //     width: 350,
-                //     //height: 350,
-                //     child: FittedBox(child: Column(
-                //       children: [
-                //         //  addAccountHeader(),
-                //         Container(
-                //           // color: Colors.yellow,
-                //           height: 300,
-                //           width: 350,
-                //           child:
-                //           //Column(
-                //           // children: [
-                //           //  addAccountHeader(),
-                //           VerticalBarChart(
-                //             painter: VerticalBarChartPainter(
-                //               verticalBarChartContainer: verticalBarChartContainer,
-                //             ),
-                //           ),
-                //
-                //         )
-                //       ],
-                //     ))
-                // ),
+                      dashboardHeader(),
+                      debitTransaction(),
+                      creditLiability(),
+                      paymentButton(),
+                      viewtransaction(),
+                      Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: viewVisible1,
+                        child: Container(
+                          width: double.infinity,
+                          //height: 200.0,
+                          // color: Colors.yellow,
+                          child: Stack(
+                            //child: Column(
+                            children: [
+                              isLoading1 ?
+                              Center(child: CircularProgressIndicator()) :
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: transactionlist.length,
+                                  itemBuilder: (context, int index) {
+                                    var $;
+                                    return Card(
+                                      color: const Color(0xffF7F6FA),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 80.0,
+                                        margin:
+                                        const EdgeInsets.only(right: 9, left: 9),
+                                        child: ListTile(
+                                            contentPadding: EdgeInsets.only(
+                                                left: 10.0, right: 0.0),
+                                            leading: CircleAvatar(
+                                              radius: 20,
+                                              child:
+                                              Image(image: AssetImage("asset/images/cart.png"),
+                                                //Image.asset( iconname[index],),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              transactionlist[index].name.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            subtitle: Text(
+                                              transactionlist[index]
+                                                  .category
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            trailing: Padding(
+                                              padding: EdgeInsets.only(top: 5),
+                                              child: Column(children: <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 3, bottom: 3),
+                                                  child: Text(
+                                                    dollar +
+                                                        transactionlist[index]
+                                                            .amount
+                                                            .toStringAsFixed(2),
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  transactionlist[index]
+                                                      .date
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w500),
+                                                ),
+                                              ]),
+                                            )),
+                                      ),
+                                    );
+                                  }
+                                // );
+                                // }
+                                //},
+                              ),
 
-                paymentButton(),
-                viewtransaction(),
-                 Visibility(
-                   maintainSize: true,
-                   maintainAnimation: true,
-                   maintainState: true,
-                   visible: viewVisible1,
-                   child: Container(
-                     width: double.infinity,
-                     height: 200.0,
-                     // color: Colors.yellow,
-                     child: Stack(
-                       //child: Column(
-                       children: [
-                      isLoading1 ?
-                     Center(child: CircularProgressIndicator()) :
-                         ListView.builder(
-                             shrinkWrap: true,
-                             itemCount: transactionlist.length,
-                             itemBuilder: (context, int index) {
-                               var $;
-                               return Card(
-                                 color: const Color(0xffF7F6FA),
-                                 child: Container(
-                                   width: double.infinity,
-                                   height: 80.0,
-                                   margin:
-                                       const EdgeInsets.only(right: 9, left: 9),
-                                   child: ListTile(
-                                       contentPadding: EdgeInsets.only(
-                                           left: 10.0, right: 0.0),
-                                       leading: CircleAvatar(
-                                         radius: 20,
-                                         child:
-                                         Image(image: AssetImage("asset/images/cart.png"),
-                                         //Image.asset( iconname[index],),
-                                       ),
-                                       ),
-                                       title: Text(
-                                         transactionlist[index].name.toString(),
-                                         style: TextStyle(
-                                             color: Colors.black,
-                                             fontSize: 14,
-                                             fontWeight: FontWeight.w600),
-                                       ),
-                                       subtitle: Text(
-                                         transactionlist[index]
-                                             .category
-                                             .toString(),
-                                         style: TextStyle(
-                                             color: Colors.grey,
-                                             fontSize: 12,
-                                             fontWeight: FontWeight.w600),
-                                       ),
-                                       trailing: Padding(
-                                         padding: EdgeInsets.only(top: 5),
-                                         child: Column(children: <Widget>[
-                                           Padding(
-                                             padding: EdgeInsets.only(
-                                                 top: 3, bottom: 3),
-                                             child: Text(
-                                               dollar +
-                                                   transactionlist[index]
-                                                       .amount
-                                                       .toStringAsFixed(2),
-                                               style: TextStyle(
-                                                   color: Colors.black,
-                                                   fontSize: 14,
-                                                   fontWeight: FontWeight.w600),
-                                             ),
-                                           ),
-                                           Text(
-                                             transactionlist[index]
-                                                 .date
-                                                 .toString(),
-                                             style: TextStyle(
-                                                 color: Colors.grey,
-                                                 fontSize: 12,
-                                                 fontWeight: FontWeight.w500),
-                                           ),
-                                         ]),
-                                       )),
-                                 ),
-                               );
-                             }
-                             // );
-                             // }
-                             //},
-                             ),
-                       ],
-                     ),
-                   ),
-                 ),
-              ],
-            ),
+                            ],
+                          ),
+                        ),
+                      ),
+                   
+
+
+                ],
+              ),
+            )
+
           )),
     );
   }
@@ -979,7 +960,7 @@ class tdashboardState extends State<Dashboard> {
             //-----------------------------------debir////-----------
             Container(
               width: double.infinity,
-              height: 150.0,
+             // height: 150.0,
               margin: const EdgeInsets.only(bottom: 4, top: 4),
               color: Colors.white,
               child: ListView(
@@ -988,61 +969,88 @@ class tdashboardState extends State<Dashboard> {
                   FutureBuilder<List<BankData>>(
                     future: bankdatalist,
                     builder: (context, snapshot) {
-                      return ExpansionPanelList(
-                        animationDuration: Duration(milliseconds: 2000),
-                        children:
-                            snapshot.data!.map<ExpansionPanel>((BankData item) {
-                          return ExpansionPanel(
-                            headerBuilder:
-                                (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                iconColor: Colors.red,
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  child:
-                                      // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
-                                      Image.network(item.banklogo.toString()),
-                                ),
-                                title: Text(
-                                  item.bankname.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                trailing: Text(
-                                  dollar + item.totalamount.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                subtitle: Text(
-                                  item.accountname.toString(),
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                selected: false,
-                              );
-                            },
-                            body:
-                                // Text("gcdsgchgdsv"),
-                                debitBuildExpandableContent(
-                                    item.accesstoken.toString(),
-                                    item.accountid.toString(),
-                                    cmonth),
-                            isExpanded: item.isExpaneded,
-                          );
-                        }).toList(),
-                        dividerColor: Colors.grey,
-                        expansionCallback: (int index, bool isExpanded) {
-                          setState(() {
-                            snapshot.data![index].isExpaneded = !isExpanded;
-                          });
-                        },
-                      );
+                      if(snapshot.hasData)
+                        {
+                          return
+                            ExpansionPanelList(
+                              animationDuration: Duration(milliseconds: 2000),
+                              children:
+                              snapshot.data!.map<ExpansionPanel>((BankData item) {
+                                return ExpansionPanel(
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded) {
+                                    return ListTile(
+                                      iconColor: Colors.red,
+                                      leading: CircleAvatar(
+                                        radius: 30,
+                                        child:
+                                        // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
+                                        Image.network(item.banklogo.toString()),
+                                      ),
+                                      title: Text(
+                                        item.bankname.toString(),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      trailing:
+                                      item.totalamount ==null?
+                                      Text(dollar+'0',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500
+                                        ),
+                                      ):
+                                      Text('${item.totalamount.toString()}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                      // Text(
+                                      //   dollar + item.totalamount.toString(), "0",
+                                      //
+                                      //   style: TextStyle(
+                                      //       color: Colors.black,
+                                      //       fontSize: 16,
+                                      //       fontWeight: FontWeight.w500),
+                                      //),
+                                      subtitle: Text(
+                                        item.accountname.toString(),
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      selected: false,
+                                    );
+                                  },
+                                  body:
+                                  // Text("gcdsgchgdsv"),
+                                  debitBuildExpandableContent(
+                                      item.accesstoken.toString(),
+                                      item.accountid.toString(),
+                                      cmonth),
+                                  isExpanded: item.isExpaneded,
+                                );
+                              }).toList(),
+                              dividerColor: Colors.grey,
+                              expansionCallback: (int index, bool isExpanded) {
+                                setState(() {
+                                  snapshot.data![index].isExpaneded = !isExpanded;
+                                });
+                              },
+                            );
+                        }
+                      else
+                        {
+                          return Center(
+                              child: CircularProgressIndicator());
+                        }
+
                     },
                   ),
                 ],
@@ -1134,7 +1142,7 @@ class tdashboardState extends State<Dashboard> {
           )),
       Container(
         width: double.infinity,
-        height: 150.0,
+       // height: 150.0,
         margin: const EdgeInsets.only(bottom: 0, top: 0),
         color: Colors.white,
         child: ListView(
@@ -1143,97 +1151,124 @@ class tdashboardState extends State<Dashboard> {
             FutureBuilder<List<BankData>>(
               future: creditbankdatalist,
               builder: (context, snapshot) {
-                return ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 2000),
-                  children: snapshot.data!.map<ExpansionPanel>((BankData item) {
-                    return ExpansionPanel(
-                      headerBuilder: (BuildContext context, bool isExpanded) {
-                        return ListTile(
-                          iconColor: Colors.red,
-                          leading: CircleAvatar(
-                              radius: 30,
-                              child:
-                                  //Image.memory(Base64Codec().decode(item.banklogo.toString())),
+                if(snapshot.hasData)
+                  {
+                    return
+                      ExpansionPanelList(
+                        animationDuration: Duration(milliseconds: 2000),
+                        children: snapshot.data!.map<ExpansionPanel>((BankData item) {
+                          return ExpansionPanel(
+                            headerBuilder: (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                iconColor: Colors.red,
+                                leading: CircleAvatar(
+                                    radius: 30,
+                                    child:
+                                    //Image.memory(Base64Codec().decode(item.banklogo.toString())),
 
-                                  Image.network(item.banklogo.toString())),
-                          title: Text(
-                            item.bankname.toString(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          trailing: Text(
-                            dollar + item.totalamount.toString(),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          subtitle: Text(
-                            item.accountname.toString(),
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          selected: false,
-                        );
-                      },
-                      body: //Text('hgsdvfghjbvsdjhcgsdh'),
-                          creditBuildExpandableContent(
-                        item.accesstoken.toString(),
-                        item.accountid.toString(),
-                      ),
-                      isExpanded: item.isExpaneded,
+                                    Image.network(item.banklogo.toString())),
+                                title: Text(
+                                  item.bankname.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                trailing:
+                                // Text(
+                                //   dollar + item.totalamount.toString(),
+                                //   style: TextStyle(
+                                //       color: Colors.black,
+                                //       fontSize: 16,
+                                //       fontWeight: FontWeight.w500),
+                                // ),
+                                item.totalamount ==null?
+                                Text(dollar+'0',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ):
+                                Text('${item.totalamount!.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  item.accountname.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                selected: false,
+                              );
+                            },
+                            body: //Text('hgsdvfghjbvsdjhcgsdh'),
+                            creditBuildExpandableContent(
+                              item.accesstoken.toString(),
+                              item.accountid.toString(),
+                            ),
+                            isExpanded: item.isExpaneded,
+                          );
+                        }).toList(),
+                        dividerColor: Colors.grey,
+                        expansionCallback: (int index, bool isExpanded) async {
+                          setState(() {
+                            snapshot.data![index].isExpaneded = !isExpanded;
+                          });
+                          // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                          // print(index);
+                          // print(isExpanded);
+                          // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                          // TransactionResponse tempresponse2 =
+                          //     await transactionResponse(
+                          //         snapshot.data![index].accesstoken.toString(),
+                          //         snapshot.data![index].accountid.toString(),
+                          //         cmonth);
+                          //
+                          // transactionlist =
+                          //     tempresponse2.transactions as List<Transactions>;
+                          // viewVisible = true;
+                          viewVisibleTransaction = true;
+                          showWidget();
+                          LiabilityResponse tempresponse = await liabilityData(
+                              snapshot.data![index].accesstoken.toString(),
+                              snapshot.data![index].accountid.toString());
+                          liabilitylist = tempresponse.liabilities as Liabilities;
+                          viewVisible = false;
+                          viewVisible2 = false;
+                          viewVisible3 = false;
+                          if (liabilitylist.student != null) {
+                            stdlist = liabilitylist.student!;
+                            viewVisible = true;
+                            //  print("student");
+                            setStudentLoanContainer(liabilitylist.student!.first, 0);
+                          }
+                          if (liabilitylist.mortgage != null) {
+                            mrtlist = liabilitylist.mortgage!;
+                            viewVisible2 = true;
+                            //  print("mortgage");
+                            setMortgage(liabilitylist.mortgage!.first, 0);
+                          }
+                          if (liabilitylist.credit != null) {
+                            crdlist = liabilitylist.credit!;
+                            viewVisible3 = true;
+                            //  print("credit");
+                          }
+                        },
+                      );
+                  }
+                else
+                  {
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
-                  }).toList(),
-                  dividerColor: Colors.grey,
-                  expansionCallback: (int index, bool isExpanded) async {
-                    setState(() {
-                      snapshot.data![index].isExpaneded = !isExpanded;
-                    });
-                    // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                    // print(index);
-                    // print(isExpanded);
-                    // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                    // TransactionResponse tempresponse2 =
-                    //     await transactionResponse(
-                    //         snapshot.data![index].accesstoken.toString(),
-                    //         snapshot.data![index].accountid.toString(),
-                    //         cmonth);
-                    //
-                    // transactionlist =
-                    //     tempresponse2.transactions as List<Transactions>;
-                    // viewVisible = true;
-                    viewVisibleTransaction = true;
-                    showWidget();
-                    LiabilityResponse tempresponse = await liabilityData(
-                        snapshot.data![index].accesstoken.toString(),
-                        snapshot.data![index].accountid.toString());
-                    liabilitylist = tempresponse.liabilities as Liabilities;
-                    viewVisible = false;
-                    viewVisible2 = false;
-                    viewVisible3 = false;
-                    if (liabilitylist.student != null) {
-                      stdlist = liabilitylist.student!;
-                      viewVisible = true;
-                      //  print("student");
-                      setStudentLoanContainer(liabilitylist.student!.first, 0);
-                    }
-                    if (liabilitylist.mortgage != null) {
-                      mrtlist = liabilitylist.mortgage!;
-                      viewVisible2 = true;
-                      //  print("mortgage");
-                      setMortgage(liabilitylist.mortgage!.first, 0);
-                    }
-                    if (liabilitylist.credit != null) {
-                      crdlist = liabilitylist.credit!;
-                      viewVisible3 = true;
-                      //  print("credit");
-                    }
-                  },
-                );
+                  }
+
               },
             ),
           ],

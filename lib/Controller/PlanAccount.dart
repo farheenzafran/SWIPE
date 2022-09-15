@@ -18,8 +18,10 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:intl/intl.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/AddNewPlan.dart';
+import 'package:swipeapp/Controller/ManageAccount.dart';
 import 'package:swipeapp/Controller/Request/SaveBankDataRequest.dart';
 import 'package:swipeapp/Controller/Request/SaveGoalBankdataRequest.dart';
 import 'package:swipeapp/Controller/Response/GoalBankDataResponse.dart';
@@ -55,11 +57,17 @@ planacountState createState() => planacountState();
 }
 
 class planacountState extends State<PlanAccount> {
+  String dollar = " \$";
+  late String name;
+  late String a_associate;
+  late String amount;
+  late String goaldate;
+  late Future<List<getGoalResult>> datalist ;
 
   Future<List<getGoalResult>> goalGetBankData() async {
     UserDetail tempuserdetail = await Constants.getUserDetail();
     String accessToken = tempuserdetail.accessToken.toString();
-    final response2 = await http.get(Uri.parse(Constants.baseUrl2 + '/Goal/GetBankData'),
+    final response2 = await http.get(Uri.parse('${Constants.baseUrl2}/Goal/GetBankData'),
         headers: <String, String>{
           'Content-Type': 'application/json', 'Accept': 'application/json',
           'Authorization': 'Bearer $accessToken',});
@@ -75,23 +83,21 @@ class planacountState extends State<PlanAccount> {
     if (response2.statusCode == 200) {
      // return GoalGetBankdataResponse;
      // return GoalGetBankdataResponse.fromJson(jsonDecode(response2.body));
+
       GoalGetBankdataResponse getGoalResponse = GoalGetBankdataResponse.fromJson(jsonDecode(response2.body));
        return getGoalResponse.result!;
+
     }
     else
     {
-      throw Exception('Failed to call user childuserid .');
+      throw Exception('Failed to call user getgoalchilduserid .');
     }
   }
 
-  String dollar = " \$";
-  late String name;
-  late String a_associate;
-  late int tamount;
-  late String goaldate;
-  late Future<GoalGetBankdataResponse> datalist ;//= [] as Future<List<ChildDataResult>>;
+
   LabelLayoutStrategy? xContainerLabelLayoutStrategy;
   late ChartData chartData;
+  late double tValue = 0;
   ChartOptions chartOptions = const ChartOptions(
     labelCommonOptions: MyLabelCommonOptions(),
 
@@ -129,8 +135,11 @@ class planacountState extends State<PlanAccount> {
       chartData: chartData,
       xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy,
     );
+    datalist = goalGetBankData();
 
   }
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,20 +148,22 @@ class planacountState extends State<PlanAccount> {
         child: Container(
           color: Colors.white,
             child: SingleChildScrollView(
+        child: Container(
            child:
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     addAccountHeader(),
-
+                  //  savePlanList(),
+                    showuserData(),
                     addButton(),
                    // dcButton(),
 
 
                   ]
                 ),
-
+        ),
             )
         )
 
@@ -224,7 +235,7 @@ class planacountState extends State<PlanAccount> {
             //         children: [
             //
             //           Text(
-            //           "",
+            //          "$dollar",
             //             textAlign: TextAlign.center,
             //             style: TextStyle(
             //                 fontWeight: FontWeight.w700,
@@ -250,7 +261,7 @@ class planacountState extends State<PlanAccount> {
             //         children: [
             //
             //           Text(
-            //             "",
+            //            "$dollar",
             //             textAlign: TextAlign.center,
             //             style: TextStyle(
             //                 fontWeight: FontWeight.w700,
@@ -276,7 +287,7 @@ class planacountState extends State<PlanAccount> {
             //       Column(
             //         children: [
             //           Text(
-            //             '',
+            //             dollar  ,
             //             textAlign: TextAlign.center,
             //             style: TextStyle(
             //               fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
@@ -300,12 +311,7 @@ class planacountState extends State<PlanAccount> {
             //         ],
             //       ),
             //     ]),
-            // Image.asset(
-            //   "asset/images/downarrow.png", // width: 300,
-            //   height: 20,
-            //   width: 20,
-            //   alignment: Alignment.center,
-            // ),
+
             Container(
               //width: 80,
               child:
@@ -413,83 +419,293 @@ addButton() {
                   ));
 
   }
-  dcButton() {
-    return Container(
-      height: 38,
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            //color: const Color(0xFFA781D3),
-          )),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFA781D3),
-          padding: const EdgeInsets.all(5),
+  savePlanList() {
+    return
+
+      Container(
+      height: 300,
+        margin: EdgeInsets.all(8),
+        alignment: Alignment.topLeft,
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xffECDCFF)),
+      child:
+        Column(
+          children: [
+            Row(
+              children: [
+                Text("Tesla model 3",
+        style: TextStyle(
+        fontWeight: FontWeight.w700,
+          fontSize: 14,
+          color: Colors.black,
         ),
+                ),
+                Text("before jan 1",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
 
-        onPressed: () {
 
-goalGetBankData();
-          setState(() {
-          });
+              ],
+            ),
+            Text("jan saving",
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            Text("feb saving ",
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            Text("march saving",
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ],
 
-         // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
-          // ));
+        )
 
-        },
-        child: Text(
-          'Move to Dashboard',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
     );
   }
 
+  showuserData()
+  {
+    return
+    Column(
+      children: [
+      Container(
+      height: 300,
+      margin:  EdgeInsets.only(
+        bottom: 5.0,top: 5 , ),
+      child:
+      FutureBuilder<List<getGoalResult>>(
+          future: datalist,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, i) {
+                    var item = snapshot.data![i];
+                    amount =item.goaldate.toString(); //DateTime.parse(currentdate);
+                   // final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    var startdate = DateTime.parse(item.goaldate.toString());
+                    String  dateformat = DateFormat('yyyy-MM-dd').format(startdate);
+                    return
+                      Container(
+                         // height: 220,
+                          width: double.infinity,
+                          margin: EdgeInsets.only(left: 15, right: 15, top: 4, bottom: 12),
+                          alignment: Alignment.topLeft,
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: const Color(0x85dadada)),
+                          child:
+                          Column(
+                            children: [
+                              Padding(padding: EdgeInsets.only(bottom: 15),
+                                child:   Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(item.name.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+
+
+                                    Text("Before "+ dateformat,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Feb 2022 saving",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(dollar+ tValue.toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Mar 2022 saving",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(dollar+tValue.toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child:
+                                  Padding(padding: EdgeInsets.only(top: 15),
+                                    child:   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                                        // Text("$dollar${item.totalamount} of ",
+                                        //   style: TextStyle(
+                                        //     fontWeight: FontWeight.w700,
+                                        //     fontSize: 17,
+                                        //     color: const Color(0xFFA781D3),
+                                        //   ),
+                                        // ),
+                                        Text(dollar+item.totalamount.toString(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 17,
+                                            color: const Color(0xFFA781D3),
+
+                                          ),
+                                        ),
+
+                                      ],
+
+
+                                    ),
+                                  )
+                              )
+
+
+                            ],
+
+                          )
+
+                      );
+
+                  });
+            }
+            else
+            {
+              return Container(
+                //color: Colors.red,
+                  child:
+                  Center(
+                    child:
+                    CircularProgressIndicator(),
+                  )
+              );
+            }
+            // if (snapshot.data == null) {
+            //return Text("first return>>>>>>");
+            // }
+            // else {
+            //   return
+            //     ListView.builder(
+            //         shrinkWrap: true,
+            //         scrollDirection: Axis.vertical,
+            //         itemCount: snapshot.data!.length,
+            //         itemBuilder: (context, posxition) {
+            //           return
+            //             ListTile(
+            //               title: Text(
+            //                 snapshot.data![i].lastName.toString(),
+            //                 style: TextStyle(
+            //                     color: Colors.red,
+            //                     fontSize: 11,
+            //                     fontWeight:
+            //                     FontWeight.w500),
+            //               ),
+            //             );
+            //         });
+            // }
+          }
+      ),
+    ),
+      ],
+    );
+
+
+  }
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 
 //>>>>>>>>>>>>>>-------------------------API's--------------------------------->>>>>>>>>>>>>>>
-Future<GoalBankdataResponse> GoalData(  String name ,String accountassociate , int totalamount , String goaldate ) async {
-  SaveGoallBankdataRequest saveGoallBankdataRequest = SaveGoallBankdataRequest();
-  UserDetail tempuserdetail = await Constants.getUserDetail();
-  saveGoallBankdataRequest.name = name;
-  saveGoallBankdataRequest.accountassociate= accountassociate;
-  saveGoallBankdataRequest.totalamount= totalamount;
-  saveGoallBankdataRequest.goaldate= goaldate;
-  // saveGoallBankdataRequest.id = tempuserdetail.id;
-  // saveGoallBankdataRequest.createdon= createdon;
-  // saveGoallBankdataRequest.createdby= create;
-  print(">>>>>>>>>??????/");
-  print("____________??????????????<<<<<<<");
-  //------------->>>>>>>>>>.
-  String accesstoken = tempuserdetail.accessToken.toString();
-  print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(saveGoallBankdataRequest)}');
-  final response = await http.post(Uri.parse(Constants.baseUrl2 + '/Goal/SaveGoal'),
-      headers: <String, String>{
-        'Content-Type': 'application/json', 'Accept': 'application/json',
-        'Authorization': 'Bearer $accesstoken',
-      },
-      body: jsonEncode(saveGoallBankdataRequest));
-  print("plannn&&&&&&&&&&??????????????<<<<<<<");
-  print(response);
-  print(response.body);
-  print(response.statusCode);
-  print("&&&&&&&&&&??????????????<<<<<<<");
-  if (response.statusCode == 200) {
-    print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(response)}');
-
-    // return GoalBankdataResponse.fromJson(jsonDecode(response.body));
-    GoalBankdataResponse goalResponse = GoalBankdataResponse.fromJson(jsonDecode(response.body));
-    return goalResponse;
-  } else {
-    throw Exception('Failed to call user adduserid .');
-  }
-}
+// Future<GoalBankdataResponse> GoalData(  String name ,String accountassociate , int totalamount , String goaldate ) async {
+//   SaveGoallBankdataRequest saveGoallBankdataRequest = SaveGoallBankdataRequest();
+//   UserDetail tempuserdetail = await Constants.getUserDetail();
+//   saveGoallBankdataRequest.name = name;
+//   saveGoallBankdataRequest.accountassociate= accountassociate;
+//   saveGoallBankdataRequest.totalamount= totalamount;
+//   saveGoallBankdataRequest.goaldate= goaldate;
+//   // saveGoallBankdataRequest.id = tempuserdetail.id;
+//   // saveGoallBankdataRequest.createdon= createdon;
+//   // saveGoallBankdataRequest.createdby= create;
+//   print(">>>>>>>>>??????/");
+//   print("____________??????????????<<<<<<<");
+//   //------------->>>>>>>>>>.
+//   String accesstoken = tempuserdetail.accessToken.toString();
+//   print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(saveGoallBankdataRequest)}');
+//   final response = await http.post(Uri.parse(Constants.baseUrl2 + '/Goal/SaveGoal'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json', 'Accept': 'application/json',
+//         'Authorization': 'Bearer $accesstoken',
+//       },
+//       body: jsonEncode(saveGoallBankdataRequest));
+//   print("plannn&&&&&&&&&&??????????????<<<<<<<");
+//   print(response);
+//   print(response.body);
+//   print(response.statusCode);
+//   print("&&&&&&&&&&??????????????<<<<<<<");
+//   if (response.statusCode == 200) {
+//     print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(response)}');
+//
+//     // return GoalBankdataResponse.fromJson(jsonDecode(response.body));
+//     GoalBankdataResponse goalResponse = GoalBankdataResponse.fromJson(jsonDecode(response.body));
+//     return goalResponse;
+//   } else {
+//     throw Exception('Failed to call user adduserid .');
+//   }
+// }

@@ -47,6 +47,11 @@ import 'package:flutter/material.dart';
 class PlanGoal extends StatefulWidget {
   int _groupValue = -1;
   String? select;
+  var pamount;
+  var pdate;
+  var pname;
+  PlanGoal(   {Key? key,  required  this.pamount, required  this.pdate, required  this.pname}) : super(key: key);
+
   @override
   goalsavingplanState createState() => goalsavingplanState();
 }
@@ -81,6 +86,8 @@ class goalsavingplanState extends State<PlanGoal> {
   late double tCreditValue = 0;
   bool selected = false;
   String amount = "";
+
+
   void initState() {
     super.initState();
     _publicKeyConfiguration = LegacyLinkConfiguration(
@@ -333,14 +340,22 @@ class goalsavingplanState extends State<PlanGoal> {
   Future<GoalBankdataResponse> GoalData( ) async {
     SaveGoallBankdataRequest saveGoallBankdataRequest = SaveGoallBankdataRequest();
     UserDetail tempuserdetail = await Constants.getUserDetail();
-    saveGoallBankdataRequest.name = "";
     saveGoallBankdataRequest.accountassociate= bankDataobj.accountid ;
-    saveGoallBankdataRequest.totalamount= 0;
-    saveGoallBankdataRequest.goaldate= "";
+    print(">>>>>>>>>??????/");
+    print("22>>>>>>>>>??????/");
+    print(widget.pname);
+    print("33>>>>>>>>>??????/");
+    saveGoallBankdataRequest.id = 0;
+    saveGoallBankdataRequest.name = widget.pname;
+    saveGoallBankdataRequest.totalamount= double.parse(widget.pamount);
+    saveGoallBankdataRequest.goaldate= widget.pdate;
     // saveGoallBankdataRequest.id = tempuserdetail.id;
     // saveGoallBankdataRequest.createdon= createdon;
     // saveGoallBankdataRequest.createdby= create;
     print(">>>>>>>>>??????/");
+    print(widget.pname);
+    print(widget.pamount);
+    print(widget.pdate);
     print("____________??????????????<<<<<<<");
     //------------->>>>>>>>>>.
     String accesstoken = tempuserdetail.accessToken.toString();
@@ -354,6 +369,7 @@ class goalsavingplanState extends State<PlanGoal> {
     print("plannn&&&&&&&&&&??????????????<<<<<<<");
     print(saveGoallBankdataRequest);
     print(response.body);
+    print(accesstoken);
     print(response.statusCode);
     print("&&&&&&&&&&??????????????<<<<<<<");
     if (response.statusCode == 200) {
@@ -560,12 +576,21 @@ class goalsavingplanState extends State<PlanGoal> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     trailing:
-                                    Text(amount =  dollar + item.totalamount.toString(),
-                                     // dollar + item.mask.toString(),
+                                    item.totalamount ==null?
+                                    Text(dollar+'0',
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w500),),
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    ):
+                                    Text('${item.totalamount!.toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    ),
 
                                     subtitle: Text(
                                       item.accountname.toString(),

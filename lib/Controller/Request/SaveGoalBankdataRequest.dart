@@ -1,7 +1,7 @@
 class SaveGoallBankdataRequest {
   int? id;
   String? name;
-  int? totalamount;
+  double? totalamount;
   String? goaldate;
   String? accountassociate;
   String? createdon;

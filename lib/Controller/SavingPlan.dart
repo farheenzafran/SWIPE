@@ -17,6 +17,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/AddNewPlan.dart';
 import 'package:swipeapp/Controller/PlanGoal.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
@@ -43,27 +44,38 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 
+
 class SavingPlan extends StatefulWidget {
+ var nameholder;
+  SavingPlan({Key? key, required  this.nameholder}) : super(key: key);
   @override
   savingplanState createState() => savingplanState();
 }
 
 class savingplanState extends State<SavingPlan> {
-  TextEditingController amountinput = TextEditingController();
-  TextEditingController  dateInput = TextEditingController();
-  late LinkTokenConfiguration _linkTokenConfiguration;
 
+  final amountinput = TextEditingController();
+  final  dateInput = TextEditingController();
+  late LinkTokenConfiguration _linkTokenConfiguration;
   void initState() {
-    dateInput.text = ""; //set the initial value of text field
+    dateInput.text = ""; //set tshe initial value of text field
     super.initState();
+    main();
   }
   String dollar = " \$";
-  late String name;
   late String a_associate;
   late int tamount;
   late String goaldate;
   bool _validate = false;
   bool _validate1 = false;
+  late String dateformat;
+  late String nowformattedDates;
+  late String formattedDate;
+  late String f;
+  late double calculate =0.0;
+  late double enteredNumber =0.0;
+  late double calculate2;
+  double result = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -235,18 +247,35 @@ class savingplanState extends State<SavingPlan> {
                             firstDate: DateTime(1950),
                             //DateTime.now() - not to allow to choose before today.
                             lastDate: DateTime(2100));
-
                         if (pickedDate != null) {
                           print(
                               pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                          String formattedDate =
-                          DateFormat('MMM-dd-yy').format(pickedDate);
-                          print(
-                              formattedDate); //formatted date output using intl package =>  2021-03-16
+                          formattedDate = DateFormat('MMM-dd-yy').format(pickedDate);
+                          dateformat = DateFormat('yyyy-MM-dd').format(pickedDate);
+                          final date1 = DateTime.now();
+                          final date2 = dateformat;
+                          final date3 = DateTime.parse(date2);
+                          final difference = date3.difference(date1);
+                          final  monthDiff = (difference.inDays / 30).floor();
+                           enteredNumber = double.tryParse(amountinput.text)!;
+                          final cal = (enteredNumber/monthDiff) ;
+                          calculate = cal;
+                          print('monthDiff $monthDiff');
+                          print(difference);
+                          print(calculate);
+                          print("print>>>>>>>>>");
+                          print(dateformat);
+                          print(pickedDate);
+                          print("print>>>>>>>>>");
+                         // now = DateTime.now() as String;
+                         // calculate = now+dateformat;
+
                           setState(() {
-                            dateInput.text =
-                                formattedDate; //set output date to TextField value.
+                            dateInput.text = dateformat; //set output date to TextField value.
                           });
+
+
+
                         } else {}
                       },
                     ))),
@@ -284,7 +313,7 @@ Align(
     height: 40,
     width: 160,
 
-    child: Text(dollar+ "",
+    child: Text(dollar + calculate.toStringAsFixed(2),
       style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
@@ -340,10 +369,11 @@ Align(
 
           if( _validate == false && _validate1 == false )
           {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlanGoal()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => PlanGoal()),
+            // );
+            _sendDataToSecondScreen2(context);
           }
           else
           {
@@ -368,6 +398,29 @@ Align(
     ));
   }
 
+  void _sendDataToSecondScreen2(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PlanGoal(
+                 pamount: amountinput.text,
+                 pdate : dateformat,
+                 pname: widget.nameholder,
+
+
+
+
+            ))
+    );
+    print(amountinput);
+    print(dateInput);
+    print(widget.nameholder);
+    print("saving#############");
+
+  }
+
+  void main() {
+  }
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }
