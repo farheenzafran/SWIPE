@@ -300,6 +300,8 @@ Container(
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
               controller: fnameController,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
              // obscureText: true,
               decoration: InputDecoration(
                 errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
@@ -315,6 +317,8 @@ Container(
             margin: const EdgeInsets.only(right: 20, left: 20),
             child: TextField(
              controller: lnameController,
+              keyboardType: TextInputType.text,
+              textCapitalization: TextCapitalization.sentences,
              // obscureText: true,
               decoration: InputDecoration(
                 errorText: _validate2 ? 'Value Can\'t Be Empty' : null,

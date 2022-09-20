@@ -31,6 +31,7 @@ import 'package:swipeapp/Controller/Response/GetBankDataResponse.dart';
 import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
 import 'package:swipeapp/Controller/Response/SaveBankDataResponse.dart';
 import 'package:swipeapp/Controller/TransactionDetail.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../Model Helper.dart';
 import 'AddAccount.dart';
 import 'BankData.dart';
@@ -157,6 +158,7 @@ class tdashboardState extends State<Dashboard> {
     });
   }
   bool _expanded = false;
+  late ScrollController _scrollController;
 
   //<<<<<<<<<<<<<<<<Credit>>>>>>>>>>>>>>>>>>>>
   LabelLayoutStrategy? xContainerLabelLayoutStrategy;
@@ -223,6 +225,7 @@ class tdashboardState extends State<Dashboard> {
     var creditlinktoken = creditlinktokenResponse();
     //<<<<<<<<<<<<<<<<<credit>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+    _scrollController = ScrollController();
 
 
     // var verticalBarChart = VerticalBarChart(
@@ -547,18 +550,19 @@ class tdashboardState extends State<Dashboard> {
   }
   @override
   Widget build(BuildContext context) {
-    double c_width = MediaQuery.of(context).size.width * 0.8;
-    var screenSize = MediaQuery.of(context).size;
-    final mq = MediaQueryData.fromWindow(window);
+
     var _val;
     var chidern;
     return SafeArea(
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+       
+        //  resizeToAvoidBottomInset: false,
+
+          body:
+
+       SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
 
@@ -659,14 +663,14 @@ class tdashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                   
+
 
 
                 ],
               ),
             )
 
-          )),
+          ),
     );
   }
 

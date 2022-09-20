@@ -149,6 +149,8 @@ class newplanState extends State<AddNewplan> {
             child: TextField(
               style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.normal),
               controller: tController,
+  keyboardType: TextInputType.text,
+  textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 errorText: _validate ? 'Value Can\'t Be Empty' : null,
 

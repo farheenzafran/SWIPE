@@ -44,9 +44,11 @@ import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+String? selection;
+
+
 class PlanGoal extends StatefulWidget {
   int _groupValue = -1;
-  String? select;
   var pamount;
   var pdate;
   var pname;
@@ -85,7 +87,7 @@ class goalsavingplanState extends State<PlanGoal> {
   late double tDebitValue = 0;
   late double tCreditValue = 0;
   bool selected = false;
-  String amount = "";
+  double amount = 0.0;
 
 
   void initState() {
@@ -510,7 +512,11 @@ class goalsavingplanState extends State<PlanGoal> {
        GoalData();//..onError((error, stackTrace) => Future.error(error.toString(), StackTrace.current))
           //    .then((value) => Navigator.push(context, MaterialPageRoute(
           //    builder: (_) => CheckPlans()),));
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans()),);
+     if(selection != null)
+       {
+         Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans()),);
+
+       }
         },
         child: Text(
           'Create Goal',
@@ -558,6 +564,7 @@ class goalsavingplanState extends State<PlanGoal> {
                                 physics: ScrollPhysics(),
                                 itemBuilder: (context, i) {
                                   var item = snapshot.data![i];
+                                 // amount = item.totalamount!;
                                   return Card(
                                   child:
                                       ListTile(
@@ -611,7 +618,6 @@ class goalsavingplanState extends State<PlanGoal> {
                                       if( selectedcard == i)
                                       {
                                         selected = true;
-
                                       }
                                       else
                                         {
@@ -742,15 +748,18 @@ class goalsavingplanState extends State<PlanGoal> {
   {
     return
       RadioListTile(
-        title: Text("I want to include"+ amount +" in account to my plan", style: TextStyle(
+        title: Text("I want to include selected amount in account to my plan", style: TextStyle(
             color: Colors.grey,
             fontSize: 14,
             fontWeight: FontWeight.w500),),
-        value: "btnradio",
-        groupValue:select,
+        value: "btnRadio",
+        groupValue:selection,
         onChanged: (value){
           setState(() {
-            select = value.toString();
+
+                selection = value.toString();
+
+
 
           });
         },

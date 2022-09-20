@@ -8,10 +8,12 @@ import 'dart:async';
 import 'Controller/Test.dart';
 
 void main() async{
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Poppins'),
+
       home: MyApp()));
 }
 
@@ -21,12 +23,17 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
     return MaterialApp(
-      title: 'Splash Screen',
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.dark,
+        ),
+      ),
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
+
   }
 }
 
@@ -84,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: new BoxDecoration(
         color: Colors.white
