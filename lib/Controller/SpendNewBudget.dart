@@ -10,6 +10,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
+import 'package:swipeapp/Controller/Spend.dart';
 import 'package:swipeapp/main.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
@@ -26,12 +27,12 @@ import 'Response/TransactionResponse.dart';
 String? select;
 class SpendNewBudget extends StatefulWidget {
 
-
   @override
   _managebudgetacountState createState() => _managebudgetacountState();
 }
 class _managebudgetacountState extends State<SpendNewBudget> {
   String dollar = " \$";
+
   late List<String> datalistx = ["1","2","Third","4"];
   late int selectedIndex;
   List<Transactions> transactionlist = [];
@@ -41,6 +42,10 @@ class _managebudgetacountState extends State<SpendNewBudget> {
   int cmonth = 0;
   bool viewVisible1 = true;
   bool isLoading = true;
+  late int selectedcard = -1;
+  bool selected = false;
+  late String cname;
+  late String camount;
   void initState() {
     super.initState();
     fetchBankData(Constants.debitcardValue);
@@ -177,6 +182,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
       throw Exception('Failed to call transaction .');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,10 +297,21 @@ class _managebudgetacountState extends State<SpendNewBudget> {
   }
   budgetList()
   {
+    return
+    Container(
+        height: 350,
+       // color: Colors.purpleAccent,
+        child: SingleChildScrollView(
+            child:
+            Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
 
-              return isLoading ?
+         isLoading ?
               Center(child: CircularProgressIndicator()) :
               Container(
+
                 padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
@@ -331,18 +348,6 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                             fontWeight:
                                             FontWeight.w600),
                                       ),
-                                      // subtitle:
-                                      // Text(
-                                      //   transactionlist[index]
-                                      //       .category
-                                      //       .toString(),
-                                      //   style: TextStyle(
-                                      //       color: Colors.grey,
-                                      //       fontSize: 12,
-                                      //       fontWeight:
-                                      //       FontWeight.w600),
-                                      // ),
-
                                       trailing:
                                       Padding(
                                         padding: EdgeInsets.only(top:5),
@@ -359,19 +364,84 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                       FontWeight.w600),
                                                 ),
                                               ),
-
-
-                                              // Text(transactionlist[index].date.toString(),
-                                              //
-                                              //   style: TextStyle(
-                                              //       color: Colors.grey,
-                                              //       fontSize: 12,
-                                              //       fontWeight:
-                                              //       FontWeight.w500),
-                                              // ),
                                             ]),
 
-                                      )
+                                      ),
+                                    //
+                                      selected: false,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedcard = index;
+                                        });
+                                        if( selectedcard == index)
+                                        {
+
+                                          showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) {
+                                                return
+                                                  Container(
+                                                      height: MediaQuery.of(context).size.height * 0.35,
+                                                   child:
+                                                    Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    ListTile(
+                                                        contentPadding: EdgeInsets.only(
+                                                        left: 10.0, right: 0.0),
+                                                    title: CircleAvatar(
+                                                      radius: 20,
+                                                      child: Image(
+                                                        image: AssetImage("asset/images/cart.png"),
+                                                        //width: 40,
+                                                        //color: const Color(0xffECDCFF)
+                                                      ),
+                                                    ),
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    ListTile(title: Column(
+                                                        children:[
+                                                          Text(cname=  transactionlist[index]
+                                                              .name
+                                                              .toString(),
+                                                            style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w600),
+                                                          ),
+                                                          Text(camount = dollar+transactionlist[index].amount.toStringAsFixed(2),),
+                                                          Text('Create',
+                                                            style: TextStyle(
+                                                                color: const Color(0xFFA781D3),
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w600),
+                                                          ),
+                                                        ]
+                                                    ),
+
+                                                      onTap: () {
+                                                        goTobudgetScreen(context);
+                                                      },
+                                                    ),
+
+                                                  ],
+                                                )
+
+                                                );
+
+
+                                              });
+                                        }
+                                        else
+                                        {
+                                          selected = false;
+                                        }
+                                      }
+                                    //
 
 
 
@@ -392,8 +462,10 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                       ]
 
                   ),
-
-
+              )
+                          ]
+            )
+                          )
 
               );
 
@@ -411,6 +483,15 @@ class _managebudgetacountState extends State<SpendNewBudget> {
 
 
 
+  void goTobudgetScreen(BuildContext context) async{
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Spend(text: cname,text2: camount),
+      ),
+    );
+  }
 
 
 

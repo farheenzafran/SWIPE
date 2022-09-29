@@ -42,26 +42,36 @@ import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class Spend extends StatefulWidget {
-  const Spend({Key? key}) : super(key: key);
 
-  @override
- spendacountState createState() => spendacountState();
+class Spend extends StatefulWidget {
+  final String text;
+  final String text2;
+Spend(   {Key? key,  required  this.text, required  this.text2, }) : super(key: key);
+
+@override
+  State<StatefulWidget> createState() => spendacountState();
+
 }
 
 class spendacountState extends State<Spend> {
   @override
   String dollar = " \$";
-  late List<String> datalistx = ["1","2","Third","4"];
+
+  //  late String todos = widget.text;
+  //late final List<String> t =  widget.text as List<String>;
+
   late int selectedIndex;
   List<Transactions> transactionlist = [];
-  late Future<Transactions> datalist  ;
+  late Future<Transactions> datalist;
   String accesstoken = "";
   String accountid = "";
   int cmonth = 0;
   bool viewVisible1 = true;
   List<String> array = ["0", "1", "2", "3"];
-  Color randomColor() => Color.fromARGB(255, Random().nextInt(255), Random().nextInt(100), Random().nextInt(200));
+
+  Color randomColor() =>
+      Color.fromARGB(255, Random().nextInt(255), Random().nextInt(100),
+          Random().nextInt(200));
 
   void initState() {
     super.initState();
@@ -71,7 +81,9 @@ class spendacountState extends State<Spend> {
     //debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
 
   }
+
   bool isLoading = true;
+  bool ontap = true;
 
   debitTotalValue(List<BankData> debitlistbankdata) async {
     //double totalTransactionValue = 0;
@@ -82,8 +94,6 @@ class spendacountState extends State<Spend> {
       for (var t_transaction in response.transactions!) {
         transactionlist.add(t_transaction);
       }
-
-
     }
     setState(() {
       //tDebitValue = totalTransactionValue;
@@ -127,7 +137,7 @@ class spendacountState extends State<Spend> {
       // getBankData(tempbankdatalist);
       // return tempbankdatalist ;
       if (type == Constants.debitcardValue) {
-        debitTotalValue(tempbankdatalist) ;
+        debitTotalValue(tempbankdatalist);
         //  return tempbankdatalist;
       }
 
@@ -136,8 +146,9 @@ class spendacountState extends State<Spend> {
       throw Exception('Failed to call user childuserid .');
     }
   }
-  Future<TransactionResponse> transactionResponse(
-      String accesstoken, String accountid, int currentmonth) async {
+
+  Future<TransactionResponse> transactionResponse(String accesstoken,
+      String accountid, int currentmonth) async {
     String startdate = "";
     String enddate = "";
     var now = new DateTime.now().toString();
@@ -159,7 +170,7 @@ class spendacountState extends State<Spend> {
     Transactionoptions transactionoptions = Transactionoptions();
     transactionoptions.count = 20;
     transactionoptions.offset = 0;
-    transactionoptions.accountIds = [accountid] ;
+    transactionoptions.accountIds = [accountid];
     TransactionRequest transactionRequest = TransactionRequest();
     transactionRequest.clientId = Constants.ClientId;
     transactionRequest.secret = Constants.Secret;
@@ -175,7 +186,8 @@ class spendacountState extends State<Spend> {
           'Accept': 'application/json',
         },
         body: jsonEncode(transactionRequest));
-    print(' Budgetttt REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
+    print(' Budgetttt REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(
+        transactionRequest)}');
     print('Budgetttt body-----: ${response4}');
     print(response4.statusCode);
     print(response4);
@@ -188,7 +200,6 @@ class spendacountState extends State<Spend> {
       void dispose() {
         Loader.hide();
         isLoading = false;
-
       }
 
       return TransactionResponse.fromJson(jsonDecode(response4.body));
@@ -202,6 +213,7 @@ class spendacountState extends State<Spend> {
       throw Exception('Failed to call transaction .');
     }
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -210,18 +222,46 @@ class spendacountState extends State<Spend> {
               color: Colors.white,
               child: SingleChildScrollView(
                 child:
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      addAccountHeader(),
-                      catogeriesType(),
-                     // budgetList(),
-                      gridviewlist(),
-                      addButton(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    addAccountHeader(),
+                    catogeriesType(),
+                    // budgetList(),
+                    gridviewlist(),
+                    //  getCategory(),
+                    Text(widget.text.toString()),
+                    Text(widget.text2.toString()),
+                    addButton(),
+                   // showBudgetData(),
 
-                    ],
-                  ),
+                    Container(
+                      height: 230,
+
+                      child:  ListView.builder(
+                     //   itemCount: ,
+                          itemBuilder: (BuildContext context, int i) {
+
+                            return ListTile(
+                              title: Text("kjnkjgdnb",style: TextStyle(
+                                fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                                color: Colors.red, //font color
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w700,
+
+                              ),),
+                              trailing: new Icon(Icons.videocam),
+
+                            );
+
+
+                          }),
+
+                    ),
+
+                  ],
+                ),
 
 
               )
@@ -233,7 +273,6 @@ class spendacountState extends State<Spend> {
 
 //<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
-
     return Container(
         height: 120,
         width: double.infinity,
@@ -251,7 +290,7 @@ class spendacountState extends State<Spend> {
               alignment: Alignment.center,
               child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children:[
+                  children: [
                     Container(
                         margin: EdgeInsets.all(8),
                         alignment: Alignment.topLeft,
@@ -267,17 +306,16 @@ class spendacountState extends State<Spend> {
                           'Admin Account',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 15, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                              fontSize: 15,
+                              //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
                               color: Colors.white,
-                              fontWeight: FontWeight.bold//font color
+                              fontWeight: FontWeight.bold //font color
                           ),
 
 
                         )
                       //   ],
                       // )
-
-
 
 
                     ),
@@ -294,12 +332,14 @@ class spendacountState extends State<Spend> {
                     children: [
 
                       Text(
-                        dollar+"",
+                        dollar + "",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.white, //font color
+                            fontSize: 18,
+                            //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                            color: Colors.white,
+                            //font color
                             fontStyle: FontStyle.italic
                         ),
 
@@ -326,11 +366,13 @@ class spendacountState extends State<Spend> {
                   Column(
                     children: [
                       Text(
-                       dollar+"",
+                        dollar + "",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.white, //font color
+                          fontSize: 18,
+                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white,
+                          //font color
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w700,
 
@@ -338,15 +380,78 @@ class spendacountState extends State<Spend> {
 
                       ),
 
-                      Text(
-                        'Income',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
+
+      GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return
+                  Container(
+                      height: MediaQuery.of(context).size.height * 0.35,
+                      child:
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            contentPadding: EdgeInsets.only(
+                                left: 10.0, right: 0.0),
+                            title: CircleAvatar(
+                              radius: 20,
+                              child: Image(
+                                image: AssetImage("asset/images/cart.png"),
+                                //width: 40,
+                                //color: const Color(0xffECDCFF)
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          ListTile(title: Column(
+                              children:[
+                                // Text(cname=  transactionlist[index].name.toString(),
+                            Text('0000',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight:
+                                FontWeight.w600),),
+
+                                Text('Create',
+                                  style: TextStyle(
+                                      color: const Color(0xFFA781D3),
+                                      fontSize: 14,
+                                      fontWeight:
+                                      FontWeight.w600),
+                                ),
+                              ]
+                          ),
+
+                            onTap: () {
+                             // goTobudgetScreen(context);
+                            },
+                          ),
+
+                        ],
+                      )
+
+                  );
+
+
+              });
+        },
+        child:
+        Text(
+          'Income',
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
                     ],
                   ),
                 ]),
@@ -357,7 +462,8 @@ class spendacountState extends State<Spend> {
       //  ),
     );
   }
-  catogeriesType(){
+
+  catogeriesType() {
     return Align(
       alignment: Alignment.topLeft,
       child: Container(
@@ -376,8 +482,8 @@ class spendacountState extends State<Spend> {
       ),
     );
   }
-  budgetList()
-  {
+
+  budgetList() {
     return
       Container(
         padding: const EdgeInsets.all(8),
@@ -389,9 +495,9 @@ class spendacountState extends State<Spend> {
                   itemBuilder: (context, int index) {
                     return
                       transactionlist.isEmpty ? Center(
-                        child: CircularProgressIndicator(),):
+                        child: CircularProgressIndicator(),) :
                       Card(color: const Color(0xffF3F3F3),
-                        child:   Container(
+                        child: Container(
                           width: double.infinity,
                           height: 60.0,
                           margin: const EdgeInsets.only(right: 14, left: 14),
@@ -416,27 +522,20 @@ class spendacountState extends State<Spend> {
                                     fontWeight:
                                     FontWeight.w600),
                               ),
-                              // subtitle:
-                              // Text(
-                              //   transactionlist[index]
-                              //       .category
-                              //       .toString(),
-                              //   style: TextStyle(
-                              //       color: Colors.grey,
-                              //       fontSize: 12,
-                              //       fontWeight:
-                              //       FontWeight.w600),
-                              // ),
+
 
                               trailing:
                               Padding(
-                                padding: EdgeInsets.only(top:5),
-                                child:     Column(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Column(
                                     children: <Widget>[
                                       Padding(
-                                        padding:EdgeInsets.only(top:3, bottom: 3),
+                                        padding: EdgeInsets.only(
+                                            top: 3, bottom: 3),
                                         child:
-                                        Text(dollar+transactionlist[index].amount.toStringAsFixed(2),
+                                        Text(dollar +
+                                            transactionlist[index].amount
+                                                .toStringAsFixed(2),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,
@@ -456,7 +555,8 @@ class spendacountState extends State<Spend> {
                                       // ),
                                     ]),
 
-                              )
+                              ),
+
 
 
 
@@ -464,8 +564,6 @@ class spendacountState extends State<Spend> {
 
 
                         ),
-
-
 
 
                       );
@@ -479,7 +577,6 @@ class spendacountState extends State<Spend> {
         ),
 
 
-
       );
 
 
@@ -490,58 +587,64 @@ class spendacountState extends State<Spend> {
     // }
 
   }
-gridviewlist(){
+
+  gridviewlist() {
     return isLoading ?
     Center(child: CircularProgressIndicator()) :
     Container(
       //color: Colors.yellow,
-     // height: 300,
-      child:
-      SizedBox(
-        height: 80 + 80,
-        child: GridView.builder(
-            itemCount: transactionlist.length,
-            scrollDirection: Axis.horizontal,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 90 / 256,
-              crossAxisCount: 2,),
-            itemBuilder: (context, index) {
-              return ListView(
-                  children:[
-                    ListTile(
-                        contentPadding: EdgeInsets.only(left: 5.0, right: 0.0),
-                        leading: CircleAvatar(
-                          radius: 20,
-                          child: Image(
-                            image: AssetImage("asset/images/cart.png"),
+      // height: 300,
+        child:
+        SizedBox(
+          height: 80 + 80,
+          child: GridView.builder(
+              itemCount: transactionlist.length,
+              scrollDirection: Axis.horizontal,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 90 / 256,
+                crossAxisCount: 2,),
+              itemBuilder: (context, index) {
+                return ListView(
+                  shrinkWrap: true,
+
+                    children: [
+                      ListTile(
+                          contentPadding: EdgeInsets.only(
+                              left: 5.0, right: 0.0),
+                          leading: CircleAvatar(
+                            radius: 20,
+                            child: Image(
+                              image: AssetImage("asset/images/cart.png"),
+                            ),
                           ),
-                        ),
-                        title:
-                        Text(dollar+transactionlist[index].amount.toStringAsFixed(2),
-                          style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),),
-                        subtitle:
-                        Padding(
-                          padding: EdgeInsets.only(top:5),
-                          child:
-                          Text(transactionlist[index].category.toString(),
-                            style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.w600),
-                          ),
-                        )
+                          title:
+                          Text(dollar +
+                              transactionlist[index].amount.toStringAsFixed(2),
+                            style: TextStyle(color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700),),
+                          subtitle:
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child:
+                            Text(transactionlist[index].category.toString(),
+                              style: TextStyle(color: Colors.grey,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          )
 
 
+                      ),
+                    ]
 
-                    ),
-                  ]
-
-                // color: randomColor(), child: Text(array[index])
-              );
-            }
-        ),
-      )
+                  // color: randomColor(), child: Text(array[index])
+                );
+              }
+          ),
+        )
     );
-
-
-}
+  }
 
   addButton() {
     return
@@ -563,7 +666,8 @@ gridviewlist(){
 
                 ),
                 onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SpendNewBudget()),);
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SpendNewBudget()),);
                 },
                 child: Image(
                   image: AssetImage("asset/images/Plus.png"),
@@ -575,10 +679,110 @@ gridviewlist(){
 
             ],
           ));
+  }
 
+  showBudgetData() {
+    return
+      Column(
+        children: [
+        Container(
+        height: 250,
+        margin: EdgeInsets.only(
+        bottom: 5.0,top: 5 ,),
+    child:
+
+    ListView.builder(
+    scrollDirection: Axis.vertical,
+    itemCount: transactionlist.length,
+    itemBuilder: (context, i) {
+    var item = transactionlist[i];
+
+    return
+    Container(
+    // height: 220,
+    width: double.infinity,
+    margin: EdgeInsets.only(left: 15, right: 15, top: 4, bottom: 12),
+    alignment: Alignment.topLeft,
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(15),
+    color: const Color(0x85dadada)),
+    child:
+    Column(
+    children: [
+    Padding(padding: EdgeInsets.only(bottom: 15),
+    child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text(item.name.toString(),
+    style: TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 16,
+    color: Colors.black,
+    ),
+    ),
+
+
+    Text(item.name.toString(),
+    style: TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 16,
+    color: Colors.black,
+    ),
+    ),
+    ],
+    ),
+    ),
+    Text("cash",
+    style: TextStyle(
+    fontWeight: FontWeight.w700,
+    fontSize: 16,
+    color: Colors.black,
+    ),
+    ),
+
+    ],
+
+    )
+
+    );
+
+    }
+
+    )
+        )
+          ]
+
+    );
   }
 
 
+// getCategory()
+// {
+//   // return
+//   //   Container(
+//   //   height: 230,
+//   //
+//   // child:  ListView.builder(
+//   //     itemCount: text == null ? 0 : text.length,
+//   //       itemBuilder: (BuildContext context, int index) {
+//   //         return ListTile(
+//   //             title: Text(text[index],style: TextStyle(
+//   //               fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+//   //               color: Colors.red, //font color
+//   //               fontStyle: FontStyle.italic,
+//   //               fontWeight: FontWeight.w700,
+//   //
+//   //             ),),
+//   //             trailing: new Icon(Icons.videocam),
+//   //
+//   //         );
+//   //
+//   //
+//   //       }),
+//   //
+//   // );
+// }
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 

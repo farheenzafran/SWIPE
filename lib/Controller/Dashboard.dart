@@ -553,124 +553,140 @@ class tdashboardState extends State<Dashboard> {
 
     var _val;
     var chidern;
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+
+
        
         //  resizeToAvoidBottomInset: false,
 
-          body:
+          body: SafeArea(
 
+child:
        SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+         scrollDirection: Axis.vertical,
 
+         child: Column(
+             mainAxisSize: MainAxisSize.min,
+                 crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
                       dashboardHeader(),
-                      debitTransaction(),
-                      creditLiability(),
-                      paymentButton(),
-                      viewtransaction(),
-                      Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: viewVisible1,
-                        child: Container(
-                          width: double.infinity,
-                          //height: 200.0,
-                          // color: Colors.yellow,
-                          child: Stack(
-                            //child: Column(
-                            children: [
-                              isLoading1 ?
-                              Center(child: CircularProgressIndicator()) :
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: transactionlist.length,
-                                  itemBuilder: (context, int index) {
-                                    var $;
-                                    return Card(
-                                      color: const Color(0xffF7F6FA),
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 80.0,
-                                        margin:
-                                        const EdgeInsets.only(right: 9, left: 9),
-                                        child: ListTile(
-                                            contentPadding: EdgeInsets.only(
-                                                left: 10.0, right: 0.0),
-                                            leading: CircleAvatar(
-                                              radius: 20,
-                                              child:
-                                              Image(image: AssetImage("asset/images/cart.png"),
-                                                //Image.asset( iconname[index],),
-                                              ),
-                                            ),
-                                            title: Text(
-                                              transactionlist[index].name.toString(),
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            subtitle: Text(
-                                              transactionlist[index]
-                                                  .category
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            trailing: Padding(
-                                              padding: EdgeInsets.only(top: 5),
-                                              child: Column(children: <Widget>[
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 3, bottom: 3),
-                                                  child: Text(
-                                                    dollar +
-                                                        transactionlist[index]
-                                                            .amount
-                                                            .toStringAsFixed(2),
+                        Column(
+                          children:<Widget>[
+                            debitTransaction(),
+                            creditLiability(),
+                            paymentButton(),
+                            viewtransaction(),
+                            Visibility(
+                              maintainSize: true,
+                              maintainAnimation: true,
+                              maintainState: true,
+                              visible: viewVisible1,
+                              child: Container(
+                                width: double.infinity,
+                                //height: 200.0,
+                                // color: Colors.yellow,
+                                child: Column(
+                                  //child: Column(
+                                  children: [
+                                    isLoading1 ?
+                                    Center(child: CircularProgressIndicator()) :
+                                    ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: transactionlist.length,
+                                        itemBuilder: (context, int index) {
+                                          var $;
+                                          return Card(
+                                            color: const Color(0xffF7F6FA),
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 80.0,
+                                              margin:
+                                              const EdgeInsets.only(right: 9, left: 9),
+                                              child: ListTile(
+                                                  contentPadding: EdgeInsets.only(
+                                                      left: 10.0, right: 0.0),
+                                                  leading: CircleAvatar(
+                                                    radius: 20,
+                                                    child:
+                                                    Image(image: AssetImage("asset/images/cart.png"),
+                                                      //Image.asset( iconname[index],),
+                                                    ),
+                                                  ),
+                                                  title: Text(
+                                                    transactionlist[index].name.toString(),
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 14,
                                                         fontWeight: FontWeight.w600),
                                                   ),
-                                                ),
-                                                Text(
-                                                  transactionlist[index]
-                                                      .date
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                              ]),
-                                            )),
-                                      ),
-                                    );
-                                  }
-                                // );
-                                // }
-                                //},
-                              ),
+                                                  subtitle: Text(
+                                                    transactionlist[index]
+                                                        .category
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 12,
+                                                        fontWeight: FontWeight.w600),
+                                                  ),
+                                                  trailing: Padding(
+                                                    padding: EdgeInsets.only(top: 5),
+                                                    child: Column(children: <Widget>[
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: 3, bottom: 3),
+                                                        child: Text(
+                                                          dollar +
+                                                              transactionlist[index]
+                                                                  .amount
+                                                                  .toStringAsFixed(2),
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        transactionlist[index]
+                                                            .date
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w500),
+                                                      ),
+                                                    ]),
+                                                  )),
+                                            ),
+                                          );
+                                        }
+                                      // );
+                                      // }
+                                      //},
+                                    ),
 
-                            ],
-                          ),
-                        ),
-                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+
+                          ],
+                        )
+
+
+
 
 
 
                 ],
               ),
             )
+    ),
 
-          ),
+
+
+
     );
   }
 
@@ -879,7 +895,8 @@ class tdashboardState extends State<Dashboard> {
   }
 
   debitTransaction() {
-    return Column(
+    return Scrollbar(
+      child:Column(
       children: [
         Align(
           alignment: Alignment.topLeft,
@@ -968,6 +985,7 @@ class tdashboardState extends State<Dashboard> {
               margin: const EdgeInsets.only(bottom: 4, top: 4),
               color: Colors.white,
               child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: [
                   FutureBuilder<List<BankData>>(
@@ -1064,7 +1082,9 @@ class tdashboardState extends State<Dashboard> {
             //--------------------------
           ],
         )),
+
       ],
+      ),
     );
   }
 
@@ -1151,6 +1171,8 @@ class tdashboardState extends State<Dashboard> {
         color: Colors.white,
         child: ListView(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+
           children: [
             FutureBuilder<List<BankData>>(
               future: creditbankdatalist,
@@ -1354,10 +1376,10 @@ class tdashboardState extends State<Dashboard> {
               color: isFavourite1 ? const Color(0xFFA781D3) : Colors.grey,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Spend()),
-              );
+              // Navigator.push(
+              //   context,
+              //   //MaterialPageRoute(builder: (context) => Spend(this.)),
+              // );
               setState(() {
                 isFavourite = true;
                 isFavourite1 = false;
