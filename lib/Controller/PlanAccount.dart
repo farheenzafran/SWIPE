@@ -81,8 +81,7 @@ class planacountState extends State<PlanAccount> {
     print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
 
     if (response2.statusCode == 200) {
-     // return GoalGetBankdataResponse;
-     // return GoalGetBankdataResponse.fromJson(jsonDecode(response2.body));
+
 
       GoalGetBankdataResponse getGoalResponse = GoalGetBankdataResponse.fromJson(jsonDecode(response2.body));
        return getGoalResponse.result!;
@@ -98,6 +97,7 @@ class planacountState extends State<PlanAccount> {
   LabelLayoutStrategy? xContainerLabelLayoutStrategy;
   late ChartData chartData;
   late double tValue = 0;
+  late double totalValue = 0;
   ChartOptions chartOptions = const ChartOptions(
     labelCommonOptions: MyLabelCommonOptions(),
 
@@ -487,7 +487,7 @@ addButton() {
     Column(
       children: [
       Container(
-      height: 300,
+      //height: 300,
       margin:  EdgeInsets.only(
         bottom: 5.0,top: 5 , ),
       child:
@@ -496,6 +496,8 @@ addButton() {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, i) {

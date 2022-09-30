@@ -16,6 +16,7 @@ import '../Model Helper.dart';
 import 'AddMember.dart';
 import 'BankData.dart';
 import 'Request/AddUserRequest.dart';
+import 'Request/SaveBudgetDataRequest.dart';
 import 'Request/TransactionRequest.dart';
 import 'Response/AddUserResponse.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ import 'package:http/http.dart' as http;
 
 import 'Response/ChildUserResponse.dart';
 import 'Response/GetBankDataResponse.dart';
+import 'Response/SaveBudgetDataResponse.dart';
 import 'Response/TransactionResponse.dart';
 String? select;
 class SpendNewBudget extends StatefulWidget {
@@ -31,6 +33,15 @@ class SpendNewBudget extends StatefulWidget {
   _managebudgetacountState createState() => _managebudgetacountState();
 }
 class _managebudgetacountState extends State<SpendNewBudget> {
+  void initState() {
+    super.initState();
+    fetchBankData(Constants.debitcardValue);
+   // saveBudgetData();
+    // load();
+    //debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
+
+  }
+
   String dollar = " \$";
 
   late List<String> datalistx = ["1","2","Third","4"];
@@ -45,15 +56,9 @@ class _managebudgetacountState extends State<SpendNewBudget> {
   late int selectedcard = -1;
   bool selected = false;
   late String cname;
-  late String camount;
-  void initState() {
-    super.initState();
-    fetchBankData(Constants.debitcardValue);
+  late String camount ;
 
-   // load();
-   //debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
 
-  }
   debitTotalValue(List<BankData> debitlistbankdata) async {
     //double totalTransactionValue = 0;
     for (var debitdata in debitlistbankdata) {
@@ -157,13 +162,6 @@ class _managebudgetacountState extends State<SpendNewBudget> {
           'Accept': 'application/json',
         },
         body: jsonEncode(transactionRequest));
-    print(' Budgetttt REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(transactionRequest)}');
-    print('Budgetttt body-----: ${response4}');
-    print(response4.statusCode);
-    print(response4);
-    print(accesstoken);
-    print(accountid);
-    print('Budget##########################################');
     if (response4.statusCode == 200) {
       void dispose() {
         Loader.hide();
@@ -179,7 +177,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
       // super.dispose();
       //}
 
-      throw Exception('Failed to call transaction .');
+      throw Exception('00000Failed to call transaction .');
     }
   }
 
@@ -356,7 +354,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                               Padding(
                                                 padding:EdgeInsets.only(top:3, bottom: 3),
                                                 child:
-                                                Text(dollar+transactionlist[index].amount.toStringAsFixed(2),
+                                                Text(camount = dollar+transactionlist[index].amount!.toStringAsFixed(2),
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
@@ -403,16 +401,14 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                     ),
                                                     ListTile(title: Column(
                                                         children:[
-                                                          Text(cname=  transactionlist[index]
-                                                              .name
-                                                              .toString(),
+                                                          Text( cname = transactionlist[index].name.toString(),
                                                             style: TextStyle(
                                                                 color: Colors.black,
                                                                 fontSize: 14,
                                                                 fontWeight:
                                                                 FontWeight.w600),
                                                           ),
-                                                          Text(camount = dollar+transactionlist[index].amount.toStringAsFixed(2),),
+                                                          Text(dollar+ (camount=transactionlist[index].amount.toString())),
                                                           Text('Create',
                                                             style: TextStyle(
                                                                 color: const Color(0xFFA781D3),

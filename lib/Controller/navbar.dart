@@ -29,7 +29,7 @@ class _navState extends State<navbar> {
     _currentIndex = 0;
     _children = [
        Dashboard(),
-        Spend(text: '', text2: '',),
+        Spend(text: '', text2: 0,),
         PlanAccount(),
         AddAccount()
     ];
@@ -95,7 +95,7 @@ class _navState extends State<navbar> {
 
     case 1:
     return CupertinoTabView(builder: (context)
-    {return CupertinoPageScaffold(child: Spend(text: '', text2: '',),);
+    {return CupertinoPageScaffold(child: Spend(text: '', text2: 0,),);
     });
 
     case 2:

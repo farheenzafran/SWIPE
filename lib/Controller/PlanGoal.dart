@@ -339,6 +339,7 @@ class goalsavingplanState extends State<PlanGoal> {
       throw Exception('Failed to call plaid save bank data.');
     }
   }
+
   Future<GoalBankdataResponse> GoalData( ) async {
     SaveGoallBankdataRequest saveGoallBankdataRequest = SaveGoallBankdataRequest();
     UserDetail tempuserdetail = await Constants.getUserDetail();
@@ -384,7 +385,6 @@ class goalsavingplanState extends State<PlanGoal> {
       throw Exception('Failed to call user adduserid .');
     }
   }
-
   int _groupValue = -1;
   String dollar = " \$";
   bool isexpanse = true;

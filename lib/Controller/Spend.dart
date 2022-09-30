@@ -20,6 +20,8 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/AddNewPlan.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/Request/SaveBudgetDataRequest.dart';
+import 'package:swipeapp/Controller/Response/SaveBudgetDataResponse.dart';
 import 'package:swipeapp/Controller/SpendNewBudget.dart';
 import '../Model Helper.dart';
 import 'AddMember.dart';
@@ -31,6 +33,7 @@ import 'Request/TokenResquest.dart';
 import 'Request/TransactionRequest.dart';
 import 'Response/AccessTokenResponse.dart';
 import 'Response/GetBankDataResponse.dart';
+import 'Response/GetBudgetDataResponse.dart';
 import 'Response/InstitutionResponse.dart';
 import 'Response/LiabilityResponse.dart';
 import 'Response/LinkTokenResponse.dart';
@@ -44,8 +47,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Spend extends StatefulWidget {
-  final String text;
-  final String text2;
+ var text;
+ var text2;
 Spend(   {Key? key,  required  this.text, required  this.text2, }) : super(key: key);
 
 @override
@@ -55,14 +58,96 @@ Spend(   {Key? key,  required  this.text, required  this.text2, }) : super(key: 
 
 class spendacountState extends State<Spend> {
   @override
+  BankData bankDataobj = BankData();
+  void initState()  {
+    super.initState();
+    fetchBankData(Constants.debitcardValue);
+  //  saveBudgetData();
+   datalist =  getGoalBudgetData();
+   saveBudgetData();
+   // datalist = saveBudgetData();
+  }
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  late Future<List<getResultBudget>> datalist ;
+  Future<List<getResultBudget>> getGoalBudgetData() async {
+    UserDetail tempuserdetail = await Constants.getUserDetail();
+    String accessToken = tempuserdetail.accessToken.toString();
+    final response2 = await http.get(Uri.parse('${Constants.baseUrl2}/Expense/GetExpense'),
+        headers: <String, String>{
+          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',});
+    print(accessToken);
+    print("66666responseprint>>>>>>>>>>>>>");
+    print(response2);
+    print("getgetgetgetbodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+    print(response2.body);
+    print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+    print(response2.statusCode);
+    print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+
+    if (response2.statusCode == 200) {
+      // return
+      // GoalGetBankdataResponse;
+      // return GoalGetBankdataResponse.fromJson(jsonDecode(response2.b
+
+      GetBudegetDataResponse getbResponse =
+       GetBudegetDataResponse.fromJson(jsonDecode(response2.body));
+      return getbResponse.result!;
+
+
+
+    }
+    else
+    {
+      throw Exception('Failed to call user getgoalchilduserid .');
+    }
+  }
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  Future<SaveBudegetDataResponse> saveBudgetData() async {
+    SaveBudegetDataRequest savedataRequest = SaveBudegetDataRequest();
+    print("testing#######___________________******");
+    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
+
+    print("testing#######___________________******");
+    UserDetail tempuserdetail = await Constants.getUserDetail();
+    savedataRequest.id = 0;
+    savedataRequest.amount = widget.text2;
+    savedataRequest.expenseTitle = widget.text;
+    savedataRequest.createdOn = "";
+    savedataRequest.userId = 0;
+   // savedataRequest.userId = accountid ;
+
+    String accesstoken = tempuserdetail.accessToken.toString();
+    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
+    final responsebudget = await http.post(Uri.parse(Constants.baseUrl2 + '/Expense/SaveExpense'),
+        headers: <String, String>{
+          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Authorization': 'Bearer $accesstoken',
+        },
+        body: jsonEncode(savedataRequest));
+    print("budget&&&&&&&&&&??????????????<<<<<<<");
+    print(responsebudget.body);
+    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
+    print(widget.text2);
+    print(savedataRequest);
+    print(responsebudget.body);
+    print(accesstoken);
+    print(responsebudget.statusCode);
+    print("&&&&&&&&&&??????????????<<<<<<<");
+    if (responsebudget.statusCode == 200) {
+      print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(responsebudget)}');
+      SaveBudegetDataResponse budgetResponse = SaveBudegetDataResponse.fromJson(jsonDecode(responsebudget.body));
+      return budgetResponse;
+    } else {
+      throw Exception('Failed to call user budegetdata.');
+    }
+  }
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   String dollar = " \$";
-
-  //  late String todos = widget.text;
-  //late final List<String> t =  widget.text as List<String>;
-
   late int selectedIndex;
   List<Transactions> transactionlist = [];
-  late Future<Transactions> datalist;
   String accesstoken = "";
   String accountid = "";
   int cmonth = 0;
@@ -73,14 +158,6 @@ class spendacountState extends State<Spend> {
       Color.fromARGB(255, Random().nextInt(255), Random().nextInt(100),
           Random().nextInt(200));
 
-  void initState() {
-    super.initState();
-    fetchBankData(Constants.debitcardValue);
-
-    // load();
-    //debitBuildExpandableContent(accesstoken.toString(), accountid.toString(), cmonth);
-
-  }
 
   bool isLoading = true;
   bool ontap = true;
@@ -186,14 +263,7 @@ class spendacountState extends State<Spend> {
           'Accept': 'application/json',
         },
         body: jsonEncode(transactionRequest));
-    print(' Budgetttt REQUESTTTTTTTTTTTTTTTTTTTT: ${jsonEncode(
-        transactionRequest)}');
-    print('Budgetttt body-----: ${response4}');
-    print(response4.statusCode);
-    print(response4);
-    print(accesstoken);
-    print(accountid);
-    print('Budget##########################################');
+
     isLoading = false;
 
     if (response4.statusCode == 200) {
@@ -213,6 +283,7 @@ class spendacountState extends State<Spend> {
       throw Exception('Failed to call transaction .');
     }
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,31 +305,8 @@ class spendacountState extends State<Spend> {
                     Text(widget.text.toString()),
                     Text(widget.text2.toString()),
                     addButton(),
-                   // showBudgetData(),
+                  showBudgetData(),
 
-                    Container(
-                      height: 230,
-
-                      child:  ListView.builder(
-                     //   itemCount: ,
-                          itemBuilder: (BuildContext context, int i) {
-
-                            return ListTile(
-                              title: Text("kjnkjgdnb",style: TextStyle(
-                                fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                                color: Colors.red, //font color
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w700,
-
-                              ),),
-                              trailing: new Icon(Icons.videocam),
-
-                            );
-
-
-                          }),
-
-                    ),
 
                   ],
                 ),
@@ -680,6 +728,40 @@ class spendacountState extends State<Spend> {
             ],
           ));
   }
+  addButton2() {
+    return
+
+      Container(
+          height: 45,
+          width: double.infinity,
+          margin:
+          EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.yellow,),
+          child: Row(
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(5),
+
+                ),
+                onPressed: () async {
+                  //saveBudgetData();
+                },
+                child: Image(
+                  image: AssetImage("asset/images/Plus.png"),
+                  width: 130,
+                  height: 130,
+                ),
+              ),
+              Text('Add a new budget'),
+
+            ],
+          ));
+  }
+
 
   showBudgetData() {
     return
@@ -690,13 +772,18 @@ class spendacountState extends State<Spend> {
         margin: EdgeInsets.only(
         bottom: 5.0,top: 5 ,),
     child:
-
+    FutureBuilder<List<getResultBudget>>(
+    future: datalist,
+    builder: (context, snapshot) {
+    if (snapshot.hasData) {
+return
     ListView.builder(
-    scrollDirection: Axis.vertical,
-    itemCount: transactionlist.length,
-    itemBuilder: (context, i) {
-    var item = transactionlist[i];
-
+        shrinkWrap: true,
+       // physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: snapshot.data!.length,
+         itemBuilder: (context, i) {
+           var item = snapshot.data![i];
     return
     Container(
     // height: 220,
@@ -714,7 +801,7 @@ class spendacountState extends State<Spend> {
     child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-    Text(item.name.toString(),
+    Text(item.amount.toString(),
     style: TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 16,
@@ -723,7 +810,7 @@ class spendacountState extends State<Spend> {
     ),
 
 
-    Text(item.name.toString(),
+    Text(item.expenseTitle.toString(),
     style: TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 16,
@@ -749,40 +836,30 @@ class spendacountState extends State<Spend> {
 
     }
 
-    )
-        )
-          ]
-
     );
+    }
+    else
+    {
+      return Container(
+        //color: Colors.red,
+          child:
+          Center(
+            child:
+            CircularProgressIndicator(),
+          )
+      );
+    }
+
+    }
+    ),
+        ),
+        ],
+      );
+
+
   }
 
 
-// getCategory()
-// {
-//   // return
-//   //   Container(
-//   //   height: 230,
-//   //
-//   // child:  ListView.builder(
-//   //     itemCount: text == null ? 0 : text.length,
-//   //       itemBuilder: (BuildContext context, int index) {
-//   //         return ListTile(
-//   //             title: Text(text[index],style: TextStyle(
-//   //               fontSize: 18, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-//   //               color: Colors.red, //font color
-//   //               fontStyle: FontStyle.italic,
-//   //               fontWeight: FontWeight.w700,
-//   //
-//   //             ),),
-//   //             trailing: new Icon(Icons.videocam),
-//   //
-//   //         );
-//   //
-//   //
-//   //       }),
-//   //
-//   // );
-// }
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 
