@@ -18,33 +18,33 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/AddAccount.dart';
+import 'package:swipeapp/Controller/Account/AddAccount1.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
-import '../Model Helper.dart';
-import 'BankData.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
+import '../../Model Helper.dart';
+import '../PlaidData/BankData.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'creditBankdata.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class AddAccountSuccessful extends StatefulWidget {
+class AddAccountSuccessful3 extends StatefulWidget {
 
   @override
   addacountState createState() => addacountState();
 }
 
-class addacountState extends State<AddAccountSuccessful> {
+class addacountState extends State<AddAccountSuccessful3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +93,7 @@ class addacountState extends State<AddAccountSuccessful> {
 
            // Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccount()),);
           //  Navigator.of(context, rootNavigator: true).push( MaterialPageRoute(builder: (context) => AddAccount()),);
-            Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccount(), maintainState: false));
+            Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccount1(), maintainState: false));
 
 
             // ));

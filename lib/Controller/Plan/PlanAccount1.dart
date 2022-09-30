@@ -20,43 +20,43 @@ import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/AddNewPlan.dart';
-import 'package:swipeapp/Controller/ManageAccount.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
+import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
 import 'package:swipeapp/Controller/Request/SaveBankDataRequest.dart';
 import 'package:swipeapp/Controller/Request/SaveGoalBankdataRequest.dart';
 import 'package:swipeapp/Controller/Response/GoalBankDataResponse.dart';
-import '../Model Helper.dart';
-import 'AddMember.dart';
-import 'BankData.dart';
-import 'Chart.dart';
-import 'Dashboard.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/GoalGetBankDataResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../PlaidData/Chart.dart';
+import '../Dashboard.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/GoalGetBankDataResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'Response/UserDeatail.dart';
-import 'creditBankdata.dart';
+import '../Response/UserDeatail.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class PlanAccount extends StatefulWidget {
-  const PlanAccount({Key? key}) : super(key: key);
+class PlanAccount1 extends StatefulWidget {
+  const PlanAccount1({Key? key}) : super(key: key);
 
   @override
 
 planacountState createState() => planacountState();
 }
 
-class planacountState extends State<PlanAccount> {
+class planacountState extends State<PlanAccount1> {
   String dollar = " \$";
   late String name;
   late String a_associate;
@@ -404,7 +404,7 @@ addButton() {
                            //    .then((value) => Navigator.push(context, MaterialPageRoute(
                            //    builder: (_) => AddNewplan()),));
                           Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => AddNewplan()),
+                            context, MaterialPageRoute(builder: (context) => AddNewplan2()),
                           );
                         },
                         child: Image(

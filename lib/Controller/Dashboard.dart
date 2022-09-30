@@ -21,21 +21,20 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/BarChartGraph.dart';
-import 'package:swipeapp/Controller/EmailSignup.dart';
-import 'package:swipeapp/Controller/ManageAccount.dart';
-import 'package:swipeapp/Controller/PlanAccount.dart';
+import 'package:swipeapp/Controller/Login/EmailSignup.dart';
+import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
+import 'package:swipeapp/Controller/Plan/PlanAccount1.dart';
 import 'package:swipeapp/Controller/Request/SaveBankDataRequest.dart';
 import 'package:swipeapp/Controller/Request/RefreshTokenRequest.dart';
 import 'package:swipeapp/Controller/Response/GetBankDataResponse.dart';
 import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
 import 'package:swipeapp/Controller/Response/SaveBankDataResponse.dart';
-import 'package:swipeapp/Controller/TransactionDetail.dart';
+import 'package:swipeapp/Controller/PlaidData/TransactionDetail.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../Model Helper.dart';
-import 'AddAccount.dart';
-import 'BankData.dart';
-import 'Chart.dart';
+import 'Account/AddAccount1.dart';
+import 'PlaidData/BankData.dart';
+import 'PlaidData/Chart.dart';
 import 'Request/AccessTokenRequest.dart';
 import 'Request/InstitutionRequest.dart';
 import 'Request/LiabilityRequest.dart';
@@ -49,9 +48,9 @@ import 'Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'Response/UserDeatail.dart';
-import 'Spend.dart';
+import 'Spend/Spend.dart';
 import 'Test.dart';
-import 'creditBankdata.dart';
+import 'PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1337,99 +1336,7 @@ child:
     );
   }
 
-  bottomNavBar() {
-    return Container(
-      height: 45,
-      padding: const EdgeInsets.all(
-        8,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        color: const Color(0xF5F7F6FA),
-      ),
-      //alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            // icon: Image.asset('assets/images/dashboard.png'),
-            icon: ImageIcon(
-              AssetImage("asset/images/home2.png"),
-              size: 140,
-              color: isFavourite ? const Color(0xFFA781D3) : Colors.grey,
-            ),
 
-            onPressed: () {
-              setState(() {
-                isFavourite = false;
-                isFavourite1 = true;
-                isFavourite2 = true;
-                isFavourite3 = true;
-              });
-            },
-          ),
-          IconButton(
-            icon: ImageIcon(
-              AssetImage("asset/images/pbox.png"),
-              size: 140,
-              color: isFavourite1 ? const Color(0xFFA781D3) : Colors.grey,
-            ),
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   //MaterialPageRoute(builder: (context) => Spend(this.)),
-              // );
-              setState(() {
-                isFavourite = true;
-                isFavourite1 = false;
-                isFavourite2 = true;
-                isFavourite3 = true;
-              });
-            },
-          ),
-          IconButton(
-            icon: ImageIcon(
-              AssetImage("asset/images/pmoney.png"),
-              size: 140,
-              color: isFavourite2 ? const Color(0xFFA781D3) : Colors.grey,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PlanAccount()),
-              );
-              setState(() {
-                isFavourite = true;
-                isFavourite1 = true;
-                isFavourite2 = false;
-                isFavourite3 = true;
-              });
-            },
-          ),
-          IconButton(
-            icon: ImageIcon(
-              AssetImage("asset/images/paccount.png"),
-              size: 140,
-              color: isFavourite3 ? const Color(0xFFA781D3) : Colors.grey,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddAccount()),
-              );
-              setState(() {
-                isFavourite = true;
-                isFavourite1 = true;
-                isFavourite2 = true;
-                isFavourite3 = false;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   viewtransaction() {
     return Container(

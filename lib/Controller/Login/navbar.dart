@@ -1,20 +1,20 @@
 //
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:swipeapp/Controller/AddAccount.dart';
-import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
-import 'package:swipeapp/Controller/AddNewPlan.dart';
+import 'package:swipeapp/Controller/Account/AddAccount1.dart';
+import 'package:swipeapp/Controller/Account/AddAccountSuccessful3.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
-import 'package:swipeapp/Controller/ManageAccount.dart';
-import 'package:swipeapp/Controller/PlanAccount.dart';
-import 'package:swipeapp/Controller/Spend.dart';
+import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
+import 'package:swipeapp/Controller/Plan/PlanAccount1.dart';
+import 'package:swipeapp/Controller/Spend/Spend.dart';
 // const Dashboard(),
 // const  Spend(),
 // const  PlanAccount(),
 // const  AddAccount()
 import 'package:flutter/material.dart';
 
-import 'Chart.dart';
+import '../PlaidData/Chart.dart';
 
 class  navbar extends StatefulWidget {
   @override
@@ -30,8 +30,8 @@ class _navState extends State<navbar> {
     _children = [
        Dashboard(),
         Spend(text: '', text2: 0,),
-        PlanAccount(),
-        AddAccount()
+        PlanAccount1(),
+        AddAccount1()
     ];
     super.initState();
   }
@@ -100,12 +100,12 @@ class _navState extends State<navbar> {
 
     case 2:
     return CupertinoTabView(builder: (context)
-    {return CupertinoPageScaffold(child: PlanAccount(),);
+    {return CupertinoPageScaffold(child: PlanAccount1(),);
     });
 
     case 3:
     return CupertinoTabView(builder: (context)
-    {return CupertinoPageScaffold(child: AddAccount(),);
+    {return CupertinoPageScaffold(child: AddAccount1(),);
     });
             default:
               return CupertinoTabView(builder: (context)

@@ -17,29 +17,29 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
-import 'package:swipeapp/Controller/ManageAccount.dart';
+import 'package:swipeapp/Controller/Account/AddAccountSuccessful3.dart';
+import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
 import 'package:swipeapp/Controller/Request/AddUserRequest.dart';
 import 'package:swipeapp/Controller/Response/AddUserResponse.dart';
 import 'package:swipeapp/Controller/Response/ChildUserResponse.dart';
-import '../Model Helper.dart';
-import 'Dashboard.dart';
+import '../../Model Helper.dart';
+import '../Dashboard.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'Response/UserDeatail.dart';
+import '../Response/UserDeatail.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddAccount extends StatefulWidget {
-  const AddAccount({Key? key,}) : super(key: key);
+class AddAccount1 extends StatefulWidget {
+  const AddAccount1({Key? key,}) : super(key: key);
   //AddAccount() : super();
 
   @override
   addacountState createState() => addacountState();
 }
 
-class addacountState extends State<AddAccount> {
+class addacountState extends State<AddAccount1> {
   late Function setTabIndex;
 
   late String countryCode;
@@ -235,7 +235,7 @@ class addacountState extends State<AddAccount> {
               // setTabIndex(0);
               // Provider.of<ValueNotifier<int>>(context, listen: false).value = 1;
              // Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
-              Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) => ManageAccount(), maintainState: false));
+              Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) => ManageAccount2(), maintainState: false));
               // Navigator.pushReplacement(
               //   context,
               //   MaterialPageRoute(

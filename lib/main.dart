@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
-import 'Controller/LoginScreen.dart';
+import 'Controller/Login/LoginScreen.dart';
 import 'Model Helper.dart';
 import 'dart:async';
 import 'Controller/Test.dart';

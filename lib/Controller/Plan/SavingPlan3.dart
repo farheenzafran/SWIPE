@@ -17,27 +17,27 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/AddNewPlan.dart';
-import 'package:swipeapp/Controller/PlanGoal.dart';
-import '../Model Helper.dart';
-import 'AddMember.dart';
-import 'BankData.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/SaveGoalBankdataRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/GoalBankDataResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
+import 'package:swipeapp/Controller/Plan/PlanGoal4.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/SaveGoalBankdataRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/GoalBankDataResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'Response/UserDeatail.dart';
-import 'creditBankdata.dart';
+import '../Response/UserDeatail.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +45,14 @@ import 'package:intl/intl.dart';
 
 
 
-class SavingPlan extends StatefulWidget {
+class SavingPlan3 extends StatefulWidget {
  var nameholder;
-  SavingPlan({Key? key, required  this.nameholder}) : super(key: key);
+  SavingPlan3({Key? key, required  this.nameholder}) : super(key: key);
   @override
   savingplanState createState() => savingplanState();
 }
 
-class savingplanState extends State<SavingPlan> {
+class savingplanState extends State<SavingPlan3> {
 
   final amountinput = TextEditingController();
   final  dateInput = TextEditingController();
@@ -402,7 +402,7 @@ Align(
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PlanGoal(
+            builder: (context) => PlanGoal4(
                  pamount: amountinput.text,
                  pdate : dateformat,
                  pname: widget.nameholder,

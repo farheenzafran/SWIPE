@@ -8,12 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeapp/Controller/Request/MobileRequest.dart';
 import 'package:swipeapp/Controller/Response/MobileResponse.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
-import 'package:swipeapp/Controller/navbar.dart';
+import 'package:swipeapp/Controller/Login/navbar.dart';
 import 'package:swipeapp/main.dart';
 import 'package:flutter/services.dart';
-import '../Model Helper.dart';
-import 'Chart.dart';
-import 'Dashboard.dart';
+import '../../Model Helper.dart';
+import '../PlaidData/Chart.dart';
+import '../Dashboard.dart';
 import 'package:http/http.dart' as http;
 void main() {
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);

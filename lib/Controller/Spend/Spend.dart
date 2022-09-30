@@ -18,30 +18,30 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/AddNewPlan.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import 'package:swipeapp/Controller/Request/SaveBudgetDataRequest.dart';
 import 'package:swipeapp/Controller/Response/SaveBudgetDataResponse.dart';
-import 'package:swipeapp/Controller/SpendNewBudget.dart';
-import '../Model Helper.dart';
-import 'AddMember.dart';
-import 'BankData.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/GetBankDataResponse.dart';
-import 'Response/GetBudgetDataResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
+import 'package:swipeapp/Controller/Spend/SpendNewBudget.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/GetBankDataResponse.dart';
+import '../Response/GetBudgetDataResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'Response/UserDeatail.dart';
-import 'creditBankdata.dart';
+import '../Response/UserDeatail.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,9 +63,9 @@ class spendacountState extends State<Spend> {
     super.initState();
     fetchBankData(Constants.debitcardValue);
   //  saveBudgetData();
-   datalist =  getGoalBudgetData();
-   saveBudgetData();
-   // datalist = saveBudgetData();
+ //  datalist =  getGoalBudgetData();
+  // saveBudgetData();
+
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   late Future<List<getResultBudget>> datalist ;
@@ -305,7 +305,7 @@ class spendacountState extends State<Spend> {
                     Text(widget.text.toString()),
                     Text(widget.text2.toString()),
                     addButton(),
-                  showBudgetData(),
+                  //showBudgetData(),
 
 
                   ],

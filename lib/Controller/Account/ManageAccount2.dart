@@ -6,19 +6,19 @@ import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:swipeapp/Controller/AddAccountSuccessful.dart';
+import 'package:swipeapp/Controller/Account/AddAccountSuccessful3.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
 import 'package:swipeapp/Controller/Response/UserDeatail.dart';
 import 'package:swipeapp/main.dart';
-import '../Model Helper.dart';
+import '../../Model Helper.dart';
 import 'AddMember.dart';
-import 'Request/AddUserRequest.dart';
-import 'Response/AddUserResponse.dart';
+import '../Request/AddUserRequest.dart';
+import '../Response/AddUserResponse.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-import 'Response/ChildUserResponse.dart';
+import '../Response/ChildUserResponse.dart';
 String? select;
 
 void main() {
@@ -30,17 +30,17 @@ class accMyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ManageAccount(),
+      home: ManageAccount2(),
     );
   }
 }
-class ManageAccount extends StatefulWidget {
-  const ManageAccount({Key? key,}) : super(key: key);
+class ManageAccount2 extends StatefulWidget {
+  const ManageAccount2({Key? key,}) : super(key: key);
 
   @override
   _manageacountState createState() => _manageacountState();
 }
-class _manageacountState extends State<ManageAccount> {
+class _manageacountState extends State<ManageAccount2> {
 
   void initState()  {
     super.initState();
@@ -372,7 +372,7 @@ Container(
           if( _validate1 == false && _validate2 == false )
             {
             //  Navigator.push(context, MaterialPageRoute(builder: (context) => AddAccountSuccessful()),);
-              Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccountSuccessful(), maintainState: false));
+              Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (context) => AddAccountSuccessful3(), maintainState: false));
 
             }
           else

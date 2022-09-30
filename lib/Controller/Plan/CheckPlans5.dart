@@ -17,58 +17,59 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/SavingPlan.dart';
-import '../Model Helper.dart';
-import 'AddMember.dart';
-import 'BankData.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/TransactionResponse.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
+import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/Plan/PlanAccount1.dart';
+import 'package:swipeapp/Controller/Plan/SavingPlan3.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'creditBankdata.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class AddNewplan extends StatefulWidget {
-
+class CheckPlans5 extends StatefulWidget {
   @override
-  newplanState createState() => newplanState();
+  checkplanState createState() => checkplanState();
 }
 
-class newplanState extends State<AddNewplan> {
- // final tController = TextEditingController();
-  final tController = TextEditingController();
-  bool _validate = false;
-
+class checkplanState extends State<CheckPlans5> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       body: SafeArea(
-          child: SingleChildScrollView(
-           // children: [
-           child:   Column(
+          child: ListView(
+            children: [
+              Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   addAccountHeader(),
-                  emailVerify(),
-                addButton(),
+                  buttonsuccesful(),
+                  textAccount(),
+                  addButton(),
 
-              //  ],
-             // ),
+
+
+                ],
+              ),
             ],
 
           )
-          ),
       ),
     );
   }
@@ -85,7 +86,7 @@ class newplanState extends State<AddNewplan> {
               fit: BoxFit.cover,
             )),
 
-        padding: EdgeInsets.only(top: 20, left: 15, bottom: 10),
+        padding: EdgeInsets.only(top: 20, left: 15,),
         child: Wrap(
           spacing: 100,
           children: <Widget>[
@@ -117,48 +118,37 @@ class newplanState extends State<AddNewplan> {
         // color: Colors.purpleAccent,
       );
   }
-  emailVerify()
+  goalText()
   {
     return
       Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 20.0,left: 8 ),
+
+            padding: const EdgeInsets.only(top: 20.0,left: 4, right: 4 , bottom: 20),
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(left: 15),
 
             child: SizedBox(
               child: Text(
-                'I want to save for',
+                'You are one the way approaching to your goals',
                 maxLines: 2,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
                     overflow: TextOverflow.ellipsis,
-                    color: Colors.grey
+                      color: const Color(0xFFA781D3),
 
-                ),
+                    ),
+
+
+
+
               ),
             ),
           ),
 
-          Container(
-            padding: EdgeInsets.only(left: 15 , right: 15),
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
-            child: TextField(
-              style: TextStyle(fontSize: 22.0,  color: Colors.black , fontWeight: FontWeight.normal),
-              controller: tController,
-  keyboardType: TextInputType.text,
-  textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                errorText: _validate ? 'Value Can\'t Be Empty' : null,
 
-                // border: OutlineInputBorder(),
-              ),
-
-            ) ,
-          ),
 
 
         ],
@@ -167,12 +157,10 @@ class newplanState extends State<AddNewplan> {
   }
 
   addButton() {
-    return
-      Align(
-    child:  Container(
+    return Container(
       height: 38,
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 20, bottom: 20.0, left: 25, right: 25),
+      margin: const EdgeInsets.only(top: 15, bottom: 20.0, left: 25, right: 25),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
@@ -185,22 +173,13 @@ class newplanState extends State<AddNewplan> {
         ),
 
         onPressed: () {
-          tController.text.isEmpty ? _validate = true : _validate = false;
-          //   tController.value.text.toString();
-         // Navigator.push(context, MaterialPageRoute(builder: (context) => SavingPlan()),);
-          if( _validate == false  )
-          {
-
-            _sendDataToSecondScreen(context);
-          }
-          else
-          {
-            print("all filled");
-          }
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PlanAccount1()),
+          );
         },
         child: Text(
-          'Continue',
+          'Check Your plans',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -209,17 +188,64 @@ class newplanState extends State<AddNewplan> {
           textAlign: TextAlign.center,
         ),
       ),
-      ),
     );
   }
+  textAccount()
+  {
+    return
+      Align(
+        //   heightFactor: 6,
+        child:
+        Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(5),
+              margin:  EdgeInsets.only(right: 15, left: 15),
+              child:
 
-  void _sendDataToSecondScreen(BuildContext context) {
+              Text("You are on the way approaching to your goal!",style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: const Color(0xFFA781D3),
+                // fontFamily: 'Ubuntu',
+              ),),
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SavingPlan(nameholder: tController.text),));
-    print(tController.text);
-    print(tController);
-    print("<<<<<Last Btracket >>>>>>>>>>");
+            ),
+            Container(
+              padding: EdgeInsets.all(5),
+              margin:  EdgeInsets.only(left: 16,right: 16, bottom: 20, top:12),
+              child:Text("You’re set to save  per month in order to reach your goal  by Jan, 2023"
+                ,style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: Colors.grey,
+                  // fontFamily: 'Ubuntu',
+                ),
+              ),
+            ),
+
+
+          ],
+        ),
+      );
+
   }
+  buttonsuccesful()
+  {
+    return
+      Container(
+        color: Colors.white,
+        child: Align(
+          // alignment: Alignment.center,
+          heightFactor: 2,
+          child: Image.asset('asset/images/plan.png', width: 300.0, height: 150.0),
+        ),
+
+
+      );
+
+  }
+
 //<<<<<Last Btracket >>>>>>>>>>//
 }
 

@@ -1,8 +1,8 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
-import 'package:swipeapp/Controller/EmailScreen.dart';
-import 'package:swipeapp/Controller/EmailSignup.dart';
-import 'package:swipeapp/Controller/OtpScreen.dart';
+import 'package:swipeapp/Controller/Login/EmailScreen.dart';
+import 'package:swipeapp/Controller/Login/EmailSignup.dart';
+import 'package:swipeapp/Controller/Login/OtpScreen.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);

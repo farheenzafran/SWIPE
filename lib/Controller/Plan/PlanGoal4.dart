@@ -17,48 +17,48 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:swipeapp/Controller/CheckPlans.dart';
-import '../Model Helper.dart';
-import 'AddMember.dart';
-import 'BankData.dart';
-import 'ManageAccount.dart';
-import 'Request/AccessTokenRequest.dart';
-import 'Request/InstitutionRequest.dart';
-import 'Request/LiabilityRequest.dart';
-import 'Request/SaveBankDataRequest.dart';
-import 'Request/SaveGoalBankdataRequest.dart';
-import 'Request/TokenResquest.dart';
-import 'Request/TransactionRequest.dart';
-import 'Response/AccessTokenResponse.dart';
-import 'Response/GetBankDataResponse.dart';
-import 'Response/GoalBankDataResponse.dart';
-import 'Response/InstitutionResponse.dart';
-import 'Response/LiabilityResponse.dart';
-import 'Response/LinkTokenResponse.dart';
-import 'Response/SaveBankDataResponse.dart';
-import 'Response/TransactionResponse.dart';
+import 'package:swipeapp/Controller/Plan/CheckPlans5.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../Account/ManageAccount2.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/SaveBankDataRequest.dart';
+import '../Request/SaveGoalBankdataRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/GetBankDataResponse.dart';
+import '../Response/GoalBankDataResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/SaveBankDataResponse.dart';
+import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'Response/UserDeatail.dart';
-import 'creditBankdata.dart';
+import '../Response/UserDeatail.dart';
+import '../PlaidData/creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 String? selection;
 
 
-class PlanGoal extends StatefulWidget {
+class PlanGoal4 extends StatefulWidget {
   int _groupValue = -1;
   var pamount;
   var pdate;
   var pname;
-  PlanGoal(   {Key? key,  required  this.pamount, required  this.pdate, required  this.pname}) : super(key: key);
+  PlanGoal4(   {Key? key,  required  this.pamount, required  this.pdate, required  this.pname}) : super(key: key);
 
   @override
   goalsavingplanState createState() => goalsavingplanState();
 }
 
-class goalsavingplanState extends State<PlanGoal> {
+class goalsavingplanState extends State<PlanGoal4> {
   BankData bankDataobj = BankData();
   late String name;
   late String a_associate;
@@ -514,7 +514,7 @@ class goalsavingplanState extends State<PlanGoal> {
           //    builder: (_) => CheckPlans()),));
      if(selection != null)
        {
-         Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans()),);
+         Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPlans5()),);
 
        }
         },
