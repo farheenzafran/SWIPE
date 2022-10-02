@@ -62,9 +62,9 @@ class spendacountState extends State<Spend> {
   void initState()  {
     super.initState();
     fetchBankData(Constants.debitcardValue);
-  //  saveBudgetData();
- //  datalist =  getGoalBudgetData();
-  // saveBudgetData();
+   // saveBudgetData();
+   //datalist =  getGoalBudgetData();
+      //saveBudgetData();
 
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -302,10 +302,10 @@ class spendacountState extends State<Spend> {
                     // budgetList(),
                     gridviewlist(),
                     //  getCategory(),
-                    Text(widget.text.toString()),
-                    Text(widget.text2.toString()),
+                    // Text(widget.text.toString()),
+                    // Text(widget.text2.toString()),
                     addButton(),
-                  //showBudgetData(),
+               //   showBudgetData(),
 
 
                   ],

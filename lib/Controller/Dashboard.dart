@@ -899,7 +899,8 @@ child:
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
+          child: Row(mainAxisSize: MainAxisSize.min, children:
+          [
             Container(
                 margin: EdgeInsets.all(8),
                 alignment: Alignment.topLeft,
