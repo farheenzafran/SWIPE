@@ -1,7 +1,7 @@
 class SaveBudegetDataResponse {
   bool? status;
   String? message;
-  BudgetResult? result;
+  Result? result;
 
   SaveBudegetDataResponse({this.status, this.message, this.result});
 
@@ -9,7 +9,7 @@ class SaveBudegetDataResponse {
     status = json['status'];
     message = json['message'];
     result =
-    json['result'] != null ? new BudgetResult.fromJson(json['result']) : null;
+    json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -23,17 +23,17 @@ class SaveBudegetDataResponse {
   }
 }
 
-class BudgetResult {
+class Result {
   int? id;
   String? expenseTitle;
   int? amount;
   String? createdOn;
   int? userId;
 
-  BudgetResult(
+  Result(
       {this.id, this.expenseTitle, this.amount, this.createdOn, this.userId});
 
-  BudgetResult.fromJson(Map<String, dynamic> json) {
+  Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     expenseTitle = json['expenseTitle'];
     amount = json['amount'];

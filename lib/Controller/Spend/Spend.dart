@@ -47,35 +47,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Spend extends StatefulWidget {
- var text;
- var text2;
-Spend(   {Key? key,  required  this.text, required  this.text2, }) : super(key: key);
+  var text;
+  var text2;
 
-@override
+  Spend({
+    Key? key,
+    required this.text,
+    required this.text2,
+  }) : super(key: key);
+
+  @override
   State<StatefulWidget> createState() => spendacountState();
-
 }
 
 class spendacountState extends State<Spend> {
   @override
   BankData bankDataobj = BankData();
-  void initState()  {
+
+  void initState() {
     super.initState();
     fetchBankData(Constants.debitcardValue);
-   // saveBudgetData();
-   //datalist =  getGoalBudgetData();
-      //saveBudgetData();
-
+    // saveBudgetData();
+    datalist =  getGoalBudgetData();
+    //saveBudgetData();
   }
+
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  late Future<List<getResultBudget>> datalist ;
+  late Future<List<getResultBudget>> datalist;
+
   Future<List<getResultBudget>> getGoalBudgetData() async {
     UserDetail tempuserdetail = await Constants.getUserDetail();
+
     String accessToken = tempuserdetail.accessToken.toString();
-    final response2 = await http.get(Uri.parse('${Constants.baseUrl2}/Expense/GetExpense'),
+    final response2 = await http.get(
+        Uri.parse('${Constants.baseUrl2}/Expense/GetExpense'),
         headers: <String, String>{
-          'Content-Type': 'application/json', 'Accept': 'application/json',
-          'Authorization': 'Bearer $accessToken',});
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        });
     print(accessToken);
     print("66666responseprint>>>>>>>>>>>>>");
     print(response2);
@@ -91,59 +101,14 @@ class spendacountState extends State<Spend> {
       // return GoalGetBankdataResponse.fromJson(jsonDecode(response2.b
 
       GetBudegetDataResponse getbResponse =
-       GetBudegetDataResponse.fromJson(jsonDecode(response2.body));
+          GetBudegetDataResponse.fromJson(jsonDecode(response2.body));
       return getbResponse.result!;
-
-
-
-    }
-    else
-    {
+    } else {
       throw Exception('Failed to call user getgoalchilduserid .');
     }
   }
+
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  Future<SaveBudegetDataResponse> saveBudgetData() async {
-    SaveBudegetDataRequest savedataRequest = SaveBudegetDataRequest();
-    print("testing#######___________________******");
-    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
-
-    print("testing#######___________________******");
-    UserDetail tempuserdetail = await Constants.getUserDetail();
-    savedataRequest.id = 0;
-    savedataRequest.amount = widget.text2;
-    savedataRequest.expenseTitle = widget.text;
-    savedataRequest.createdOn = "";
-    savedataRequest.userId = 0;
-   // savedataRequest.userId = accountid ;
-
-    String accesstoken = tempuserdetail.accessToken.toString();
-    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
-    final responsebudget = await http.post(Uri.parse(Constants.baseUrl2 + '/Expense/SaveExpense'),
-        headers: <String, String>{
-          'Content-Type': 'application/json', 'Accept': 'application/json',
-          'Authorization': 'Bearer $accesstoken',
-        },
-        body: jsonEncode(savedataRequest));
-    print("budget&&&&&&&&&&??????????????<<<<<<<");
-    print(responsebudget.body);
-    print('<<<<<<<<<<<<<<Request body----->>>>>>>>>>>>: ${jsonEncode(savedataRequest)}');
-    print(widget.text2);
-    print(savedataRequest);
-    print(responsebudget.body);
-    print(accesstoken);
-    print(responsebudget.statusCode);
-    print("&&&&&&&&&&??????????????<<<<<<<");
-    if (responsebudget.statusCode == 200) {
-      print('####manage account Response <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<${jsonEncode(responsebudget)}');
-      SaveBudegetDataResponse budgetResponse = SaveBudegetDataResponse.fromJson(jsonDecode(responsebudget.body));
-      return budgetResponse;
-    } else {
-      throw Exception('Failed to call user budegetdata.');
-    }
-  }
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   String dollar = " \$";
   late int selectedIndex;
@@ -153,11 +118,10 @@ class spendacountState extends State<Spend> {
   int cmonth = 0;
   bool viewVisible1 = true;
   List<String> array = ["0", "1", "2", "3"];
-
-  Color randomColor() =>
-      Color.fromARGB(255, Random().nextInt(255), Random().nextInt(100),
-          Random().nextInt(200));
-
+  late String t_income;
+  late String t_spend;
+  Color randomColor() => Color.fromARGB(
+      255, Random().nextInt(255), Random().nextInt(100), Random().nextInt(200));
 
   bool isLoading = true;
   bool ontap = true;
@@ -195,7 +159,7 @@ class spendacountState extends State<Spend> {
     List<BankData> tempbankdatalist = <BankData>[];
     if (response.statusCode == 200) {
       GetBankDataResponse bankdataResponse =
-      GetBankDataResponse.fromJson(jsonDecode(response.body));
+          GetBankDataResponse.fromJson(jsonDecode(response.body));
       for (var i in bankdataResponse.result!) {
         BankData bd = new BankData();
         bd.publictoken = i.publictoken;
@@ -209,8 +173,8 @@ class spendacountState extends State<Spend> {
         tempbankdatalist.add(bd);
       }
 
-      print(jsonEncode(tempbankdatalist));
-      print("reposne>>>>>>>");
+      // print(jsonEncode(tempbankdatalist));
+      // print("reposne>>>>>>>");
       // getBankData(tempbankdatalist);
       // return tempbankdatalist ;
       if (type == Constants.debitcardValue) {
@@ -224,8 +188,8 @@ class spendacountState extends State<Spend> {
     }
   }
 
-  Future<TransactionResponse> transactionResponse(String accesstoken,
-      String accountid, int currentmonth) async {
+  Future<TransactionResponse> transactionResponse(
+      String accesstoken, String accountid, int currentmonth) async {
     String startdate = "";
     String enddate = "";
     var now = new DateTime.now().toString();
@@ -257,12 +221,12 @@ class spendacountState extends State<Spend> {
     transactionRequest.endDate = enddate;
 
     final response4 =
-    await http.post(Uri.parse(Constants.URL + '/transactions/get'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(transactionRequest));
+        await http.post(Uri.parse(Constants.URL + '/transactions/get'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(transactionRequest));
 
     isLoading = false;
 
@@ -284,7 +248,6 @@ class spendacountState extends State<Spend> {
     }
   }
 
-
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -292,8 +255,7 @@ class spendacountState extends State<Spend> {
           child: Container(
               color: Colors.white,
               child: SingleChildScrollView(
-                child:
-                Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -305,17 +267,10 @@ class spendacountState extends State<Spend> {
                     // Text(widget.text.toString()),
                     // Text(widget.text2.toString()),
                     addButton(),
-               //   showBudgetData(),
-
-
+                      showBudgetData(),
                   ],
                 ),
-
-
-              )
-          )
-
-      ),
+              ))),
     );
   }
 
@@ -328,49 +283,41 @@ class spendacountState extends State<Spend> {
         //color: const Color(0xDEB46FEA),
         decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("asset/images/background.png"),
-              fit: BoxFit.cover,
-            )),
+          image: AssetImage("asset/images/background.png"),
+          fit: BoxFit.cover,
+        )),
         //child: Align(alignment: Alignment.center,
         child: Column(
           children: [
             Align(
               alignment: Alignment.center,
-              child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.all(8),
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: const Color(0x75f5f5f5)),
-                        child:
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                    margin: EdgeInsets.all(8),
+                    alignment: Alignment.topLeft,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: const Color(0x75f5f5f5)),
+                    child:
                         // Row(
                         //   mainAxisSize: MainAxisSize.min,
                         //   children: [
                         Text(
-                          'Admin Account',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 15,
-                              //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold //font color
+                      'Admin Account',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15,
+                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold //font color
                           ),
-
-
-                        )
-                      //   ],
-                      // )
-
+                    )
+                    //   ],
+                    // )
 
                     ),
-
-                  ]
-
-              ),
+              ]),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -378,7 +325,6 @@ class spendacountState extends State<Spend> {
                 children: <Widget>[
                   Column(
                     children: [
-
                       Text(
                         dollar + "",
                         textAlign: TextAlign.center,
@@ -388,15 +334,12 @@ class spendacountState extends State<Spend> {
                             //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
                             color: Colors.white,
                             //font color
-                            fontStyle: FontStyle.italic
-                        ),
-
+                            fontStyle: FontStyle.italic),
                       ),
-
                       Text(
-                        'Spend',
+                        'SPENDS',
                         style: TextStyle(
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           fontSize: 14,
                           color: Colors.white,
                         ),
@@ -404,7 +347,6 @@ class spendacountState extends State<Spend> {
                       ),
                     ],
                   ),
-
                   Image.asset(
                     "asset/images/downarrow.png", // width: 300,
                     height: 20,
@@ -414,7 +356,7 @@ class spendacountState extends State<Spend> {
                   Column(
                     children: [
                       Text(
-                        dollar + "",
+                        dollar ,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -423,442 +365,419 @@ class spendacountState extends State<Spend> {
                           //font color
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w700,
-
                         ),
-
                       ),
-
-
-      GestureDetector(
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return
-                  Container(
-                      height: MediaQuery.of(context).size.height * 0.35,
-                      child:
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            contentPadding: EdgeInsets.only(
-                                left: 10.0, right: 0.0),
-                            title: CircleAvatar(
-                              radius: 20,
-                              child: Image(
-                                image: AssetImage("asset/images/cart.png"),
-                                //width: 40,
-                                //color: const Color(0xffECDCFF)
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(title: Column(
-                              children:[
-                                // Text(cname=  transactionlist[index].name.toString(),
-                            Text('0000',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight:
-                                FontWeight.w600),),
-
-                                Text('Create',
-                                  style: TextStyle(
-                                      color: const Color(0xFFA781D3),
-                                      fontSize: 14,
-                                      fontWeight:
-                                      FontWeight.w600),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.30,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          title: Column(children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  top: 15, bottom: 1),
+                                              padding: EdgeInsets.all(8),
+                                              child: Text(
+                                                'Your montly estimated income is? ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: EdgeInsets.only(
+                                                  top: 10,
+                                                ),
+                                                padding: EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    color: const Color(
+                                                        0xffEDECEE)),
+                                                child: Text(
+                                                  dollar + ( "0000"
+                                //transactionlist[index].amount.toStringAsFixed(2)
                                 ),
-                              ]
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                                                      color: Colors.black,
+                                                      //font color
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                )
+                                                //   ],
+                                                // )
+
+                                                ),
+                                            Container(
+                                              margin: EdgeInsets.only(top: 10),
+                                              padding: EdgeInsets.all(8),
+                                              child: Text(
+                                                'Create',
+                                                style: TextStyle(
+                                                    color:
+                                                        const Color(0xFFA781D3),
+                                                    fontSize: 16,
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                              ),
+                                            )
+                                          ]),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context);
+                                            // goTobudgetScreen(context);
+                                          },
+                                        ),
+                                      ],
+                                    ));
+                              });
+                        },
+                        child: Text(
+                          'INCOME',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.white,
+
                           ),
-
-                            onTap: () {
-                             // goTobudgetScreen(context);
-                            },
-                          ),
-
-                        ],
-                      )
-
-                  );
-
-
-              });
-        },
-        child:
-        Text(
-          'Income',
-          style: TextStyle(
-            fontWeight: FontWeight.w300,
-            fontSize: 14,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.left,
-        ),
-      ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
                     ],
                   ),
                 ]),
           ],
         )
 
-
-      //  ),
-    );
+        //  ),
+        );
   }
 
   catogeriesType() {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        height: 40,
-        width: 150,
-        margin: EdgeInsets.only(top: 10, left: 15, bottom: 10),
+    return Container(
+      margin: const EdgeInsets.only(right: 14, top: 18, bottom: 18),
+      child: Align(
         alignment: Alignment.topLeft,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: const Color(0xffECDCFF)),
-        child: Text(
-          'Top categories',
-          textAlign: TextAlign.center,
-        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Container(
+              margin: EdgeInsets.all(8),
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xffECDCFF)),
+              child:
+              // Row(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              Text(
+                'Top Categories',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 14,
+                    //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                    color: Colors.black,
+                    //font color
+                    fontStyle: FontStyle.italic),
+              )
+            //   ],
+            // )
+
+          ),
+        ]),
+        // ),
       ),
     );
   }
 
   budgetList() {
-    return
-      Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-            children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: transactionlist.length,
-                  itemBuilder: (context, int index) {
-                    return
-                      transactionlist.isEmpty ? Center(
-                        child: CircularProgressIndicator(),) :
-                      Card(color: const Color(0xffF3F3F3),
-                        child: Container(
-                          width: double.infinity,
-                          height: 60.0,
-                          margin: const EdgeInsets.only(right: 14, left: 14),
-                          child: ListTile(
-                              contentPadding: EdgeInsets.only(
-                                  left: 10.0, right: 0.0),
-                              leading: CircleAvatar(
-                                radius: 20,
-                                child: Image(
-                                  image: AssetImage("asset/images/cart.png"),
-                                  //width: 40,
-                                  //color: const Color(0xffECDCFF)
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Column(children: [
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: transactionlist.length,
+            itemBuilder: (context, int index) {
+              return transactionlist.isEmpty
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Card(
+                      color: const Color(0xffF3F3F3),
+                      child: Container(
+                        width: double.infinity,
+                        height: 60.0,
+                        margin: const EdgeInsets.only(right: 14, left: 14),
+                        child: ListTile(
+                          contentPadding:
+                              EdgeInsets.only(left: 10.0, right: 0.0),
+                          leading: CircleAvatar(
+                            radius: 20,
+                            child: Image(
+                              image: AssetImage("asset/images/cart.png"),
+                              //width: 40,
+                              //color: const Color(0xffECDCFF)
+                            ),
+                          ),
+                          title: Text(
+                            transactionlist[index].name.toString(),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          trailing: Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Column(children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 3, bottom: 3),
+                                child: Text(
+                                  dollar +
+                                      transactionlist[index]
+                                          .amount
+                                          .toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              title: Text(
-                                transactionlist[index]
-                                    .name
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight:
-                                    FontWeight.w600),
-                              ),
 
-
-                              trailing:
-                              Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 3, bottom: 3),
-                                        child:
-                                        Text(dollar +
-                                            transactionlist[index].amount
-                                                .toStringAsFixed(2),
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.w600),
-                                        ),
-                                      ),
-
-
-                                      // Text(transactionlist[index].date.toString(),
-                                      //
-                                      //   style: TextStyle(
-                                      //       color: Colors.grey,
-                                      //       fontSize: 12,
-                                      //       fontWeight:
-                                      //       FontWeight.w500),
-                                      // ),
-                                    ]),
-
-                              ),
-
-
-
-
+                              // Text(transactionlist[index].date.toString(),
+                              //
+                              //   style: TextStyle(
+                              //       color: Colors.grey,
+                              //       fontSize: 12,
+                              //       fontWeight:
+                              //       FontWeight.w500),
+                              // ),
+                            ]),
                           ),
-
-
                         ),
-
-
-                      );
-                  }
-                // );
-                // }
-                //},
-              ),
-            ]
-
-        ),
-
-
-      );
-
+                      ),
+                    );
+            }
+            // );
+            // }
+            //},
+            ),
+      ]),
+    );
 
     // }
     // else
     // {
     //   return Container();
     // }
-
   }
 
   gridviewlist() {
-    return isLoading ?
-    Center(child: CircularProgressIndicator()) :
-    Container(
-      //color: Colors.yellow,
-      // height: 300,
-        child:
-        SizedBox(
-          height: 80 + 80,
-          child: GridView.builder(
-              itemCount: transactionlist.length,
-              scrollDirection: Axis.horizontal,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 90 / 256,
-                crossAxisCount: 2,),
-              itemBuilder: (context, index) {
-                return ListView(
-                  shrinkWrap: true,
-
-                    children: [
-                      ListTile(
-                          contentPadding: EdgeInsets.only(
-                              left: 5.0, right: 0.0),
-                          leading: CircleAvatar(
-                            radius: 20,
-                            child: Image(
-                              image: AssetImage("asset/images/cart.png"),
-                            ),
+    return isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Container(
+            //color: Colors.yellow,
+            // height: 300,
+            child: SizedBox(
+            height: 80 + 80,
+            child: GridView.builder(
+                itemCount: transactionlist.length,
+                scrollDirection: Axis.horizontal,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 90 / 256,
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (context, index) {
+                  return ListView(shrinkWrap: true, children: [
+                    ListTile(
+                        contentPadding: EdgeInsets.only(left: 5.0, right: 0.0),
+                        leading: CircleAvatar(
+                          radius: 20,
+                          child: Image(
+                            image: AssetImage("asset/images/cart.png"),
                           ),
-                          title:
-                          Text(dollar +
+                        ),
+                        title: Text(
+                          dollar +
                               transactionlist[index].amount.toStringAsFixed(2),
-                            style: TextStyle(color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700),),
-                          subtitle:
-                          Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child:
-                            Text(transactionlist[index].category.toString(),
-                              style: TextStyle(color: Colors.grey,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          )
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            transactionlist[index].category.toString(),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        )),
+                  ]
 
-
-                      ),
-                    ]
-
-                  // color: randomColor(), child: Text(array[index])
-                );
-              }
-          ),
-        )
-    );
+                      // color: randomColor(), child: Text(array[index])
+                      );
+                }),
+          ));
   }
 
   addButton() {
-    return
-
-      Container(
-          height: 45,
-          width: double.infinity,
-          margin:
-          EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: const Color(0xffF7F6FA)),
-          child: Row(
-            children: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(5),
-
-                ),
-                onPressed: () async {
-                  Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SpendNewBudget()),);
-                },
-                child: Image(
-                  image: AssetImage("asset/images/Plus.png"),
-                  width: 130,
-                  height: 130,
-                ),
+    return Container(
+        height: 45,
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: const Color(0xffF7F6FA)),
+        child: Row(
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(5),
               ),
-              Text('Add a new budget'),
-
-            ],
-          ));
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SpendNewBudget()),
+                );
+              },
+              child: Image(
+                image: AssetImage("asset/images/Plus.png"),
+                width: 130,
+                height: 130,
+              ),
+            ),
+            Text('Add a new budget'),
+          ],
+        ));
   }
+
   addButton2() {
-    return
-
-      Container(
-          height: 45,
-          width: double.infinity,
-          margin:
-          EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.yellow,),
-          child: Row(
-            children: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(5),
-
-                ),
-                onPressed: () async {
-                  //saveBudgetData();
-                },
-                child: Image(
-                  image: AssetImage("asset/images/Plus.png"),
-                  width: 130,
-                  height: 130,
-                ),
+    return Container(
+        height: 45,
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.yellow,
+        ),
+        child: Row(
+          children: [
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(5),
               ),
-              Text('Add a new budget'),
-
-            ],
-          ));
+              onPressed: () async {
+                //saveBudgetData();
+              },
+              child: Image(
+                image: AssetImage("asset/images/Plus.png"),
+                width: 130,
+                height: 130,
+              ),
+            ),
+            Text('Add a new budget'),
+          ],
+        ));
   }
-
 
   showBudgetData() {
-    return
-      Column(
-        children: [
+    return Column(
+      children: [
         Container(
-        height: 250,
-        margin: EdgeInsets.only(
-        bottom: 5.0,top: 5 ,),
-    child:
-    FutureBuilder<List<getResultBudget>>(
-    future: datalist,
-    builder: (context, snapshot) {
-    if (snapshot.hasData) {
-return
-    ListView.builder(
-        shrinkWrap: true,
-       // physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: snapshot.data!.length,
-         itemBuilder: (context, i) {
-           var item = snapshot.data![i];
-    return
-    Container(
-    // height: 220,
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 15, right: 15, top: 4, bottom: 12),
-    alignment: Alignment.topLeft,
-    padding: EdgeInsets.all(12),
-    decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(15),
-    color: const Color(0x85dadada)),
-    child:
-    Column(
-    children: [
-    Padding(padding: EdgeInsets.only(bottom: 15),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Text(item.amount.toString(),
-    style: TextStyle(
-    fontWeight: FontWeight.w700,
-    fontSize: 16,
-    color: Colors.black,
-    ),
-    ),
-
-
-    Text(item.expenseTitle.toString(),
-    style: TextStyle(
-    fontWeight: FontWeight.w700,
-    fontSize: 16,
-    color: Colors.black,
-    ),
-    ),
-    ],
-    ),
-    ),
-    Text("cash",
-    style: TextStyle(
-    fontWeight: FontWeight.w700,
-    fontSize: 16,
-    color: Colors.black,
-    ),
-    ),
-
-    ],
-
-    )
-
-    );
-
-    }
-
-    );
-    }
-    else
-    {
-      return Container(
-        //color: Colors.red,
-          child:
-          Center(
-            child:
-            CircularProgressIndicator(),
-          )
-      );
-    }
-
-    }
-    ),
+          height: 250,
+          margin: EdgeInsets.only(
+            bottom: 5.0,
+            top: 5,
+          ),
+          child: FutureBuilder<List<getResultBudget>>(
+              future: datalist,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      // physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, i) {
+                        var item = snapshot.data![i];
+                        return Container(
+                            // height: 220,
+                            width: double.infinity,
+                            margin: EdgeInsets.only(
+                                left: 15, right: 15, top: 4, bottom: 12),
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: const Color(0x85dadada)),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        dollar+
+                                        item.amount.toStringAsFixed(2),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        item.expenseTitle.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  "cash",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ));
+                      });
+                } else {
+                  return Container(
+                      //color: Colors.red,
+                      child: Center(
+                    child: CircularProgressIndicator(),
+                  ));
+                }
+              }),
         ),
-        ],
-      );
-
-
+      ],
+    );
   }
-
 
 //<<<<<Last Btracket >>>>>>>>>>//
 }

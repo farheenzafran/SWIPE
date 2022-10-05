@@ -267,9 +267,9 @@ class tdashboardState extends State<Dashboard> {
     if (metadata.institution.id != "") {
       var insres = await institutionResponse(metadata.institution.id);
       bankDataobj.banklogo = insres.institution?.logo;
-      print("logooooooooo");
-      print(bankDataobj.banklogo);
-      print("logooooooooo");
+      // print("logooooooooo");
+      // print(bankDataobj.banklogo);
+      // print("logooooooooo");
       bankDataobj.bankthemecolor = insres.institution?.primaryColor;
       bankDataobj.bankname = insres.institution?.name;
       var accesstokenres =
@@ -312,14 +312,14 @@ class tdashboardState extends State<Dashboard> {
   //--
 
   Future<List<BankData>> getBankData(List<BankData> bankresultList) async {
-    print("frfgr<<<<<<>>>>>>");
+   // print("frfgr<<<<<<>>>>>>");
 
     try {
       // var bankdatalist1 =  [] as Future<List<BankData>>;
       // setState(() {
       bankdatalist = appendElements(bankdatalist, bankresultList);
       //});
-      print("<<<<<<>>>>>>");
+  //    print("<<<<<<>>>>>>");
 
       bankdatalist = debitTotalValue(bankresultList);
     } catch (Excepetion) {
@@ -355,7 +355,7 @@ class tdashboardState extends State<Dashboard> {
           'Accept': 'application/json',
           'Authorization': 'Bearer $banktoken',
         });
-    print(response.body);
+   // print(response.body);
 
     List<BankData> tempbankdatalist = <BankData>[];
     if (response.statusCode == 200) {
@@ -374,8 +374,8 @@ class tdashboardState extends State<Dashboard> {
         tempbankdatalist.add(bd);
       }
 
-      print(jsonEncode(tempbankdatalist));
-      print("reposne>>>>>>>");
+      // print(jsonEncode(tempbankdatalist));
+      // print("reposne>>>>>>>");
       // getBankData(tempbankdatalist);
       // return tempbankdatalist ;
       if (type == Constants.debitcardValue) {
@@ -403,10 +403,10 @@ class tdashboardState extends State<Dashboard> {
     saveBankDataRequest.mask = bankDataobj.mask;
     saveBankDataRequest.bankname = bankDataobj.bankname;
     saveBankDataRequest.banklogo = bankDataobj.banklogo;
-    print("banklogooooooooo>>>>>>>>");
-    print(bankDataobj.banklogo?.length.toString());
-    print(bankDataobj.banklogo);
-    print("banklogooooooooo>>>>>>>>");
+    // print("banklogooooooooo>>>>>>>>");
+    // print(bankDataobj.banklogo?.length.toString());
+    // print(bankDataobj.banklogo);
+    // print("banklogooooooooo>>>>>>>>");
     saveBankDataRequest.bankthemecolor = bankDataobj.bankthemecolor;
     saveBankDataRequest.publictoken = bankDataobj.publictoken;
 
@@ -520,15 +520,15 @@ class tdashboardState extends State<Dashboard> {
           'Accept': 'application/json',
         },
         body: jsonEncode(transactionRequest));
-    print(
-        '!!!!!!!!!!!!###########################################################################################################');
-    print('dshrespose44 body-----: ${response4}');
-    print(response4.statusCode);
-    print(response4);
-    // print(accesstoken);
-    print('dash##########################################'
-        '###################################################'
-        '##############');
+    // print(
+    //     '!!!!!!!!!!!!###########################################################################################################');
+    // print('dshrespose44 body-----: ${response4}');
+    // print(response4.statusCode);
+    // print(response4);
+    // // print(accesstoken);
+    // print('dash##########################################'
+    //     '###################################################'
+    //     '##############');
     if (response4.statusCode == 200) {
       void dispose() {
         Loader.hide();
@@ -1415,23 +1415,23 @@ child:
         transactionlist.add(t_transaction);
         totalTransactionValue += t_transaction.amount;
         debitcardtotalTransactionValue += t_transaction.amount;
-        print("||||||||||");
-
-        print(t_transaction.amount);
+        // print("||||||||||");
+        //
+        // print(t_transaction.amount);
       }
       debitdata.totalamount = debitcardtotalTransactionValue;
       debitGraphdata.add(debitcardtotalTransactionValue);
       graphbankname.add(debitdata.bankname.toString());
       creditGraphdata.add(0);
-      print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt" +
-          totalTransactionValue.toString());
-      print(debitdata.totalamount);
-      print(debitcardtotalTransactionValue);
+      // print("||||||||||¥¥¥¥¥¥¥¥¥¥¥¥total debitttttttt" +
+      //     totalTransactionValue.toString());
+      // print(debitdata.totalamount);
+      // print(debitcardtotalTransactionValue);
     }
     setState(() {
       tDebitValue = totalTransactionValue;
     });
-    print(jsonEncode(debitlistbankdata));
+   // print(jsonEncode(debitlistbankdata));
     return debitlistbankdata;
   }
 

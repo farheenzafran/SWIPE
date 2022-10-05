@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          brightness: Brightness.dark,
+          backwardsCompatibility: false,
+         systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          brightness: Brightness.light,
         ),
       ),
       home: MyHomePage(),

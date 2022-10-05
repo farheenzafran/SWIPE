@@ -19,6 +19,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
 import 'package:swipeapp/Controller/Plan/PlanGoal4.dart';
+import 'package:swipeapp/Controller/Spend/SpendNewBudget.dart';
 import '../../Model Helper.dart';
 import '../Account/AddMember.dart';
 import '../PlaidData/BankData.dart';
@@ -171,7 +172,8 @@ class savingplanState extends State<SavingPlan3> {
           ),
           Align(
             alignment: Alignment.topRight,
-            child:Container(
+            child:
+            Container(
           color: const Color(0xffF7F6FA ),
   padding: EdgeInsets.all(0),
   margin: const EdgeInsets.only( left:20,top: 15,right: 10),

@@ -30,7 +30,7 @@ class GetBudegetDataResponse {
 class getResultBudget {
   int? id;
   String? expenseTitle;
-  int? amount;
+  dynamic? amount;
   String? createdOn;
   int? userId;
 
