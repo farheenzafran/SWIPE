@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'dart:async';
-import 'dart:async';
-import 'dart:async';
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:core';
@@ -32,7 +28,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddAccount1 extends StatefulWidget {
-  const AddAccount1({Key? key,}) : super(key: key);
+  const AddAccount1({
+    Key? key,
+  }) : super(key: key);
+
   //AddAccount() : super();
 
   @override
@@ -44,46 +43,47 @@ class addacountState extends State<AddAccount1> {
 
   late String countryCode;
   late String phoneNumber;
-  late Future<List<ChildDataResult>> datalist ;//= [] as Future<List<ChildDataResult>>;
-  void initState()  {
+  late Future<List<ChildDataResult>>
+      datalist; //= [] as Future<List<ChildDataResult>>;
+  void initState() {
     super.initState();
     datalist = getChildUser();
   }
-   Future<List<ChildDataResult>>  getChildUser( ) async {
+
+  Future<List<ChildDataResult>> getChildUser() async {
     UserDetail tempuserdetail = await Constants.getUserDetail();
     String ctoken = tempuserdetail.accessToken.toString();
-    final response = await http.get(Uri.parse(Constants.baseUrl2 + '/User/GetChildUser'),
+    final response = await http.get(
+        Uri.parse(Constants.baseUrl2 + '/User/GetChildUser'),
         headers: <String, String>{
-          'Content-Type': 'application/json', 'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $ctoken',
         });
     print(ctoken);
-      print("!!!!!!!!!!!!!!!!!!!!!!");
-      print("!!!!!!!!!!!!!!!!!!!!!!");
-      print(response);
-      print("bodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
-      print(response.body);
-      print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
-      print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
-      print(response.statusCode);
-      print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+    print("!!!!!!!!!!!!!!!!!!!!!!");
+    print("!!!!!!!!!!!!!!!!!!!!!!");
+    print(response);
+    print("bodyyyyyyyyyyyyyyyyy>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
+    print(response.body);
+    print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
+    print(">>>>>>>>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!><<<<<<<<<<<<<<<<<<<<");
+    print(response.statusCode);
+    print(">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<");
 
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
+      ChildUserResponse userResponse =
+          ChildUserResponse.fromJson(jsonDecode(response.body));
+      return userResponse
+          .result!; // usResult.fromJson(jsonDecode(response.body));
 
-       ChildUserResponse userResponse = ChildUserResponse.fromJson(jsonDecode(response.body));
-        return userResponse.result! ;// usResult.fromJson(jsonDecode(response.body));
-
-      }
-
-      else
-
-      {
-    // return List<ChildDataResult>;
+    } else {
+      // return List<ChildDataResult>;
       throw Exception('Failed to call user getgoalchild .');
-     }
+    }
   }
-  String bname = "";
 
+  String bname = "";
 
   @override
   Widget build(BuildContext context) {
@@ -91,368 +91,222 @@ class addacountState extends State<AddAccount1> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: SingleChildScrollView(
-
-           child:
-          Column(
+        child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               addAccountHeader(),
               addButton(),
-            //  dcButton(),
-             // addchild()
-             //  showuserData(),
-           ]
-          ),
-
+            ]),
       )),
     );
   }
 
-//<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+//<<<<<<<<<<<<<<<<<<<UI View>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
-    return
-    SafeArea(
+    return SafeArea(
         child: SingleChildScrollView(
       child: Column(
         children: [
           Container(
-          height: 280,
-          width: double.infinity,
-          padding: EdgeInsets.all(15),
-          margin: EdgeInsets.only(bottom: 18),
-          //color: const Color(0xDEB46FEA),
-          decoration: BoxDecoration(
-              image: DecorationImage(
+              height: 280,
+              width: double.infinity,
+              padding: EdgeInsets.all(15),
+              margin: EdgeInsets.only(bottom: 18),
+              //color: const Color(0xDEB46FEA),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
                 image: AssetImage("asset/images/background.png"),
                 fit: BoxFit.cover,
               )),
-          child: Column(children: [
-
-
-            Container(
-              alignment: Alignment.topRight,
-              child:
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  Icons.settings;
-                },
-                child: Icon(
-                  Icons.settings,
-                  color: Colors.white,
+              child: Column(children: [
+                Container(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Icons.settings;
+                    },
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-
-
-            Column(
-                mainAxisSize: MainAxisSize.min,
-                children:[
-
+                Column(mainAxisSize: MainAxisSize.min, children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children:[
-                          Container(
-                              margin: EdgeInsets.all(8),
-                              alignment: Alignment.topLeft,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: const Color(0x54ecdcff)),
-                              child:
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Container(
+                          margin: EdgeInsets.all(8),
+                          alignment: Alignment.topLeft,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: const Color(0x54ecdcff)),
+                          child:
                               // Row(
                               //   mainAxisSize: MainAxisSize.min,
                               //   children: [
                               Text(
-                                'Admin Account',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 14, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                                    color: Colors.white, //font color
-                                    fontStyle: FontStyle.italic
-                                ),
-
-
-                              )
-                            //   ],
-                            // )
-
-
-
+                            'Admin Account',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 14,
+                                //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                                color: Colors.white,
+                                //font color
+                                fontStyle: FontStyle.normal),
+                          )
+                          //   ],
+                          // )
 
                           ),
-
-                        ]
-
-                    ),
+                    ]),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 20),
-                  child:  Row(
-                    children: [
-                      showuserData(),
-                      addButton(),
+                      margin: EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: [
+                          showuserData(),
+                          addButton(),
+                        ],
+                      ))
+                ]),
+              ])
 
-                    ],
-
-                    )
-                  )
-
-                ]
-
-            ),
-
-
-
-
-          ])
-
-        //  ),
-      ),
+              //  ),
+              ),
         ],
       ),
     ));
-
   }
 
   addButton() {
-    return
-    Padding(padding: EdgeInsets.only(bottom: 10),
-   child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
+    return Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(
+                bottom: 5.0,
+              ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount2()),);
 
-
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(bottom: 5.0,),
-
-          child: InkWell(
-            onTap: () {
-              // setTabIndex(0);
-              // Provider.of<ValueNotifier<int>>(context, listen: false).value = 1;
-             // Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
-              Navigator.of(context, rootNavigator: false).pushReplacement(MaterialPageRoute(builder: (context) => ManageAccount2(), maintainState: false));
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ManageAccount(),
-              //   ),
-              // );
-            },
-            child: Image.asset('asset/images/addaccount.png',
-                width: 50.0, height: 50.0),
-
-          ),
-
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          child:  Text("Add Account",style:
-          TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.w300),
-          ),),
-      ],
-    )
-    );
-
-
-
+                },
+                child: Image.asset('asset/images/addaccount.png',
+                    width: 50.0, height: 50.0),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Add Account",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300),
+              ),
+            ),
+          ],
+        ));
   }
+
   addchild() {
     return Container(
       alignment: Alignment.centerLeft,
       child: InkWell(
         onTap: () {
-        //  addChildUser();
-        //  Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
+          //  addChildUser();
+          //  Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccount()),);
         },
-        child: Image.asset('asset/images/Plus.png',
-            width: 50.0, height: 50.0),
-
+        child: Image.asset('asset/images/Plus.png', width: 50.0, height: 50.0),
       ),
-
     );
   }
-  showuserData()
-  {
-    return
-      Container(
-          height: 130,
-      width: 190,
-      margin:  EdgeInsets.only(
-          bottom: 5.0,right:15 ),
 
-          child:
-          FutureBuilder<List<ChildDataResult>>(
-            future: datalist,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, i) {
-                      var item = snapshot.data![i];
-                      return
-
-                           Column(
-                             mainAxisSize: MainAxisSize.min,
-                             children: [
-                               CircleAvatar(
-                                 radius: 30,
-                                 backgroundImage: AssetImage('asset/images/pic.png'),
-                               ),
-                               Text(snapshot.data![i].firstName.toString(),
-                                 style: TextStyle(
-                                     color: Colors.white,
-                                     fontSize: 14,
-                                     fontWeight: FontWeight.bold),
-                               ),
-                               Text(snapshot.data![i].lastName.toString(),
-                                 style: TextStyle(
-                                     color: Colors.white,
-                                     fontSize: 11,
-                                     fontWeight: FontWeight.w300),
-                               ),
-
-                             ],
-
-                      );
-
-
-
-                        // ListView(
-                        //   scrollDirection: Axis.horizontal,
-                        //   children: [
-
-
-                      // ]
-                      //   );
-
-                       // Text("first return>>>>>>"+ item.toString());
-                    });
-              }
-              else
-                {
-                  return Container();
-                }
-             // if (snapshot.data == null) {
-                //return Text("first return>>>>>>");
-             // }
-              // else {
-              //   return
-              //     ListView.builder(
-              //         shrinkWrap: true,
-              //         scrollDirection: Axis.vertical,
-              //         itemCount: snapshot.data!.length,
-              //         itemBuilder: (context, posxition) {
-              //           return
-              //             ListTile(
-              //               title: Text(
-              //                 snapshot.data![i].lastName.toString(),
-              //                 style: TextStyle(
-              //                     color: Colors.red,
-              //                     fontSize: 11,
-              //                     fontWeight:
-              //                     FontWeight.w500),
-              //               ),
-              //             );
-              //         });
-              // }
-            }
-          ),
-      );
-
-  }
-  dcButton() {
+  showuserData() {
     return Container(
-      height: 38,
-      width: double.infinity,
-      margin: const EdgeInsets.only(top: 10, bottom: 20.0, left: 25, right: 25),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            //color: const Color(0xFFA781D3),
-          )),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFA781D3),
-          padding: const EdgeInsets.all(5),
-        ),
+      height: 130,
+      width: 190,
+      margin: EdgeInsets.only(bottom: 5.0, right: 15),
+      child: FutureBuilder<List<ChildDataResult>>(
+          future: datalist,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, i) {
+                    var item = snapshot.data![i];
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage('asset/images/pic.png'),
+                        ),
+                        Text(
+                          snapshot.data![i].firstName.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          snapshot.data![i].lastName.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
+                    );
 
-        onPressed: () {
-          setState(() {
-          });
+                    // ListView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   children: [
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()),);
+                    // ]
+                    //   );
 
-          // ));
-
-        },
-        child: Text(
-          'Move to Dashboard',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
+                    // Text("first return>>>>>>"+ item.toString());
+                  });
+            } else {
+              return Container();
+            }
+            // if (snapshot.data == null) {
+            //return Text("first return>>>>>>");
+            // }
+            // else {
+            //   return
+            //     ListView.builder(
+            //         shrinkWrap: true,
+            //         scrollDirection: Axis.vertical,
+            //         itemCount: snapshot.data!.length,
+            //         itemBuilder: (context, posxition) {
+            //           return
+            //             ListTile(
+            //               title: Text(
+            //                 snapshot.data![i].lastName.toString(),
+            //                 style: TextStyle(
+            //                     color: Colors.red,
+            //                     fontSize: 11,
+            //                     fontWeight:
+            //                     FontWeight.w500),
+            //               ),
+            //             );
+            //         });
+            // }
+          }),
     );
   }
-vertcalListtile()
-{
-  return
-  SizedBox(
-    height: 110,
-    child: ListView(
-      scrollDirection: Axis.vertical,
-      children: [
-      CircleAvatar(
-      radius: 30,
-      backgroundImage: AssetImage('asset/images/pic.png'),
-    ),
-      Text("bndgnkbngdfj",
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w600),),
 
 
-      ],
-    )
-    );
-
-  ListView(
-    scrollDirection: Axis.vertical,
-    children: [
-
-  ListTile(
-  title: Column(
-  children:[
-    CircleAvatar(
-    radius: 30,
-    backgroundImage: AssetImage('asset/images/pic.png'),
-  ),
-  Text("bndgnkbngdfj",
-  style: TextStyle(
-  color: Colors.black,
-  fontSize: 16,
-  fontWeight: FontWeight.w600),),
-  ]
-  )
-  ),
-    ],
-  );
-
-}
 
 
 

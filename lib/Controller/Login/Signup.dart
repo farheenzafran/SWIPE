@@ -30,7 +30,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 60,
+                  height: 80,
                   width: double.infinity,
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
@@ -39,7 +39,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                         fit: BoxFit.cover,
                       )),
                   child: Wrap(
-                    spacing: 100,
+                    spacing: 120,
                     children: <Widget>[
                       // Container(
                       // alignment: Alignment.center,
@@ -57,7 +57,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
                       // ),
                       Text(
                         'SignUp',
-                        style: TextStyle(fontWeight: FontWeight.w600 , color: Colors.white, fontSize: 14)
+                        style: TextStyle(fontWeight: FontWeight.w600 , color: Colors.white, fontSize: 15)
                         ,textAlign: TextAlign.center ,
                       ),
                     ],

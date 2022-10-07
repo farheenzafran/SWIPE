@@ -175,9 +175,9 @@ class planacountState extends State<PlanAccount1> {
   addAccountHeader() {
     return   Flexible(
  child:Container(
-
+   //height: 120,
         width: double.infinity,
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         //color: const Color(0xDEB46FEA),
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -197,7 +197,7 @@ class planacountState extends State<PlanAccount1> {
                         alignment: Alignment.topLeft,
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(14),
                             color: const Color(0x54ecdcff)
                         ),
                         child:
@@ -210,7 +210,7 @@ class planacountState extends State<PlanAccount1> {
                           style: TextStyle(
                               fontSize: 15, //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
                               color: Colors.white,
-                              fontWeight: FontWeight.bold//font color
+                              fontWeight: FontWeight.normal//font color
                           ),
 
 
@@ -313,6 +313,9 @@ class planacountState extends State<PlanAccount1> {
             //     ]),
 
             Container(
+             // height: 60,
+              //color: Colors.yellow,
+              margin: EdgeInsets.only(top: 7),
               //width: 80,
               child:
               ExpandableNotifier(  // <-- Provides ExpandableController to its children

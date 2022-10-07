@@ -286,7 +286,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
 
   budgetList() {
     return Container(
-        height: 350,
+      //  height: 350,
         child: SingleChildScrollView(
             child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -300,6 +300,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                     padding: const EdgeInsets.all(8),
                     child: Column(children: [
                       ListView.builder(
+                        physics:const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: transactionlist.length,
                           itemBuilder: (context, int index) {
@@ -329,7 +330,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                     ),
                                     title: Text(
                                       transactionlist[index]
-                                          .name
+                                          .category
                                           .toString(),
                                       style: TextStyle(
                                           color: Colors.black,
@@ -377,6 +378,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                       .size
                                                       .height *
                                                       0.35,
+                                                  color: Colors.white,
                                                   margin:   EdgeInsets.only(top: 15),
                                                   child: Column(
                                                     mainAxisSize:
@@ -410,56 +412,49 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                       ListTile(
                                                         title: Column(
                                                             children: [
-                                                              Text(
-                                                              cname = (transactionlist[index].name
-                                                  .toString()) ,
-                                                                style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                  14,
-                                                                  fontWeight:
-                                                                  FontWeight.w600,
+                                                              Container(
+                                                                margin: EdgeInsets.only(
+                                                                    bottom:10),
+                                                                child:Text(
+                                                                  cname = (transactionlist[index].category
+                                                                      .toString()) ,
+                                                                  style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                    14,
+                                                                    fontWeight:
+                                                                    FontWeight.w600,
 
+                                                                  ),
                                                                 ),
                                                               ),
-                                                              Container(
-                                                                  margin: EdgeInsets.only(
-                                                                    top:10, ),
-                                                                  padding: EdgeInsets.all(
-                                                                      8),
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius: BorderRadius.circular(12),
-                                                                      color: const Color(0xffEDECEE)),
-                                                                  child:
 
 
-                                              Container(
-                                              padding: EdgeInsets.all(0),
-                                              margin: const EdgeInsets.only( left:20,top: 10,right: 10),
-                                              alignment: Alignment.topRight,
-                                              height: 30,
-                                              width: 80,
-                                              child: TextField(
-                                              controller: amountinput,
-                                              style: TextStyle(fontSize: 16.0,  color:
-                                              Colors.black , fontWeight: FontWeight.w600),
-                                              keyboardType: TextInputType.number,
-                                              inputFormatters: <TextInputFormatter>[
-                                              FilteringTextInputFormatter.digitsOnly
-                                              ],
-                                              decoration: InputDecoration(
+                                                              SizedBox(
+                                                                height: 40,
+                                                                width: 160.0,
 
-                                              border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(20.0),
-                                              ),
-                                              // border: OutlineInputBorder(),
-                                              labelText: dollar,
-                                             // errorText: _validate ? 'Value Can\'t Be Empty' : null,
-                                              //hintText: 'Enter Code',
-                                              ),
-                                              ) ,
-                                              ),
+                                                                child:
+                                                                TextField(
+                                                                  controller: amountinput,
+                                                                  style: TextStyle(fontSize: 16.0,  color:
+                                                                  Colors.black , fontWeight: FontWeight.w600),
+                                                                  keyboardType: TextInputType.number,
+                                                                  inputFormatters: <TextInputFormatter>[
+                                                                    FilteringTextInputFormatter.digitsOnly
+                                                                  ],
+                                                                  decoration: InputDecoration(
+
+                                                                    border: OutlineInputBorder(
+                                                                      borderRadius: BorderRadius.circular(21.0),
+                                                                    ),
+                                                                    // border: OutlineInputBorder(),
+                                                                    labelText: dollar,
+                                                                    // errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                                                    //hintText: 'Enter Code',
+                                                                  ),
+                                                                ) ,
                                                               ),
 
 
@@ -478,6 +473,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                                           0xFFA781D3),
                                                                       fontSize:
                                                                       16,
+                                                                      fontWeight: FontWeight.w600,
                                                                       fontStyle: FontStyle.italic),
                                                                 ),
                                                               )

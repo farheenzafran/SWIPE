@@ -78,7 +78,7 @@ class checkplanState extends State<CheckPlans5> {
   addAccountHeader() {
     return
       Container(
-        height: 60,
+        height: 80,
         width: double.infinity,
         decoration: BoxDecoration(
             image: DecorationImage(

@@ -105,16 +105,17 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
   headerView(){
     return
       Container(
-        height: 60,
+        height: 70,
         width: double.infinity,
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.only(top:15,left: 8,right: 8),
         decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("asset/images/background.png"),
               fit: BoxFit.cover,
             )),
+
         child: Wrap(
-          spacing: 100,
+          spacing: 120,
           children: <Widget>[
             // Container(
             // alignment: Alignment.center,
@@ -132,7 +133,7 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
             // ),
             Text(
               'LOGIN',
-              style: TextStyle(color: Colors.white, fontSize: 14 , fontWeight: FontWeight.w600),
+              style: TextStyle(color: Colors.white, fontSize: 15 , fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
           ],

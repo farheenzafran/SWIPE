@@ -634,15 +634,35 @@ child:
                                                       Padding(
                                                         padding: EdgeInsets.only(
                                                             top: 3, bottom: 3),
-                                                        child: Text(
-                                                          dollar +
-                                                              transactionlist[index]
-                                                                  .amount
-                                                                  .toStringAsFixed(2),
+                                                        child:
+
+                                                        // Text(
+                                                        //   dollar +
+                                                        //       transactionlist[index]
+                                                        //           .amount
+                                                        //           .toStringAsFixed(2),
+                                                        //   style: TextStyle(
+                                                        //       color: Colors.black,
+                                                        //       fontSize: 14,
+                                                        //       fontWeight: FontWeight.w600),
+                                                        // ),
+
+                                                        //child:
+                                                        transactionlist[index].amount ==null?
+                                                        Text(dollar+'0',
                                                           style: TextStyle(
                                                               color: Colors.black,
                                                               fontSize: 14,
-                                                              fontWeight: FontWeight.w600),
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ):
+                                                        Text(dollar+'${ transactionlist[index].amount.toStringAsFixed(2)}',
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
                                                         ),
                                                       ),
                                                       Text(
@@ -1025,7 +1045,7 @@ child:
                                                 fontWeight: FontWeight.w500
                                         ),
                                       ):
-                                      Text('${item.totalamount.toString()}',
+                                      Text('${item.totalamount!.toStringAsFixed(2)}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -1635,7 +1655,8 @@ child:
                     children: <Widget>[
                       Container(
                         width: double.infinity,
-                        height: 100,
+                        height: 150,
+                      //  color: Colors.yellow,
                         margin: const EdgeInsets.only(
                             right: 15, left: 15, top: 4, bottom: 4),
                         padding: const EdgeInsets.all(10),
@@ -1980,7 +2001,7 @@ child:
                     children: [
                       Container(
                         width: double.infinity,
-                        height: 100,
+                        height: 150,
                         margin: const EdgeInsets.only(
                             right: 20, left: 20, top: 4, bottom: 4),
                         padding: const EdgeInsets.all(15),
@@ -2344,7 +2365,7 @@ child:
                     children: <Widget>[
                       Container(
                           width: double.infinity,
-                          height: 100.0,
+                          height: 140.0,
                           margin: const EdgeInsets.only(right: 15, left: 15),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
