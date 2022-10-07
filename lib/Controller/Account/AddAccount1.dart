@@ -104,12 +104,12 @@ class addacountState extends State<AddAccount1> {
 
 //<<<<<<<<<<<<<<<<<<<UI View>>>>>>>>>>>>>>>>>>>>>>>>>>
   addAccountHeader() {
-    return SafeArea(
+    return Flexible(
         child: SingleChildScrollView(
       child: Column(
         children: [
           Container(
-              height: 280,
+              height: 250,
               width: double.infinity,
               padding: EdgeInsets.all(15),
               margin: EdgeInsets.only(bottom: 18),
@@ -165,7 +165,8 @@ class addacountState extends State<AddAccount1> {
                     ]),
                   ),
                   Container(
-                      margin: EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 15),
+                    //  color: Colors.yellow,
                       child: Row(
                         children: [
                           showuserData(),
@@ -231,7 +232,8 @@ class addacountState extends State<AddAccount1> {
 
   showuserData() {
     return Container(
-      height: 130,
+    //  color: Colors.red,
+      height: 120,
       width: 190,
       margin: EdgeInsets.only(bottom: 5.0, right: 15),
       child: FutureBuilder<List<ChildDataResult>>(

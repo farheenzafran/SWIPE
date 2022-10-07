@@ -328,7 +328,9 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                         //color: const Color(0xffECDCFF)
                                       ),
                                     ),
-                                    title: Text(
+                                    title:
+
+                                    Text(
                                       transactionlist[index]
                                           .category
                                           .toString(),
@@ -377,7 +379,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                       context)
                                                       .size
                                                       .height *
-                                                      0.35,
+                                                      0.38,
                                                   color: Colors.white,
                                                   margin:   EdgeInsets.only(top: 15),
                                                   child: Column(
@@ -393,7 +395,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
                                                             right:
                                                             0.0,
                                                             top:
-                                                            17, bottom: 10),
+                                                            15, bottom: 10),
                                                         title:
                                                         CircleAvatar(
                                                           radius: 20,
@@ -460,9 +462,9 @@ class _managebudgetacountState extends State<SpendNewBudget> {
 
                                                               Container(
                                                                 margin: EdgeInsets.only(
-                                                                    top:10),
+                                                                    top:10, bottom: 8),
                                                                 padding: EdgeInsets.all(
-                                                                    8),
+                                                                    5),
 
                                                                 child:
 
