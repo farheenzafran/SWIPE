@@ -75,7 +75,7 @@ class BankData {
     );
   }
 
-  void add(int index) {}
+
 
 
 }

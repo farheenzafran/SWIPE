@@ -1,0 +1,219 @@
+import 'dart:async';
+import 'dart:async';
+import 'dart:async';
+import 'dart:async';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
+import 'dart:core';
+import 'dart:core';
+import 'dart:core';
+import 'dart:math' as math;
+import 'dart:ui';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
+import 'package:swipeapp/Controller/Dashboard.dart';
+import 'package:swipeapp/Controller/Plan/PlanAccount1.dart';
+import 'package:swipeapp/Controller/Plan/SavingPlan3.dart';
+import '../../Model Helper.dart';
+import '../Account/AddMember.dart';
+import '../PlaidData/BankData.dart';
+import '../Request/AccessTokenRequest.dart';
+import '../Request/InstitutionRequest.dart';
+import '../Request/LiabilityRequest.dart';
+import '../Request/TokenResquest.dart';
+import '../Request/TransactionRequest.dart';
+import '../Response/AccessTokenResponse.dart';
+import '../Response/InstitutionResponse.dart';
+import '../Response/LiabilityResponse.dart';
+import '../Response/LinkTokenResponse.dart';
+import '../Response/TransactionResponse.dart';
+import 'package:flutter/services.dart';
+import 'dart:math' as math;
+import '../PlaidData/creditBankdata.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+class PaymentSuccessful extends StatefulWidget {
+  @override
+  checkpaymentState createState() => checkpaymentState();
+}
+
+class checkpaymentState extends State<PaymentSuccessful> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+          child: ListView(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  addAccountHeader(),
+                  buttonsuccesful(),
+
+                  textAccount(),
+                  addButton(),
+
+
+
+                ],
+              ),
+            ],
+
+          )
+      ),
+    );
+  }
+
+//<<<<<<<<<<<<<<<<<<<UI DashboardView>>>>>>>>>>>>>>>>>>>>>>>>>>
+  addAccountHeader() {
+    return
+      Container(
+        height: 80,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("asset/images/background.png"),
+              fit: BoxFit.cover,
+            )),
+
+        padding: EdgeInsets.only(top: 20, left: 15,),
+        child: Wrap(
+          spacing: 100,
+          children: <Widget>[
+            // Container(
+            // alignment: Alignment.center,
+            //  child:
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Icons.arrow_left;
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+            ),
+            // ),
+            Text(
+              'Add a new plan',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+                color: Colors.white,
+                // fontFamily: 'Ubuntu',
+              ),
+            ),
+          ],
+        ),
+        // color: Colors.purpleAccent,
+      );
+  }
+  addButton() {
+    return Container(
+      height: 38,
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 25, bottom: 20.0, left: 25, right: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            //color: const Color(0xFFA781D3),
+          )),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xFFA781D3),
+          padding: const EdgeInsets.all(5),
+        ),
+
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+          );
+        },
+        child: Text(
+          'Back to Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+  textAccount()
+  {
+    return
+
+      Container(
+        margin:  EdgeInsets.only(left: 20,right: 20),
+      child:  Column(
+          children: [
+            Text(
+              'You have successfully paid your debits',
+              maxLines: 2,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 17,
+                overflow: TextOverflow.ellipsis,
+                color: const Color(0xFFA781D3),
+
+              ),
+
+
+
+
+            ),
+            Container(
+              padding: EdgeInsets.all(5),
+            margin:  EdgeInsets.only(left: 5,right: 5, bottom: 20, top:15),
+              child:Text("Swipe will help you tracking on your credit balances!",
+                maxLines: 2
+                ,style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  overflow: TextOverflow.ellipsis,
+                  color: Colors.grey,
+                  // fontFamily: 'Ubuntu',
+                ),
+              ),
+            ),
+
+
+          ],
+        ),
+      );
+
+  }
+  buttonsuccesful()
+  {
+    return
+      Container(
+        color: Colors.white,
+        child: Align(
+          // alignment: Alignment.center,
+          heightFactor: 2,
+          child: Image.asset('asset/images/plan.png', width: 300.0, height: 150.0),
+        ),
+
+
+      );
+
+  }
+
+//<<<<<Last Btracket >>>>>>>>>>//
+}
+
+//>>>>>>>>>>>>>>-------------------------API's--------------------------------->>>>>>>>>>>>>>>

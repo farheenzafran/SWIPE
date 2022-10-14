@@ -23,6 +23,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/Login/EmailSignup.dart';
 import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
+import 'package:swipeapp/Controller/MakePayment/MakePayment.dart';
 import 'package:swipeapp/Controller/Plan/PlanAccount1.dart';
 import 'package:swipeapp/Controller/Request/SaveBankDataRequest.dart';
 import 'package:swipeapp/Controller/Request/RefreshTokenRequest.dart';
@@ -30,7 +31,6 @@ import 'package:swipeapp/Controller/Response/GetBankDataResponse.dart';
 import 'package:swipeapp/Controller/Response/RefreshTokenResponse.dart';
 import 'package:swipeapp/Controller/Response/SaveBankDataResponse.dart';
 import 'package:swipeapp/Controller/PlaidData/TransactionDetail.dart';
-import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../Model Helper.dart';
 import 'Account/AddAccount1.dart';
 import 'PlaidData/BankData.dart';
@@ -172,7 +172,7 @@ class tdashboardState extends State<Dashboard> {
       xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy);
 
   void initState() {
-   // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     //super.initState();
     chartData = ChartData(
       dataRows:  [
@@ -185,7 +185,7 @@ class tdashboardState extends State<Dashboard> {
       //   [2000.0, 1800.0, 2200.0, 2300.0, 1700.0, 0],
       //   [0, 0, 0, 0, 0, -1800.0],
       // ],
-   //   xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      //   xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
       dataRowsLegends: const ['Values', 'Values 2'],
       dataRowsColors: const [
         Colors.green,
@@ -273,7 +273,7 @@ class tdashboardState extends State<Dashboard> {
       bankDataobj.bankthemecolor = insres.institution?.primaryColor;
       bankDataobj.bankname = insres.institution?.name;
       var accesstokenres =
-          await accessTokenResponse(bankDataobj.publictoken.toString());
+      await accessTokenResponse(bankDataobj.publictoken.toString());
       bankDataobj.accesstoken = accesstokenres.accessToken;
 
       //  if (isexpanse) {
@@ -312,14 +312,14 @@ class tdashboardState extends State<Dashboard> {
   //--
 
   Future<List<BankData>> getBankData(List<BankData> bankresultList) async {
-   // print("frfgr<<<<<<>>>>>>");
+    // print("frfgr<<<<<<>>>>>>");
 
     try {
       // var bankdatalist1 =  [] as Future<List<BankData>>;
       // setState(() {
       bankdatalist = appendElements(bankdatalist, bankresultList);
       //});
-  //    print("<<<<<<>>>>>>");
+      //    print("<<<<<<>>>>>>");
 
       bankdatalist = debitTotalValue(bankresultList);
     } catch (Excepetion) {
@@ -355,12 +355,12 @@ class tdashboardState extends State<Dashboard> {
           'Accept': 'application/json',
           'Authorization': 'Bearer $banktoken',
         });
-   // print(response.body);
+    // print(response.body);
 
     List<BankData> tempbankdatalist = <BankData>[];
     if (response.statusCode == 200) {
       GetBankDataResponse bankdataResponse =
-          GetBankDataResponse.fromJson(jsonDecode(response.body));
+      GetBankDataResponse.fromJson(jsonDecode(response.body));
       for (var i in bankdataResponse.result!) {
         BankData bd = new BankData();
         bd.publictoken = i.publictoken;
@@ -390,6 +390,7 @@ class tdashboardState extends State<Dashboard> {
     } else {
       throw Exception('Failed to call user childuserid .');
     }
+
   }
 
   Future<SaveBankDataResponse> saveBankdataResponse() async {
@@ -420,13 +421,13 @@ class tdashboardState extends State<Dashboard> {
     //print('/////////.request <<<<<<<<<<<<<<<<<<<<<<<<<');
 
     final savebankresponse =
-        await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $accounttoken',
-            },
-            body: jsonEncode(saveBankDataRequest));
+    await http.post(Uri.parse(Constants.baseUrl2 + '/Bank/SaveBankData'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accounttoken',
+        },
+        body: jsonEncode(saveBankDataRequest));
     // print('/////////.svaebankdata <<<<<<<<<<<<<<<<<<<<<<<<<');
     // print(accounttoken);
     // print(saveBankDataRequest);
@@ -455,9 +456,9 @@ class tdashboardState extends State<Dashboard> {
     //   'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
   ];
   List<String> TransactionIconCategory =[
-  "Bank Fees",
-  "Cash Advance",
-  "Community"
+    "Bank Fees",
+    "Cash Advance",
+    "Community"
   ];
 
 
@@ -555,153 +556,153 @@ class tdashboardState extends State<Dashboard> {
     return Scaffold(
 
 
-       
-        //  resizeToAvoidBottomInset: false,
 
-          body: SafeArea(
+      //  resizeToAvoidBottomInset: false,
 
-child:
-       SingleChildScrollView(
-         scrollDirection: Axis.vertical,
+      body: SafeArea(
 
-         child: Column(
-             mainAxisSize: MainAxisSize.min,
-                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                      dashboardHeader(),
-                        Column(
-                          children:<Widget>[
-                            debitTransaction(),
-                            creditLiability(),
-                            paymentButton(),
-                            viewtransaction(),
-                            Visibility(
-                              maintainSize: true,
-                              maintainAnimation: true,
-                              maintainState: true,
-                              visible: viewVisible1,
-                              child: Container(
-                                width: double.infinity,
-                                //height: 200.0,
-                                // color: Colors.yellow,
-                                child: Column(
-                                  //child: Column(
-                                  children: [
-                                    isLoading1 ?
-                                    Center(child: CircularProgressIndicator()) :
-                                    ListView.builder(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: transactionlist.length,
-                                        itemBuilder: (context, int index) {
-                                          var $;
-                                          return Card(
-                                            color: const Color(0xffF7F6FA),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 80.0,
-                                              margin:
-                                              const EdgeInsets.only(right: 9, left: 9),
-                                              child: ListTile(
-                                                  contentPadding: EdgeInsets.only(
-                                                      left: 10.0, right: 0.0),
-                                                  leading: CircleAvatar(
-                                                    radius: 20,
-                                                    child:
-                                                    Image(image: AssetImage("asset/images/cart.png"),
-                                                      //Image.asset( iconname[index],),
-                                                    ),
-                                                  ),
-                                                  title: Text(
-                                                    transactionlist[index].name.toString(),
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.w600),
-                                                  ),
-                                                  subtitle: Text(
-                                                    transactionlist[index]
-                                                        .category
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.w600),
-                                                  ),
-                                                  trailing: Padding(
-                                                    padding: EdgeInsets.only(top: 5),
-                                                    child: Column(children: <Widget>[
-                                                      Padding(
-                                                        padding: EdgeInsets.only(
-                                                            top: 3, bottom: 3),
-                                                        child:
+          child:
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
 
-                                                        // Text(
-                                                        //   dollar +
-                                                        //       transactionlist[index]
-                                                        //           .amount
-                                                        //           .toStringAsFixed(2),
-                                                        //   style: TextStyle(
-                                                        //       color: Colors.black,
-                                                        //       fontSize: 14,
-                                                        //       fontWeight: FontWeight.w600),
-                                                        // ),
-
-                                                        //child:
-                                                        transactionlist[index].amount ==null?
-                                                        Text(dollar+'0',
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.w600
-                                                          ),
-                                                        ):
-                                                        Text(dollar+'${ transactionlist[index].amount.toStringAsFixed(2)}',
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.w600
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        transactionlist[index]
-                                                            .date
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.w500),
-                                                      ),
-                                                    ]),
-                                                  )),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                dashboardHeader(),
+                Column(
+                  children:<Widget>[
+                    debitTransaction(),
+                    creditLiability(),
+                    paymentButton(),
+                    viewtransaction(),
+                    Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: viewVisible1,
+                      child: Container(
+                        width: double.infinity,
+                        //height: 200.0,
+                        // color: Colors.yellow,
+                        child: Column(
+                          //child: Column(
+                          children: [
+                            isLoading1 ?
+                            Center(child: CircularProgressIndicator()) :
+                            ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: transactionlist.length,
+                                itemBuilder: (context, int index) {
+                                  var $;
+                                  return Card(
+                                    color: const Color(0xffF7F6FA),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 80.0,
+                                      margin:
+                                      const EdgeInsets.only(right: 9, left: 9),
+                                      child: ListTile(
+                                          contentPadding: EdgeInsets.only(
+                                              left: 10.0, right: 0.0),
+                                          leading: CircleAvatar(
+                                            radius: 20,
+                                            child:
+                                            Image(image: AssetImage("asset/images/cart.png"),
+                                              //Image.asset( iconname[index],),
                                             ),
-                                          );
-                                        }
-                                      // );
-                                      // }
-                                      //},
-                                    ),
+                                          ),
+                                          title: Text(
+                                            transactionlist[index].name.toString(),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          subtitle: Text(
+                                            transactionlist[index]
+                                                .category
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          trailing: Padding(
+                                            padding: EdgeInsets.only(top: 5),
+                                            child: Column(children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 3, bottom: 3),
+                                                child:
 
-                                  ],
-                                ),
-                              ),
+                                                // Text(
+                                                //   dollar +
+                                                //       transactionlist[index]
+                                                //           .amount
+                                                //           .toStringAsFixed(2),
+                                                //   style: TextStyle(
+                                                //       color: Colors.black,
+                                                //       fontSize: 14,
+                                                //       fontWeight: FontWeight.w600),
+                                                // ),
+
+                                                //child:
+                                                transactionlist[index].amount ==null?
+                                                Text(dollar+'0',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
+                                                  ),
+                                                ):
+                                                Text(dollar+'${ transactionlist[index].amount.toStringAsFixed(2)}',
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                transactionlist[index]
+                                                    .date
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                            ]),
+                                          )),
+                                    ),
+                                  );
+                                }
+                              // );
+                              // }
+                              //},
                             ),
 
-
                           ],
-                        )
+                        ),
+                      ),
+                    ),
+
+
+                  ],
+                )
 
 
 
 
 
 
-                ],
-              ),
-            )
-    ),
+              ],
+            ),
+          )
+      ),
 
 
 
@@ -746,364 +747,364 @@ child:
   }
   dashboardHeader() {
     return   Flexible(
-     child: Container(
-        //height: 120,
-        width: double.infinity,
-        padding: EdgeInsets.all(5),
-        //color: const Color(0xDEB46FEA),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage("asset/images/background.png"),
-          fit: BoxFit.cover,
-        )),
-        //child: Align(alignment: Alignment.center,
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Container(
-                    margin: EdgeInsets.all(8),
-                    alignment: Alignment.topLeft,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        //color: const Color(0x75f5f5f5)
-                    ),
-                    child:
+        child: Container(
+          //height: 120,
+            width: double.infinity,
+            padding: EdgeInsets.all(5),
+            //color: const Color(0xDEB46FEA),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("asset/images/background.png"),
+                  fit: BoxFit.cover,
+                )),
+            //child: Align(alignment: Alignment.center,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Container(
+                        margin: EdgeInsets.all(8),
+                        alignment: Alignment.topLeft,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          //color: const Color(0x75f5f5f5)
+                        ),
+                        child:
                         // Row(
                         //   mainAxisSize: MainAxisSize.min,
                         //   children: [
                         Text(
-                      'Admin Account',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15,
-                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold //font color
+                          'Admin Account',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold //font color
                           ),
-                    )
-                    //   ],
-                    // )
+                        )
+                      //   ],
+                      // )
 
                     ),
-              ]),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: [
-                      Text(
-                        dollar + tDebitValue.toStringAsFixed(2),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18,
-                            //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                            color: Colors.white,
-                            //font color
-                            fontStyle: FontStyle.italic),
-                      ),
-                      Text(
-                        'Debit',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-
-
-                  Column(
-                    children: [
-                      Text(
-                        dollar + tCreditValue.toStringAsFixed(2),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                          color: Colors.white,
-                          //font color
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Text(
-                        'Credit',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
-                ]),
-            Container(
-              //width: 80,
-              child:
-              ExpandableNotifier(  // <-- Provides ExpandableController to its children
-                child: Column(
-                  children: [
-                    Expandable(           // <-- Driven by ExpandableController from ExpandableNotifier
-                      collapsed: ExpandableButton(  // <-- Expands when tapped on the cover photo
-                        child: //Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.white,),
-                        Image.asset(
-                          "asset/images/down.png", // width: 300,
-                          height: 20,
-                          width: 20,
-                          alignment: Alignment.center,
-                        ),
-
-                      ),
-                      expanded: Column(
-                          children: [
-                            //Text("Backjdsgcygdsucudshiodhycoe"),
-                            SizedBox(
-                                width: 400,
-                                height: 350,
-                                child: FittedBox(child: Column(
-                                  children: [
-                                    //  addAccountHeader(),
-                                    Container(
-                                      // color: Colors.yellow,
-                                      height: 300,
-                                      width: 350,
-                                      child:
-                                      //Column(
-                                      // children: [
-                                      //  addAccountHeader(),
-                                      VerticalBarChart(
-                                        painter: VerticalBarChartPainter(
-                                          verticalBarChartContainer: verticalBarChartContainer,
-                                        ),
-                                      ),
-
-                                    )
-                                  ],
-                                ))
-                            ),
-                            ExpandableButton(
-                              child:  Image.asset(
-                                "asset/images/up.png", // width: 300,
-                                height: 20,
-                                width: 20,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                          ]
-                      ),
-                    ),
-                  ],
+                  ]),
                 ),
-              ),
-            ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Text(
+                            dollar + tDebitValue.toStringAsFixed(2),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                                //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                                color: Colors.white,
+                                //font color
+                                fontStyle: FontStyle.italic),
+                          ),
+                          Text(
+                            'Debit',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
 
-          ],
-        )
 
-        //  ),
+                      Column(
+                        children: [
+                          Text(
+                            dollar + tCreditValue.toStringAsFixed(2),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                              color: Colors.white,
+                              //font color
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            'Credit',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ]),
+                Container(
+                  //width: 80,
+                  child:
+                  ExpandableNotifier(  // <-- Provides ExpandableController to its children
+                    child: Column(
+                      children: [
+                        Expandable(           // <-- Driven by ExpandableController from ExpandableNotifier
+                          collapsed: ExpandableButton(  // <-- Expands when tapped on the cover photo
+                            child: //Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.white,),
+                            Image.asset(
+                              "asset/images/down.png", // width: 300,
+                              height: 20,
+                              width: 20,
+                              alignment: Alignment.center,
+                            ),
+
+                          ),
+                          expanded: Column(
+                              children: [
+                                //Text("Backjdsgcygdsucudshiodhycoe"),
+                                SizedBox(
+                                    width: 400,
+                                    height: 350,
+                                    child: FittedBox(child: Column(
+                                      children: [
+                                        //  addAccountHeader(),
+                                        Container(
+                                          // color: Colors.yellow,
+                                          height: 300,
+                                          width: 350,
+                                          child:
+                                          //Column(
+                                          // children: [
+                                          //  addAccountHeader(),
+                                          VerticalBarChart(
+                                            painter: VerticalBarChartPainter(
+                                              verticalBarChartContainer: verticalBarChartContainer,
+                                            ),
+                                          ),
+
+                                        )
+                                      ],
+                                    ))
+                                ),
+                                ExpandableButton(
+                                  child:  Image.asset(
+                                    "asset/images/up.png", // width: 300,
+                                    height: 20,
+                                    width: 20,
+                                    alignment: Alignment.center,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              ],
+            )
+
+          //  ),
         ));
   }
 
   debitTransaction() {
     return Scrollbar(
       child:Column(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Row(mainAxisSize: MainAxisSize.min, children:
-          [
-            Container(
-                margin: EdgeInsets.all(8),
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffECDCFF)),
-                child:
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    Text(
-                  'Debit:' + dollar + tDebitValue.toStringAsFixed(2),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 14,
-                      //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
-                      color: Colors.black,
-                      //font color
-                      fontStyle: FontStyle.italic),
-                )
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Row(mainAxisSize: MainAxisSize.min, children:
+            [
+              Container(
+                  margin: EdgeInsets.all(8),
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: const Color(0xffECDCFF)),
+                  child:
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: [
+                  Text(
+                    'Debit:' + dollar + tDebitValue.toStringAsFixed(2),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        //line height 200%, 1= 100%, were 0.9 = 90% of actual line height
+                        color: Colors.black,
+                        //font color
+                        fontStyle: FontStyle.italic),
+                  )
                 //   ],
                 // )
 
-                ),
-          ]),
-          // ),
-        ),
-        Container(
+              ),
+            ]),
+            // ),
+          ),
+          Container(
             // height: 250.0,
             // color: Colors.yellow,
-            child: Column(
-          children: [
-            Container(
-                height: 35,
-                width: double.infinity,
-                margin:
-                    EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: const Color(0xffEDECEE)),
-                child: Row(
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.all(5),
-                      ),
-                      onPressed: () async {
-                        isexpanse = true;
-                        Loader.show(context,
-                            isSafeAreaOverlay: false,
-                            progressIndicator: CircularProgressIndicator(),
-                            isBottomBarOverlay: false,
-                            overlayFromBottom: 80,
-                            themeData: Theme.of(context)
-                                .copyWith(accentColor: Colors.black),
-                            overlayColor: Color(0x0000ffff));
-                        Future.delayed(Duration(seconds: 4), () {
-                          Loader.hide();
-                        });
-                        var linktoken = await linktokenResponse();
-                        _linkTokenConfiguration = LinkTokenConfiguration(
-                          token: linktoken.linkToken.toString(),
-                        );
-
-                        PlaidLink.open(configuration: _linkTokenConfiguration);
-                      },
-                      child: Image(
-                        image: AssetImage("asset/images/Plus.png"),
-                        width: 100,
-                        height: 100,
-                      ),
-                    ),
-                    Text('Connect To Debit Account'),
-                  ],
-                )),
-            //-----------------------------------debir////-----------
-            Container(
-              width: double.infinity,
-             // height: 150.0,
-              margin: const EdgeInsets.only(bottom: 4, top: 4),
-              color: Colors.white,
-              child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+              child: Column(
                 children: [
-                  FutureBuilder<List<BankData>>(
-                    future: bankdatalist,
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData)
-                        {
-                          return
-                            ExpansionPanelList(
-                              animationDuration: Duration(milliseconds: 2000),
-                              children:
-                              snapshot.data!.map<ExpansionPanel>((BankData item) {
-                                return ExpansionPanel(
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      iconColor: Colors.red,
-                                      leading: CircleAvatar(
-                                        radius: 30,
-                                        child:
-                                        // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
-                                        Image.network(item.banklogo.toString()),
-                                      ),
-                                      title: Text(
-                                        item.bankname.toString(),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      trailing:
-                                      item.totalamount ==null?
-                                      Text(dollar+'0',
-                                        style: TextStyle(
-                                          color: Colors.black,
+                  Container(
+                      height: 35,
+                      width: double.infinity,
+                      margin:
+                      EdgeInsets.only(top: 5, left: 15, bottom: 10, right: 15),
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: const Color(0xffEDECEE)),
+                      child: Row(
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(5),
+                            ),
+                            onPressed: () async {
+                              isexpanse = true;
+                              Loader.show(context,
+                                  isSafeAreaOverlay: false,
+                                  progressIndicator: CircularProgressIndicator(),
+                                  isBottomBarOverlay: false,
+                                  overlayFromBottom: 80,
+                                  themeData: Theme.of(context)
+                                      .copyWith(accentColor: Colors.black),
+                                  overlayColor: Color(0x0000ffff));
+                              Future.delayed(Duration(seconds: 4), () {
+                                Loader.hide();
+                              });
+                              var linktoken = await linktokenResponse();
+                              _linkTokenConfiguration = LinkTokenConfiguration(
+                                token: linktoken.linkToken.toString(),
+                              );
+
+                              PlaidLink.open(configuration: _linkTokenConfiguration);
+                            },
+                            child: Image(
+                              image: AssetImage("asset/images/Plus.png"),
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                          Text('Connect To Debit Account'),
+                        ],
+                      )),
+                  //-----------------------------------debir////-----------
+                  Container(
+                    width: double.infinity,
+                    // height: 150.0,
+                    margin: const EdgeInsets.only(bottom: 4, top: 4),
+                    color: Colors.white,
+                    child: ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      children: [
+                        FutureBuilder<List<BankData>>(
+                          future: bankdatalist,
+                          builder: (context, snapshot) {
+                            if(snapshot.hasData)
+                            {
+                              return
+                                ExpansionPanelList(
+                                  animationDuration: Duration(milliseconds: 2000),
+                                  children:
+                                  snapshot.data!.map<ExpansionPanel>((BankData item) {
+                                    return ExpansionPanel(
+                                      headerBuilder:
+                                          (BuildContext context, bool isExpanded) {
+                                        return ListTile(
+                                          iconColor: Colors.red,
+                                          leading: CircleAvatar(
+                                            radius: 30,
+                                            child:
+                                            // Image.memory(Base64Codec().decode(item.banklogo.toString()),),
+                                            Image.network(item.banklogo.toString()),
+                                          ),
+                                          title: Text(
+                                            item.bankname.toString(),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          trailing:
+                                          item.totalamount ==null?
+                                          Text(dollar+'0',
+                                            style: TextStyle(
+                                                color: Colors.black,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500
-                                        ),
-                                      ):
-                                      Text('${item.totalamount!.toStringAsFixed(2)}',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500
-                                        ),
-                                      ),
-                                      // Text(
-                                      //   dollar + item.totalamount.toString(), "0",
-                                      //
-                                      //   style: TextStyle(
-                                      //       color: Colors.black,
-                                      //       fontSize: 16,
-                                      //       fontWeight: FontWeight.w500),
-                                      //),
-                                      subtitle: Text(
-                                        item.accountname.toString(),
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      selected: false,
+                                            ),
+                                          ):
+                                          Text('${item.totalamount!.toStringAsFixed(2)}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500
+                                            ),
+                                          ),
+                                          // Text(
+                                          //   dollar + item.totalamount.toString(), "0",
+                                          //
+                                          //   style: TextStyle(
+                                          //       color: Colors.black,
+                                          //       fontSize: 16,
+                                          //       fontWeight: FontWeight.w500),
+                                          //),
+                                          subtitle: Text(
+                                            item.accountname.toString(),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          selected: false,
+                                        );
+                                      },
+                                      body:
+                                      // Text("gcdsgchgdsv"),
+                                      debitBuildExpandableContent(
+                                          item.accesstoken.toString(),
+                                          item.accountid.toString(),
+                                          cmonth),
+                                      isExpanded: item.isExpaneded,
                                     );
+                                  }).toList(),
+                                  dividerColor: Colors.grey,
+                                  expansionCallback: (int index, bool isExpanded) {
+                                    setState(() {
+                                      snapshot.data![index].isExpaneded = !isExpanded;
+                                    });
                                   },
-                                  body:
-                                  // Text("gcdsgchgdsv"),
-                                  debitBuildExpandableContent(
-                                      item.accesstoken.toString(),
-                                      item.accountid.toString(),
-                                      cmonth),
-                                  isExpanded: item.isExpaneded,
                                 );
-                              }).toList(),
-                              dividerColor: Colors.grey,
-                              expansionCallback: (int index, bool isExpanded) {
-                                setState(() {
-                                  snapshot.data![index].isExpaneded = !isExpanded;
-                                });
-                              },
-                            );
-                        }
-                      else
-                        {
-                          return Center(
-                              child: CircularProgressIndicator());
-                        }
+                            }
+                            else
+                            {
+                              return Center(
+                                  child: CircularProgressIndicator());
+                            }
 
-                    },
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
 //chnage heiught to 200
-            //--------------------------
-          ],
-        )),
+                  //--------------------------
+                ],
+              )),
 
-      ],
+        ],
       ),
     );
   }
@@ -1121,10 +1122,10 @@ child:
                   borderRadius: BorderRadius.circular(12),
                   color: const Color(0xffECDCFF)),
               child:
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: [
-                  Text(
+              // Row(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              Text(
                 'Credit: ' + dollar + tCreditValue.toStringAsFixed(2),
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -1134,10 +1135,10 @@ child:
                     //font color
                     fontStyle: FontStyle.italic),
               )
-              //   ],
-              // )
+            //   ],
+            // )
 
-              ),
+          ),
         ]),
       ),
       Container(
@@ -1162,7 +1163,7 @@ child:
                       isBottomBarOverlay: false,
                       overlayFromBottom: 80,
                       themeData:
-                          Theme.of(context).copyWith(accentColor: Colors.black),
+                      Theme.of(context).copyWith(accentColor: Colors.black),
                       overlayColor: Color(0x0000ffff));
                   Future.delayed(Duration(seconds: 4), () {
                     Loader.hide();
@@ -1186,7 +1187,7 @@ child:
           )),
       Container(
         width: double.infinity,
-       // height: 150.0,
+        // height: 150.0,
         margin: const EdgeInsets.only(bottom: 0, top: 0),
         color: Colors.white,
         child: ListView(
@@ -1198,122 +1199,122 @@ child:
               future: creditbankdatalist,
               builder: (context, snapshot) {
                 if(snapshot.hasData)
-                  {
-                    return
-                      ExpansionPanelList(
-                        animationDuration: Duration(milliseconds: 2000),
-                        children: snapshot.data!.map<ExpansionPanel>((BankData item) {
-                          return ExpansionPanel(
-                            headerBuilder: (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                iconColor: Colors.red,
-                                leading: CircleAvatar(
-                                    radius: 30,
-                                    child:
-                                    //Image.memory(Base64Codec().decode(item.banklogo.toString())),
+                {
+                  return
+                    ExpansionPanelList(
+                      animationDuration: Duration(milliseconds: 2000),
+                      children: snapshot.data!.map<ExpansionPanel>((BankData item) {
+                        return ExpansionPanel(
+                          headerBuilder: (BuildContext context, bool isExpanded) {
+                            return ListTile(
+                              iconColor: Colors.red,
+                              leading: CircleAvatar(
+                                  radius: 30,
+                                  child:
+                                  //Image.memory(Base64Codec().decode(item.banklogo.toString())),
 
-                                    Image.network(item.banklogo.toString())),
-                                title: Text(
-                                  item.bankname.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
+                                  Image.network(item.banklogo.toString())),
+                              title: Text(
+                                item.bankname.toString(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              trailing:
+                              // Text(
+                              //   dollar + item.totalamount.toString(),
+                              //   style: TextStyle(
+                              //       color: Colors.black,
+                              //       fontSize: 16,
+                              //       fontWeight: FontWeight.w500),
+                              // ),
+                              item.totalamount ==null?
+                              Text(dollar+'0',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500
                                 ),
-                                trailing:
-                                // Text(
-                                //   dollar + item.totalamount.toString(),
-                                //   style: TextStyle(
-                                //       color: Colors.black,
-                                //       fontSize: 16,
-                                //       fontWeight: FontWeight.w500),
-                                // ),
-                                item.totalamount ==null?
-                                Text(dollar+'0',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500
-                                  ),
-                                ):
-                                Text('${item.totalamount!.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500
-                                  ),
+                              ):
+                              Text('${item.totalamount!.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500
                                 ),
-                                subtitle: Text(
-                                  item.accountname.toString(),
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                selected: false,
-                              );
-                            },
-                            body: //Text('hgsdvfghjbvsdjhcgsdh'),
-                            creditBuildExpandableContent(
-                              item.accesstoken.toString(),
-                              item.accountid.toString(),
-                            ),
-                            isExpanded: item.isExpaneded,
-                          );
-                        }).toList(),
-                        dividerColor: Colors.grey,
-                        expansionCallback: (int index, bool isExpanded) async {
-                          setState(() {
-                            snapshot.data![index].isExpaneded = !isExpanded;
-                          });
-                          // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                          // print(index);
-                          // print(isExpanded);
-                          // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
-                          // TransactionResponse tempresponse2 =
-                          //     await transactionResponse(
-                          //         snapshot.data![index].accesstoken.toString(),
-                          //         snapshot.data![index].accountid.toString(),
-                          //         cmonth);
-                          //
-                          // transactionlist =
-                          //     tempresponse2.transactions as List<Transactions>;
-                          // viewVisible = true;
-                          viewVisibleTransaction = true;
-                          showWidget();
-                          LiabilityResponse tempresponse = await liabilityData(
-                              snapshot.data![index].accesstoken.toString(),
-                              snapshot.data![index].accountid.toString());
-                          liabilitylist = tempresponse.liabilities as Liabilities;
-                          viewVisible = false;
-                          viewVisible2 = false;
-                          viewVisible3 = false;
-                          if (liabilitylist.student != null) {
-                            stdlist = liabilitylist.student!;
-                            viewVisible = true;
-                            //  print("student");
-                            setStudentLoanContainer(liabilitylist.student!.first, 0);
-                          }
-                          if (liabilitylist.mortgage != null) {
-                            mrtlist = liabilitylist.mortgage!;
-                            viewVisible2 = true;
-                            //  print("mortgage");
-                            setMortgage(liabilitylist.mortgage!.first, 0);
-                          }
-                          if (liabilitylist.credit != null) {
-                            crdlist = liabilitylist.credit!;
-                            viewVisible3 = true;
-                            //  print("credit");
-                          }
-                        },
-                      );
-                  }
-                else
-                  {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                              ),
+                              subtitle: Text(
+                                item.accountname.toString(),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              selected: false,
+                            );
+                          },
+                          body: //Text('hgsdvfghjbvsdjhcgsdh'),
+                          creditBuildExpandableContent(
+                            item.accesstoken.toString(),
+                            item.accountid.toString(),
+                          ),
+                          isExpanded: item.isExpaneded,
+                        );
+                      }).toList(),
+                      dividerColor: Colors.grey,
+                      expansionCallback: (int index, bool isExpanded) async {
+                        setState(() {
+                          snapshot.data![index].isExpaneded = !isExpanded;
+                        });
+                        // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                        // print(index);
+                        // print(isExpanded);
+                        // print(">>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<");
+                        // TransactionResponse tempresponse2 =
+                        //     await transactionResponse(
+                        //         snapshot.data![index].accesstoken.toString(),
+                        //         snapshot.data![index].accountid.toString(),
+                        //         cmonth);
+                        //
+                        // transactionlist =
+                        //     tempresponse2.transactions as List<Transactions>;
+                        // viewVisible = true;
+                        viewVisibleTransaction = true;
+                        showWidget();
+                        LiabilityResponse tempresponse = await liabilityData(
+                            snapshot.data![index].accesstoken.toString(),
+                            snapshot.data![index].accountid.toString());
+                        liabilitylist = tempresponse.liabilities as Liabilities;
+                        viewVisible = false;
+                        viewVisible2 = false;
+                        viewVisible3 = false;
+                        if (liabilitylist.student != null) {
+                          stdlist = liabilitylist.student!;
+                          viewVisible = true;
+                          //  print("student");
+                          setStudentLoanContainer(liabilitylist.student!.first, 0);
+                        }
+                        if (liabilitylist.mortgage != null) {
+                          mrtlist = liabilitylist.mortgage!;
+                          viewVisible2 = true;
+                          //  print("mortgage");
+                          setMortgage(liabilitylist.mortgage!.first, 0);
+                        }
+                        if (liabilitylist.credit != null) {
+                          crdlist = liabilitylist.credit!;
+                          viewVisible3 = true;
+                          //  print("credit");
+                        }
+                      },
                     );
-                  }
+                }
+                else
+                {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
               },
             ),
@@ -1331,18 +1332,18 @@ child:
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-              //color: const Color(0xFFA781D3),
-              )),
+            //color: const Color(0xFFA781D3),
+          )),
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: const Color(0xFFA781D3),
           padding: const EdgeInsets.all(5),
         ),
         onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => AddAccount()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MakePayment1()),
+          );
         },
         child: Text(
           'Make a Payment',
@@ -1370,10 +1371,10 @@ child:
                 borderRadius: BorderRadius.circular(12),
                 color: const Color(0xffECDCFF)),
             child:
-                // Row(
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                Text(
+            // Row(
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: [
+            Text(
               'Recent Transactions',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -1383,10 +1384,10 @@ child:
                   //font color
                   fontStyle: FontStyle.italic),
             )
-            //   ],
-            // )
+          //   ],
+          // )
 
-            ),
+        ),
         Spacer(),
         Container(
           margin: EdgeInsets.all(8),
@@ -1451,7 +1452,7 @@ child:
     setState(() {
       tDebitValue = totalTransactionValue;
     });
-   // print(jsonEncode(debitlistbankdata));
+    // print(jsonEncode(debitlistbankdata));
     return debitlistbankdata;
   }
 
@@ -1509,13 +1510,13 @@ child:
       );
     } else {
       return //Text("jhbvkjndfkjvnfdv");
-          FutureBuilder<TransactionResponse>(
-              future: response,
-              builder: (context, snapshot) {
-                //   print('snnnnnnnnapshot');
-                //  print(snapshot.data!.transactions.toString());
-                return debitBuildTransactionListView(snapshot.data!);
-              });
+        FutureBuilder<TransactionResponse>(
+            future: response,
+            builder: (context, snapshot) {
+              //   print('snnnnnnnnapshot');
+              //  print(snapshot.data!.transactions.toString());
+              return debitBuildTransactionListView(snapshot.data!);
+            });
     }
     ;
   }
@@ -1523,87 +1524,87 @@ child:
   debitBuildTransactionListView(TransactionResponse tdata) {
     //Text("jhbvkjndfkjvnfdv");
     return //Text("credit4444444444444credit");
-        Column(
-      children: [
-        //for (var t in tdata.transactions!)
-        if (viewVisibleTransaction) ...[
-          Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  for (var t in tdata.transactions!)
-                    Column(children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: 5, left: 13, right: 13, bottom: 3),
-                        color: const Color(0xffF5F5F5),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(8),
-                          leading: CircleAvatar(
-                            radius: 20,
-                            child: Image(
-                              image: AssetImage("asset/images/cart.png"),
-                              //width: 40,
-                              //color: const Color(0xffECDCFF)
-                            ),
-                          ),
-                          title: Padding(
-                            padding: EdgeInsets.only(top: 5, bottom: 8),
-                            child: Text(
-                              t.category.toString(),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                          trailing: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10, top: 5),
-                                child: Text(
-                                  dollar + t.amount.toStringAsFixed(2),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700),
-                                ),
+      Column(
+        children: [
+          //for (var t in tdata.transactions!)
+          if (viewVisibleTransaction) ...[
+            Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    for (var t in tdata.transactions!)
+                      Column(children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 5, left: 13, right: 13, bottom: 3),
+                          color: const Color(0xffF5F5F5),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(8),
+                            leading: CircleAvatar(
+                              radius: 20,
+                              child: Image(
+                                image: AssetImage("asset/images/cart.png"),
+                                //width: 40,
+                                //color: const Color(0xffECDCFF)
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 2),
-                                child: Text(
-                                  t.date.toString(),
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ],
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(bottom: 2),
-                            child: Text(
-                              t.name.toString(),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400),
                             ),
+                            title: Padding(
+                              padding: EdgeInsets.only(top: 5, bottom: 8),
+                              child: Text(
+                                t.category.toString(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            trailing: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10, top: 5),
+                                  child: Text(
+                                    dollar + t.amount.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  child: Text(
+                                    t.date.toString(),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Padding(
+                              padding: EdgeInsets.only(bottom: 2),
+                              child: Text(
+                                t.name.toString(),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            selected: true,
                           ),
-                          selected: true,
-                        ),
-                      )
-                    ]),
-                ],
-              )),
-        ] else
-          Container(
-            child: Text("Loading..."),
-          ),
-      ],
-    );
+                        )
+                      ]),
+                  ],
+                )),
+          ] else
+            Container(
+              child: Text("Loading..."),
+            ),
+        ],
+      );
     //selected: true;
   }
 
@@ -1640,733 +1641,25 @@ child:
 
   creditBuildLiabilityListView(LiabilityResponse ldata) {
     return //Text("4444444444444");
-        Column(
-      children: [
-        if (viewVisible) ...[
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                for (var i in stdlist)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        height: 150,
-                      //  color: Colors.yellow,
-                        margin: const EdgeInsets.only(
-                            right: 15, left: 15, top: 4, bottom: 4),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
-                              topLeft: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)),
-                          color: const Color(0xffF5F5F5),
-
-                          // color: const Color(0xffEFF4F8),
-                        ),
-                        child: ListView(
-                          children: <Widget>[
-                            // Text(
-                            //   "STUDENT LOAN",
-                            //   textAlign: TextAlign.center,
-                            //   style: TextStyle(
-                            //       color: Colors.black,
-                            //       fontSize: 13,
-                            //       fontWeight: FontWeight.w700),
-                            // ),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("LAST PAYMENT AMOUNT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                    dollar +
-                                        i.lastPaymentAmount!.toStringAsFixed(2),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("LAST PAYMENT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.lastPaymentDate.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("LOAN TYPE ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.loanName.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("EXPECT PAY",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.expectedPayoffDate.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("ORIGATION DATE",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.originationDate.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("MINIMUM PAYMENT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                    dollar +
-                                        i.minimumPaymentAmount!
-                                            .toStringAsFixed(2),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("PAYMENT DUE DATE ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.nextPaymentDueDate.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("OUTSTANDING INTEREST",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                    i.outstandingInterestAmount.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("INTEREST RATE",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.interestRatePercentage.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("GUARANTER",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.guarantor.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("PAYMENT REFERENCE NUMBER ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(i.paymentReferenceNumber.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                            // Row(children: <Widget>[
-                            //   Align(
-                            //     alignment: Alignment.topLeft,
-                            //     child: Text("YTD INTEREST PAID",
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 13,
-                            //             fontWeight: FontWeight.w700)),
-                            //   ),
-                            //   Spacer(),
-                            //   Align(
-                            //     alignment: Alignment.topRight,
-                            //     child: Text(
-                            //         dollar +
-                            //             i.ytdInterestPaid!.toStringAsFixed(2),
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 11,
-                            //             fontWeight: FontWeight.w500)),
-                            //   ),
-                            // ]),
-                            // Row(children: <Widget>[
-                            //   Align(
-                            //     alignment: Alignment.topLeft,
-                            //     child: Text("YTD PRINCIPAL PAID ",
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 13,
-                            //             fontWeight: FontWeight.w700)),
-                            //   ),
-                            //   Spacer(),
-                            //   Align(
-                            //     alignment: Alignment.topRight,
-                            //     child: Text(
-                            //         dollar +
-                            //             i.ytdPrincipalPaid!.toStringAsFixed(2),
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 11,
-                            //             fontWeight: FontWeight.w500)),
-                            //   ),
-                            // ]),
-                            // Row(children: <Widget>[
-                            //   Align(
-                            //     alignment: Alignment.topLeft,
-                            //     child: Text("SEQUENCE NUMBER",
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 13,
-                            //             fontWeight: FontWeight.w700)),
-                            //   ),
-                            //   Spacer(),
-                            //   Align(
-                            //     alignment: Alignment.topRight,
-                            //     child: Text(i.sequenceNumber.toString(),
-                            //         style: TextStyle(
-                            //             color: Colors.black,
-                            //             fontSize: 11,
-                            //             fontWeight: FontWeight.w500)),
-                            //   ),
-                            // ]),
-                            Row(children: <Widget>[
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("TOTAL AMOUNT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
-                              ),
-                              Spacer(),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                    dollar +
-                                        i.lastPaymentAmount!.toStringAsFixed(2),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ]),
-                          ],
-                        ),
-                        //),
-                      ),
-                    ],
-                    //),
-
-                    // ],
-                  ),
-                //  Text("Last payment Amount"+ i.lastPaymentAmount.toString()),
-              ],
-            ),
-          )
-        ] else if (viewVisible2) ...[
-          Container(
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                for (var i in mrtlist)
-                  // ListView(
-                  Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 150,
-                        margin: const EdgeInsets.only(
-                            right: 20, left: 20, top: 4, bottom: 4),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
-                              topLeft: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)),
-                          //  color: const Color(0xffEFF4F8),
-                          color: const Color(0xffF5F5F5),
-                        ),
-                        child: ListView(children: [
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "LAST PAYMENT AMOUNT",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.lastPaymentDate.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "LAST PAYMENT",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar +
-                                    i.lastPaymentAmount!.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "LOAN TYPE ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.loanTypeDescription.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "LOAN TERM ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.loanTerm.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "ORIGATION DATE",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.originationDate.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "YTD PRINICIPAL PAID ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar + i.ytdPrincipalPaid!.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "CURRENT LATE FEE",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar + i.currentLateFee!.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "NEXT MONTH PAYMENT",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.nextPaymentDueDate.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "YTD INTEREST PAID",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar + i.ytdInterestPaid!.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "MATURITY DATE ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.maturityDate.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "ESCROW BALANCE",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar + i.escrowBalance.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "DUE AMOUNT ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                dollar + i.pastDueAmount!.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "PAST DUE DATE",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                i.nextPaymentDueDate.toString(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ]),
-                          Row(children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "TOTAL AMOUNT",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            // Container(
-                            //   margin: const EdgeInsets.only(
-                            //       top: 10),
-                            //   child: Align(
-                            //     alignment: Alignment.topRight,
-                            //     child: Text(
-                            //       dollar + f.format(
-                            //           i.originationPrincipalAmount),
-                            //       style: TextStyle(
-                            //           color: Colors.black,
-                            //           fontSize: 14,
-                            //           fontWeight: FontWeight.w500),),
-                            //
-                            //   ),
-                            // ),
-                          ]),
-                        ]),
-                      ),
-
-                      //888****
-                    ],
-                  ),
-              ],
-            ),
-          )
-        ] else if (viewVisible3) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                for (var i in crdlist)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    // use whichever suits your need
-                    children: <Widget>[
-                      Container(
+      Column(
+        children: [
+          if (viewVisible) ...[
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  for (var i in stdlist)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
                           width: double.infinity,
-                          height: 140.0,
-                          margin: const EdgeInsets.only(right: 15, left: 15),
+                          height: 150,
+                          //  color: Colors.yellow,
+                          margin: const EdgeInsets.only(
+                              right: 15, left: 15, top: 4, bottom: 4),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -2374,25 +1667,395 @@ child:
                                 bottomRight: Radius.circular(8.0),
                                 topLeft: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0)),
+                            color: const Color(0xffF5F5F5),
+
                             // color: const Color(0xffEFF4F8),
+                          ),
+                          child: ListView(
+                            children: <Widget>[
+                              // Text(
+                              //   "STUDENT LOAN",
+                              //   textAlign: TextAlign.center,
+                              //   style: TextStyle(
+                              //       color: Colors.black,
+                              //       fontSize: 13,
+                              //       fontWeight: FontWeight.w700),
+                              // ),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LAST PAYMENT AMOUNT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      dollar +
+                                          i.lastPaymentAmount!.toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LAST PAYMENT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.lastPaymentDate.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LOAN TYPE ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.loanName.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("EXPECT PAY",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.expectedPayoffDate.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("ORIGATION DATE",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.originationDate.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("MINIMUM PAYMENT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      dollar +
+                                          i.minimumPaymentAmount!
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("PAYMENT DUE DATE ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.nextPaymentDueDate.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("OUTSTANDING INTEREST",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      i.outstandingInterestAmount.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("INTEREST RATE",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.interestRatePercentage.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("GUARANTER",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.guarantor.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("PAYMENT REFERENCE NUMBER ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(i.paymentReferenceNumber.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                              // Row(children: <Widget>[
+                              //   Align(
+                              //     alignment: Alignment.topLeft,
+                              //     child: Text("YTD INTEREST PAID",
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 13,
+                              //             fontWeight: FontWeight.w700)),
+                              //   ),
+                              //   Spacer(),
+                              //   Align(
+                              //     alignment: Alignment.topRight,
+                              //     child: Text(
+                              //         dollar +
+                              //             i.ytdInterestPaid!.toStringAsFixed(2),
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 11,
+                              //             fontWeight: FontWeight.w500)),
+                              //   ),
+                              // ]),
+                              // Row(children: <Widget>[
+                              //   Align(
+                              //     alignment: Alignment.topLeft,
+                              //     child: Text("YTD PRINCIPAL PAID ",
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 13,
+                              //             fontWeight: FontWeight.w700)),
+                              //   ),
+                              //   Spacer(),
+                              //   Align(
+                              //     alignment: Alignment.topRight,
+                              //     child: Text(
+                              //         dollar +
+                              //             i.ytdPrincipalPaid!.toStringAsFixed(2),
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 11,
+                              //             fontWeight: FontWeight.w500)),
+                              //   ),
+                              // ]),
+                              // Row(children: <Widget>[
+                              //   Align(
+                              //     alignment: Alignment.topLeft,
+                              //     child: Text("SEQUENCE NUMBER",
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 13,
+                              //             fontWeight: FontWeight.w700)),
+                              //   ),
+                              //   Spacer(),
+                              //   Align(
+                              //     alignment: Alignment.topRight,
+                              //     child: Text(i.sequenceNumber.toString(),
+                              //         style: TextStyle(
+                              //             color: Colors.black,
+                              //             fontSize: 11,
+                              //             fontWeight: FontWeight.w500)),
+                              //   ),
+                              // ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("TOTAL AMOUNT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      dollar +
+                                          i.lastPaymentAmount!.toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ]),
+                            ],
+                          ),
+                          //),
+                        ),
+                      ],
+                      //),
+
+                      // ],
+                    ),
+                  //  Text("Last payment Amount"+ i.lastPaymentAmount.toString()),
+                ],
+              ),
+            )
+          ] else if (viewVisible2) ...[
+            Container(
+              width: double.infinity,
+              child: Column(
+                children: <Widget>[
+                  for (var i in mrtlist)
+                  // ListView(
+                    Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 150,
+                          margin: const EdgeInsets.only(
+                              right: 20, left: 20, top: 4, bottom: 4),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                                topLeft: Radius.circular(8.0),
+                                bottomLeft: Radius.circular(8.0)),
+                            //  color: const Color(0xffEFF4F8),
                             color: const Color(0xffF5F5F5),
                           ),
                           child: ListView(children: [
                             Row(children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Text("LAST PAYMENT DATE",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
+                                child: Text(
+                                  "LAST PAYMENT AMOUNT",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.lastPaymentDate.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "LAST PAYMENT",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                               Spacer(),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Text(
                                   dollar +
-                                      i.lastPaymentAmount.toStringAsFixed(2),
+                                      i.lastPaymentAmount!.toStringAsFixed(2),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 11,
@@ -2403,18 +2066,19 @@ child:
                             Row(children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Text("LAST STATEMENT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
+                                child: Text(
+                                  "LOAN TYPE ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                               Spacer(),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  dollar +
-                                      i.lastPaymentAmount.toStringAsFixed(2),
+                                  i.loanTypeDescription.toString(),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 11,
@@ -2425,56 +2089,307 @@ child:
                             Row(children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Text("DUE DATE ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
+                                child: Text(
+                                  "LOAN TERM ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                               Spacer(),
                               Align(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    i.nextPaymentDueDate.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500),
-                                  )),
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.loanTerm.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
                             ]),
                             Row(children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Text("MINIMUM PAYMENT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
+                                child: Text(
+                                  "ORIGATION DATE",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                               Spacer(),
                               Align(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    dollar +
-                                        i.minimumPaymentAmount!
-                                            .toStringAsFixed(2),
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500),
-                                  )),
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.originationDate.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
                             ]),
                             Row(children: <Widget>[
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Text("LAST PAYMENT",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700)),
+                                child: Text(
+                                  "YTD PRINICIPAL PAID ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
                               Spacer(),
                               Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar + i.ytdPrincipalPaid!.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "CURRENT LATE FEE",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar + i.currentLateFee!.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "NEXT MONTH PAYMENT",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.nextPaymentDueDate.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "YTD INTEREST PAID",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar + i.ytdInterestPaid!.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "MATURITY DATE ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.maturityDate.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "ESCROW BALANCE",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar + i.escrowBalance.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "DUE AMOUNT ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  dollar + i.pastDueAmount!.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "PAST DUE DATE",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  i.nextPaymentDueDate.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                            Row(children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "TOTAL AMOUNT",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              // Container(
+                              //   margin: const EdgeInsets.only(
+                              //       top: 10),
+                              //   child: Align(
+                              //     alignment: Alignment.topRight,
+                              //     child: Text(
+                              //       dollar + f.format(
+                              //           i.originationPrincipalAmount),
+                              //       style: TextStyle(
+                              //           color: Colors.black,
+                              //           fontSize: 14,
+                              //           fontWeight: FontWeight.w500),),
+                              //
+                              //   ),
+                              // ),
+                            ]),
+                          ]),
+                        ),
+
+                        //888****
+                      ],
+                    ),
+                ],
+              ),
+            )
+          ] else if (viewVisible3) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: <Widget>[
+                  for (var i in crdlist)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // use whichever suits your need
+                      children: <Widget>[
+                        Container(
+                            width: double.infinity,
+                            height: 140.0,
+                            margin: const EdgeInsets.only(right: 15, left: 15),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(8.0),
+                                  bottomRight: Radius.circular(8.0),
+                                  topLeft: Radius.circular(8.0),
+                                  bottomLeft: Radius.circular(8.0)),
+                              // color: const Color(0xffEFF4F8),
+                              color: const Color(0xffF5F5F5),
+                            ),
+                            child: ListView(children: [
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LAST PAYMENT DATE",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
                                   alignment: Alignment.topRight,
                                   child: Text(
                                     dollar +
@@ -2483,23 +2398,109 @@ child:
                                         color: Colors.black,
                                         fontSize: 11,
                                         fontWeight: FontWeight.w500),
-                                  )),
-                            ]),
-                          ])),
-                    ],
-                  ),
-              ],
-              //),
+                                  ),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LAST STATEMENT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    dollar +
+                                        i.lastPaymentAmount.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("DUE DATE ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      i.nextPaymentDueDate.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("MINIMUM PAYMENT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      dollar +
+                                          i.minimumPaymentAmount!
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                              ]),
+                              Row(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("LAST PAYMENT",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700)),
+                                ),
+                                Spacer(),
+                                Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      dollar +
+                                          i.lastPaymentAmount.toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                              ]),
+                            ])),
+                      ],
+                    ),
+                ],
+                //),
 
-              // ],
+                // ],
+              ),
             ),
-          ),
-        ] else
-          Container(
-            child: Text("Loading..."),
-          ),
-      ],
-    );
+          ] else
+            Container(
+              child: Text("Loading..."),
+            ),
+        ],
+      );
     selected:
     true;
   }
@@ -2615,12 +2616,12 @@ Future<LinkTokenResponse> linktokenResponse() async {
   tokenRequest.language = "en";
   tokenRequest.webhook = "https://sample-web-hook.com";
   final response =
-      await http.post(Uri.parse(Constants.URL + '/link/token/create'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(tokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/link/token/create'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(tokenRequest));
   // prfint(Uri.parse(Constants.URL + '/link/token/create'));
 //  print('>>>>>>>>>>>>>>>>>>>>>>>> Link Token <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
   // print(response.body);
@@ -2659,12 +2660,12 @@ Future<InstitutionResponse> institutionResponse(String InstituteId) async {
   institutionResquest.options = options;
   //print('Request body-----: ${jsonEncode(institutionResquest)}');
   final response2 =
-      await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(institutionResquest));
+  await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(institutionResquest));
   // print('###########################################################################################################');
   print(
       '>>>>>>>>>>>>>>>>>>>>>>>> institutionResponse <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
@@ -2686,12 +2687,12 @@ Future<AccessTokenResponse> accessTokenResponse(String publicToken) async {
   accessTokenRequest.publicToken = publicToken;
   // print('Request body3-----: ${jsonEncode(accessTokenRequest)}');
   final response3 =
-      await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(accessTokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(accessTokenRequest));
 
   //print('##########################################'
   // '###################################################'
@@ -2745,12 +2746,12 @@ Future<LinkTokenResponse> creditlinktokenResponse() async {
   tokenRequest.language = "en";
   tokenRequest.webhook = "https://sample-web-hook.com";
   final response =
-      await http.post(Uri.parse(Constants.URL + '/link/token/create'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(tokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/link/token/create'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(tokenRequest));
   // print(Uri.parse(Constants.URL + '/link/token/create'));
 
   if (response.statusCode == 200) {
@@ -2789,12 +2790,12 @@ Future<InstitutionResponse> creditinstitutionResponse(
   institutionResquest.options = options;
   //print('Request body-----: ${jsonEncode(institutionResquest)}');
   final response2 =
-      await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(institutionResquest));
+  await http.post(Uri.parse(Constants.URL + '/institutions/get_by_id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(institutionResquest));
   // print('###########################################################################################################');
   if (response2.statusCode == 200) {
     // If the server did return a 201 CREATED response,
@@ -2814,12 +2815,12 @@ Future<AccessTokenResponse> creditaccessTokenResponse2(
   accessTokenRequest.publicToken = publicToken;
   // print('Request body3-----: ${jsonEncode(accessTokenRequest)}');
   final response3 =
-      await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(accessTokenRequest));
+  await http.post(Uri.parse(Constants.URL + '/item/public_token/exchange'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(accessTokenRequest));
 
   //print('##########################################'
   // '###################################################'
@@ -2851,12 +2852,12 @@ Future<LiabilityResponse> liabilityData(
   liabilityRequest.options = liabilityOptions;
   // print('Request body4-----: ${jsonEncode(liabilityRequest)}');
   final response4 =
-      await http.post(Uri.parse(Constants.URL + '/liabilities/get'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode(liabilityRequest));
+  await http.post(Uri.parse(Constants.URL + '/liabilities/get'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(liabilityRequest));
 
   // print('##########################################'
   //     '###################################################'
@@ -2922,22 +2923,22 @@ Future<RefreshTokenResponse> refreshValueToken(String refreshtoken) async {
   }
 }
 class MyLabelCommonOptions extends LabelCommonOptions {
-         const MyLabelCommonOptions(
-         ) : super ();
+  const MyLabelCommonOptions(
+      ) : super ();
 
-         /// Override [labelTextStyle] with a new font, color, etc.
-         @override
-         // get labelTextStyle => GoogleFonts.comforter(
-         //  style: TextStyle(
-         //   color: Color,
-         //   fontSize: 14.0,
-         //   fontWeight: FontWeight.w400, // Regular
-         //   ),
-         // );
+  /// Override [labelTextStyle] with a new font, color, etc.
+  @override
+  // get labelTextStyle => GoogleFonts.comforter(
+  //  style: TextStyle(
+  //   color: Color,
+  //   fontSize: 14.0,
+  //   fontWeight: FontWeight.w400, // Regular
+  //   ),
+  // );
 
-         get labelTextStyle =>
-           const ChartOptions().labelCommonOptions.labelTextStyle.copyWith(
-             color: Colors.white
-           );
+  get labelTextStyle =>
+      const ChartOptions().labelCommonOptions.labelTextStyle.copyWith(
+          color: Colors.white
+      );
 
-       }
+}

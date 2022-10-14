@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
 import 'package:swipeapp/Controller/Dashboard.dart';
@@ -63,16 +64,19 @@ class Spend extends StatefulWidget {
 class spendacountState extends State<Spend> {
   @override
   BankData bankDataobj = BankData();
-
+  late double tDebitValue = 0;
   void initState() {
     super.initState();
     fetchBankData(Constants.debitcardValue);
     // saveBudgetData();
     datalist =  getGoalBudgetData();
-    //saveBudgetData();
+
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  double percent = .5;
+ // double camount = 0.00;
+  //int camount = 0;
   late Future<List<getResultBudget>> datalist;
 
   Future<List<getResultBudget>> getGoalBudgetData() async {
@@ -102,11 +106,15 @@ class spendacountState extends State<Spend> {
 
       GetBudegetDataResponse getbResponse =
           GetBudegetDataResponse.fromJson(jsonDecode(response2.body));
+     // debitTotalValue(getbResponse.result!);
       return getbResponse.result!;
+
+
     } else {
       throw Exception('Failed to call user getgoalchilduserid .');
     }
   }
+
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -127,22 +135,7 @@ class spendacountState extends State<Spend> {
   bool isLoading = true;
   bool ontap = true;
 
-  debitTotalValue(List<BankData> debitlistbankdata) async {
-    //double totalTransactionValue = 0;
-    for (var debitdata in debitlistbankdata) {
-      // double debitcardtotalTransactionValue = 0;
-      var response = await transactionResponse(debitdata.accesstoken.toString(),
-          debitdata.accountid.toString(), cmonth);
-      for (var t_transaction in response.transactions!) {
-        transactionlist.add(t_transaction);
-      }
-    }
-    setState(() {
-      //tDebitValue = totalTransactionValue;
-    });
-    print(jsonEncode(debitlistbankdata));
-    return debitlistbankdata;
-  }
+
 
   fetchBankData(int type) async {
     UserDetail tempuserdetail = await Constants.getUserDetail();
@@ -179,7 +172,7 @@ class spendacountState extends State<Spend> {
       // getBankData(tempbankdatalist);
       // return tempbankdatalist ;
       if (type == Constants.debitcardValue) {
-        debitTotalValue(tempbankdatalist);
+
         //  return tempbankdatalist;
       }
 
@@ -710,15 +703,6 @@ class spendacountState extends State<Spend> {
                                         // )
 
                                       ),
-                                      // Container(
-                                      //     margin: EdgeInsets.all(5),
-                                      //     alignment: Alignment.topRight,
-                                      //     padding: EdgeInsets.all(8),
-                                      //     decoration: BoxDecoration(
-                                      //       //borderRadius: BorderRadius.circular(12),
-                                      //       //  color: const Color(0xffECDCFF)
-                                      //     ),
-                                          //child:
                                             Flexible(
                                             child:
                                           item.amount ==null?
@@ -729,7 +713,7 @@ class spendacountState extends State<Spend> {
                                                 fontWeight: FontWeight.w500
                                             ),
                                           ):
-                                          Text(dollar+'${item.amount.toStringAsFixed(2)}',
+                                          Text(dollar+'${ item.amount.toStringAsFixed(2)}',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.black,
@@ -739,7 +723,8 @@ class spendacountState extends State<Spend> {
                                           ),
                                             ),
 
-                                      //),
+
+
                                     ],
                                   ),
                                 ),
@@ -751,6 +736,22 @@ class spendacountState extends State<Spend> {
                                 //     color: Colors.black,
                                 //   ),
                                 //),
+                                Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                        child:
+                                LinearPercentIndicator(
+                                  width: 300.0,
+                                  lineHeight: 16.0,
+                                  percent: 0.5,
+                                  progressColor:
+                                  const Color(0xFFA781D3),
+                                 // camount == 0 ? Colors.redAccent : Colors.green,
+                                  backgroundColor: Colors.grey,
+
+                                ),
+                                ),
+
+
                               ],
                             ));
                       });
@@ -766,6 +767,7 @@ class spendacountState extends State<Spend> {
       ],
     );
   }
+
 
 
 //<<<<<Last Btracket >>>>>>>>>>//

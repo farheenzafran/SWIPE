@@ -46,7 +46,9 @@ dependencies:
   google_sign_in: ^5.4.1
   flutter_charts: ^0.5.0
   expandable: ^5.0.1
-  web_smooth_scroll: ^1.0.0
+  percent_indicator: ^4.2.2
+
+
 #  firebase_core: ^1.10.0
 ##  firebase_auth: ^0.20.0+1
 #  firebase_auth: ^3.6.3
