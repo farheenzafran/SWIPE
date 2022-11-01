@@ -435,7 +435,7 @@ class goalsavingplanState extends State<PlanGoal4> {
   addAccountHeader() {
     return
       Container(
-        height: 80,
+        height: 70,
         width: double.infinity,
         decoration: BoxDecoration(
             image: DecorationImage(

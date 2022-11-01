@@ -428,7 +428,7 @@ class payaccountState extends State<PaymentAccount2> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500
                                   ),),
-            Spacer(),
+            //Spacer(),
             Text(widget.text2,
               style: TextStyle(
                   color: Colors.black,

@@ -50,6 +50,8 @@ class TransactionDetail extends StatefulWidget {
 }
 class tacountState extends State<TransactionDetail> {
   String dollar = " \$";
+  late int selectedIndex;
+
   @override
   Widget build(BuildContext context) {
  final todo = ModalRoute.of(context)!.settings.arguments as List<Transactions>;
@@ -142,9 +144,14 @@ class tacountState extends State<TransactionDetail> {
                                           ),
                                         ]),
 
-                                  )
+                                  ),
 
+                                  onTap: () {
+                                setState(() {
+                                selectedIndex = i;
 
+                                });
+                                }
 
                               ),
 

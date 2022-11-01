@@ -30,7 +30,7 @@ class _signupState extends State<Signup> with SingleTickerProviderStateMixin {
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 80,
+                  height: 70,
                   width: double.infinity,
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
