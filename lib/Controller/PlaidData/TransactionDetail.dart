@@ -38,6 +38,7 @@ import '../Response/TransactionResponse.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import '../Response/UserDeatail.dart';
+import 'TransactionDetail2.dart';
 import 'creditBankdata.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -51,7 +52,10 @@ class TransactionDetail extends StatefulWidget {
 class tacountState extends State<TransactionDetail> {
   String dollar = " \$";
   late int selectedIndex;
-
+  late String payment = "";
+  late String date = "";
+  late String category = "";
+  late String accounttype = "";
   @override
   Widget build(BuildContext context) {
  final todo = ModalRoute.of(context)!.settings.arguments as List<Transactions>;
@@ -95,7 +99,7 @@ class tacountState extends State<TransactionDetail> {
                                     ),
                                   ),
                                   title: Text(
-                                    todo[i]
+                                  accounttype=  todo[i]
                                         .name
                                         .toString(),
                                     style: TextStyle(
@@ -106,7 +110,7 @@ class tacountState extends State<TransactionDetail> {
                                   ),
                                   subtitle:
                                   Text(
-                                    todo[i]
+                                category=     todo[i]
                                         .category
                                         .toString(),
                                     style: TextStyle(
@@ -124,7 +128,7 @@ class tacountState extends State<TransactionDetail> {
                                           Padding(
                                             padding:EdgeInsets.only(top:3, bottom: 3),
                                             child:
-                                            Text(dollar+ todo[i].amount.toStringAsFixed(2),
+                                            Text(payment = dollar+ todo[i].amount.toStringAsFixed(2),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 14,
@@ -134,7 +138,7 @@ class tacountState extends State<TransactionDetail> {
                                           ),
 
 
-                                          Text(  todo[i].date.toString(),
+                                          Text( date= todo[i].date.toString(),
 
                                             style: TextStyle(
                                                 color: Colors.grey,
@@ -147,9 +151,9 @@ class tacountState extends State<TransactionDetail> {
                                   ),
 
                                   onTap: () {
-                                setState(() {
-                                selectedIndex = i;
+                                    _sendDataToSecondScreen(context);
 
+                                    setState(() {
                                 });
                                 }
 
@@ -182,7 +186,7 @@ class tacountState extends State<TransactionDetail> {
   headerView() {
     return
       Container(
-        height: 60,
+        height: 70,
         width: double.infinity,
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -192,7 +196,7 @@ class tacountState extends State<TransactionDetail> {
 
         padding: EdgeInsets.only(top: 20, left: 15, bottom: 20),
         child: Wrap(
-          spacing: 120,
+          spacing: 100,
           children: <Widget>[
             // Container(
             // alignment: Alignment.center,
@@ -222,6 +226,12 @@ class tacountState extends State<TransactionDetail> {
       );
   }
 
+  void _sendDataToSecondScreen(BuildContext context) {
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionDetail2( text: payment,text2: date,text3: category,text4: accounttype),));
+
+    print("<<<<<Last Btracket >>>>>>>>>>");
+  }
 
 //-------
 }

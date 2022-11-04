@@ -77,6 +77,7 @@ class savingplanState extends State<SavingPlan3> {
   late double enteredNumber =0.0;
   late double calculate2;
   double result = 0.0;
+  final numberFormat = NumberFormat("#,##0.00", "en_US");
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,7 @@ class savingplanState extends State<SavingPlan3> {
 
         padding: EdgeInsets.only(top: 20, left: 15,),
         child: Wrap(
-          spacing: 80,
+          spacing: 100,
           children: <Widget>[
             // Container(
             // alignment: Alignment.center,
@@ -261,11 +262,18 @@ class savingplanState extends State<SavingPlan3> {
                           final  monthDiff = (difference.inDays / 30).floor();
                            enteredNumber = double.tryParse(amountinput.text)!;
                           final cal = (enteredNumber/monthDiff) ;
-                          calculate = cal;
+                          // calculate = cal;
+                          if(monthDiff== 0)
+                            {
+                              calculate = enteredNumber;
+                            }
+                          else {
+                            calculate = cal;
+                          }
                           print('monthDiff $monthDiff');
                           print(difference);
                           print(calculate);
-                          print("print>>>>>>>>>");
+                          print("print>>>>>>>>>qwqwqwq");
                           print(dateformat);
                           print(pickedDate);
                           print("print>>>>>>>>>");
@@ -315,7 +323,9 @@ Align(
     height: 40,
     width: 160,
 
-    child: Text(dollar + calculate.toStringAsFixed(2),
+    child:
+  Text(dollar+ numberFormat.format(calculate),
+    //Text(dollar + calculate.toStringAsFixed(2),
       style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,

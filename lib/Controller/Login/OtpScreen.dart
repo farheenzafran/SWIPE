@@ -118,7 +118,10 @@ class OtpScreen  extends StatelessWidget {
               padding: EdgeInsets.only(top: 5,left: 15 , right: 15),
               child: TextField(
                 controller: otpController,
-               // keyboardType: TextInputType.number,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Code',

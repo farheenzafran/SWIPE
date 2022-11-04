@@ -216,7 +216,7 @@ class _managebudgetacountState extends State<SpendNewBudget> {
 
       padding: EdgeInsets.only(top: 20, left: 15, bottom: 25),
       child: Wrap(
-        spacing: 70,
+        spacing: 100,
         children: <Widget>[
           // Container(
           // alignment: Alignment.center,

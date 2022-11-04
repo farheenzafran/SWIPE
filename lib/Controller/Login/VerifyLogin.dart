@@ -107,37 +107,43 @@ class _SearchState extends State<VerifyLogin>  with SingleTickerProviderStateMix
       Container(
         height: 70,
         width: double.infinity,
-        padding: EdgeInsets.only(top:15,left: 8,right: 8),
+        padding: EdgeInsets.only(top:20,left: 8,right: 8),
         decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("asset/images/background.png"),
               fit: BoxFit.cover,
             )),
 
-        child: Wrap(
-          spacing: 120,
-          children: <Widget>[
-            // Container(
-            // alignment: Alignment.center,
-            //  child:
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                Icons.arrow_left;
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
-            // ),
-            Text(
-              'LOGIN',
-              style: TextStyle(color: Colors.white, fontSize: 15 , fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
-            ),
-          ],
+  child: Wrap(
+    spacing: 120,
+      children: <Widget>[
+
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          Icons.arrow_left;
+        },
+        child: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.white,
         ),
+      ),
+      //
+
+      // Align(
+      //  // alignment: Alignment.center,
+      //   child:
+        Text(
+          'LOGIN',
+          style: TextStyle(color: Colors.white, fontSize: 15 , fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+      //)
+
+    ],
+  ),
+
+
 
       );
   }

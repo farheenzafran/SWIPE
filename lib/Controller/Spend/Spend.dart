@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/Plan/AddNewPlan2.dart';
@@ -72,6 +73,7 @@ class spendacountState extends State<Spend> {
     datalist =  getGoalBudgetData();
 
   }
+  final numberFormat = NumberFormat("#,##0.00", "en_US");
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   double percent = .5;
@@ -713,7 +715,9 @@ class spendacountState extends State<Spend> {
                                                 fontWeight: FontWeight.w500
                                             ),
                                           ):
-                                          Text(dollar+'${ item.amount.toStringAsFixed(2)}',
+                     //   Text(NumberFormat.simpleCurrency(locale: 'en-GB').format(item.amount.toString),
+                          Text(dollar+ numberFormat.format(item.amount),
+                      //  Text(dollar+'${ item.amount.toStringAsFixed(2)}',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.black,

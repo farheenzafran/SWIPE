@@ -62,6 +62,8 @@ class planacountState extends State<PlanAccount1> {
   late String a_associate;
   late String amount;
   late String goaldate;
+  final numberFormat = NumberFormat("#,##0.00", "en_US");
+
   late Future<List<getGoalResult>> datalist ;
 
   Future<List<getGoalResult>> goalGetBankData() async {
@@ -559,13 +561,13 @@ addButton() {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  Text(dollar+ tValue.toStringAsFixed(2),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                                  // Text(dollar+ tValue.toStringAsFixed(2),
+                                  //   style: TextStyle(
+                                  //     fontWeight: FontWeight.w500,
+                                  //     fontSize: 14,
+                                  //     color: Colors.black,
+                                  //   ),
+                                  // ),
 
 
                                 ],
@@ -580,13 +582,13 @@ addButton() {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  Text(dollar+tValue.toStringAsFixed(2),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                                  // Text(dollar+tValue.toStringAsFixed(2),
+                                  //   style: TextStyle(
+                                  //     fontWeight: FontWeight.w500,
+                                  //     fontSize: 14,
+                                  //     color: Colors.black,
+                                  //   ),
+                                  // ),
 
 
                                 ],
@@ -606,8 +608,10 @@ addButton() {
                                         //     color: const Color(0xFFA781D3),
                                         //   ),
                                         // ),
-                                        Text(dollar+item.totalamount.toString(),
-                                          style: TextStyle(
+                                        //Text(dollar+item.totalamount.toString(),
+                    Text(dollar+ numberFormat.format(item.totalamount),
+
+                    style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 17,
                                             color: const Color(0xFFA781D3),

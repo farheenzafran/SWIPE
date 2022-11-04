@@ -20,6 +20,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_charts/flutter_charts.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:intl/intl.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:swipeapp/Controller/Login/EmailSignup.dart';
 import 'package:swipeapp/Controller/Account/ManageAccount2.dart';
@@ -170,6 +171,7 @@ class tdashboardState extends State<Dashboard> {
   late var verticalBarChartContainer = VerticalBarChartTopContainer(
       chartData: chartData,
       xContainerLabelLayoutStrategy: xContainerLabelLayoutStrategy);
+  final numberFormat = NumberFormat("#,##0.00", "en_US");
 
   void initState() {
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -567,7 +569,7 @@ class tdashboardState extends State<Dashboard> {
 
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+             // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 dashboardHeader(),
                 Column(
@@ -657,8 +659,10 @@ class tdashboardState extends State<Dashboard> {
                                                       fontWeight: FontWeight.w600
                                                   ),
                                                 ):
-                                                Text(dollar+'${ transactionlist[index].amount.toStringAsFixed(2)}',
-                                                  overflow: TextOverflow.ellipsis,
+                                              //  Text(dollar+'${ transactionlist[index].amount.toStringAsFixed(2)}',
+                                                  Text(dollar+ numberFormat.format(transactionlist[index].amount),
+
+                                                    overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
@@ -824,7 +828,8 @@ class tdashboardState extends State<Dashboard> {
                       Column(
                         children: [
                           Text(
-                            dollar + tCreditValue.toStringAsFixed(2),
+                            dollar + numberFormat.format(
+                                tCreditValue),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
@@ -934,7 +939,8 @@ class tdashboardState extends State<Dashboard> {
                   //   mainAxisSize: MainAxisSize.min,
                   //   children: [
                   Text(
-                    'Debit:' + dollar + tDebitValue.toStringAsFixed(2),
+                    'Debit:' + dollar + numberFormat.format(
+                        tDebitValue),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 14,
@@ -1046,7 +1052,8 @@ class tdashboardState extends State<Dashboard> {
                                                 fontWeight: FontWeight.w500
                                             ),
                                           ):
-                                          Text('${item.totalamount!.toStringAsFixed(2)}',
+                                          Text('${dollar+numberFormat.format(item.totalamount)}',
+
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16,
@@ -1126,7 +1133,7 @@ class tdashboardState extends State<Dashboard> {
               //   mainAxisSize: MainAxisSize.min,
               //   children: [
               Text(
-                'Credit: ' + dollar + tCreditValue.toStringAsFixed(2),
+                'Credit: ' + dollar + numberFormat.format(tCreditValue),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 14,
@@ -1206,6 +1213,7 @@ class tdashboardState extends State<Dashboard> {
                       children: snapshot.data!.map<ExpansionPanel>((BankData item) {
                         return ExpansionPanel(
                           headerBuilder: (BuildContext context, bool isExpanded) {
+
                             return ListTile(
                               iconColor: Colors.red,
                               leading: CircleAvatar(
@@ -1222,13 +1230,6 @@ class tdashboardState extends State<Dashboard> {
                                     fontWeight: FontWeight.w600),
                               ),
                               trailing:
-                              // Text(
-                              //   dollar + item.totalamount.toString(),
-                              //   style: TextStyle(
-                              //       color: Colors.black,
-                              //       fontSize: 16,
-                              //       fontWeight: FontWeight.w500),
-                              // ),
                               item.totalamount ==null?
                               Text(dollar+'0',
                                 style: TextStyle(
@@ -1237,7 +1238,7 @@ class tdashboardState extends State<Dashboard> {
                                     fontWeight: FontWeight.w500
                                 ),
                               ):
-                              Text('${item.totalamount!.toStringAsFixed(2)}',
+                              Text('${dollar+numberFormat.format(item.totalamount)}',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -1254,13 +1255,15 @@ class tdashboardState extends State<Dashboard> {
                               selected: false,
                             );
                           },
-                          body: //Text('hgsdvfghjbvsdjhcgsdh'),
+                          body:
+                          //Text('hgsdvfghjbvsdjhcgsdh'),
+
                           creditBuildExpandableContent(
                             item.accesstoken.toString(),
                             item.accountid.toString(),
                           ),
                           isExpanded: item.isExpaneded,
-                        );
+                         );
                       }).toList(),
                       dividerColor: Colors.grey,
                       expansionCallback: (int index, bool isExpanded) async {
@@ -1281,7 +1284,7 @@ class tdashboardState extends State<Dashboard> {
                         //     tempresponse2.transactions as List<Transactions>;
                         // viewVisible = true;
                         viewVisibleTransaction = true;
-                        showWidget();
+                       // showWidget();
                         LiabilityResponse tempresponse = await liabilityData(
                             snapshot.data![index].accesstoken.toString(),
                             snapshot.data![index].accountid.toString());
@@ -1560,11 +1563,19 @@ class tdashboardState extends State<Dashboard> {
                               ),
                             ),
                             trailing: Column(
+
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 10, top: 5),
-                                  child: Text(
-                                    dollar + t.amount.toStringAsFixed(2),
+                                  child:
+                                      t.amount == null?
+                                      Text(dollar + '0',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w700),
+                                      ):
+                                  Text(dollar + numberFormat.format(t.amount),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 13,
@@ -1693,9 +1704,17 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
+                                  child:
+    i.lastPaymentAmount == null ?
+    Text(
+        dollar + '0',
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.w500)):
+                                  Text(
                                       dollar +
-                                          i.lastPaymentAmount!.toStringAsFixed(2),
+    numberFormat.format(  i.lastPaymentAmount),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
@@ -1790,10 +1809,18 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
+                                  child:
+                                  i.minimumPaymentAmount == null ?
+                                  Text(
+                                      dollar + '0',
+
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500)):
+                                  Text(
                                       dollar +
-                                          i.minimumPaymentAmount!
-                                              .toStringAsFixed(2),
+    numberFormat.format(    i.minimumPaymentAmount),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
@@ -1831,8 +1858,16 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                      i.outstandingInterestAmount.toString(),
+                                  child:
+    i.outstandingInterestAmount  == null?
+    Text( dollar + '0',
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.w500)):
+                                  Text(
+                                      dollar+ numberFormat.format(
+                                          i.outstandingInterestAmount),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
@@ -1969,9 +2004,18 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                      dollar +
-                                          i.lastPaymentAmount!.toStringAsFixed(2),
+                                  child:
+    i.lastPaymentAmount ==null?
+    Text(
+        dollar + '0',
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.w500)):
+
+                                      Text(
+                                      dollar +numberFormat.format(
+                                          i.lastPaymentAmount),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
@@ -2030,8 +2074,8 @@ class tdashboardState extends State<Dashboard> {
                               Spacer(),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: Text(
-                                  i.lastPaymentDate.toString(),
+                                child: Text(numberFormat.format(
+                                  i.lastPaymentDate.toString()),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 11,
@@ -2053,9 +2097,18 @@ class tdashboardState extends State<Dashboard> {
                               Spacer(),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: Text(
-                                  dollar +
-                                      i.lastPaymentAmount!.toStringAsFixed(2),
+                                child:
+                                i.lastPaymentAmount == null?
+                                Text(
+                                  dollar + '0',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ):
+                                Text(
+                                  dollar +numberFormat.format(
+                                      i.lastPaymentAmount),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 11,
@@ -2285,7 +2338,8 @@ class tdashboardState extends State<Dashboard> {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  dollar + i.pastDueAmount!.toStringAsFixed(2),
+                                  dollar + numberFormat.format(
+                                      i.pastDueAmount),
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 11,
@@ -2391,9 +2445,7 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                    dollar +
-                                        i.lastPaymentAmount.toStringAsFixed(2),
+                                  child: Text(i.lastPaymentDate.toString(),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 11,
@@ -2413,9 +2465,19 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                    dollar +
-                                        i.lastPaymentAmount.toStringAsFixed(2),
+                                  child:
+    i.lastPaymentAmount! == null?
+    Text(
+      dollar + '0',
+      style: TextStyle(
+          color: Colors.black,
+          fontSize: 11,
+          fontWeight: FontWeight.w500),
+    ):
+
+                                  Text(
+                                    dollar + numberFormat.format(
+                                        i.lastPaymentAmount!),
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 11,
@@ -2455,10 +2517,18 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                     alignment: Alignment.topRight,
-                                    child: Text(
-                                      dollar +
-                                          i.minimumPaymentAmount!
-                                              .toStringAsFixed(2),
+                                    child:
+                                    i.minimumPaymentAmount ==null?
+                                    Text(
+                                      dollar + '0',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500),
+                                    ):
+                                    Text(
+                                      dollar + numberFormat.format(
+                                          i.minimumPaymentAmount!),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
@@ -2477,9 +2547,18 @@ class tdashboardState extends State<Dashboard> {
                                 Spacer(),
                                 Align(
                                     alignment: Alignment.topRight,
-                                    child: Text(
-                                      dollar +
-                                          i.lastPaymentAmount.toStringAsFixed(2),
+                                    child:
+    i.lastPaymentAmount == null?
+    Text(
+      dollar + '0',
+      style: TextStyle(
+          color: Colors.black,
+          fontSize: 11,
+          fontWeight: FontWeight.w500),
+    ):
+                                    Text(
+                                      dollar + numberFormat.format(
+                                          i.lastPaymentAmount),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 11,
